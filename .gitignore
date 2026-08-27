@@ -8,3 +8,4 @@ README_DETAILED.md
 supabase/backups/
 # Local Telegram API credentials
 .telegram.env
+.telegram-session
