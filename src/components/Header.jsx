@@ -212,6 +212,20 @@ export default function Header({
             <span>{lang === 'en' ? 'Sevas' : 'సేవలు'}</span>
           </button>
 
+                    <button
+            onClick={() => setActiveTab('tokens')}
+            className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5 shrink-0 transition-all ${
+              activeTab === 'tokens'
+                ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-[#0B0E14] shadow-md'
+                : 'text-[#94A3B8] hover:text-[#FFD700] hover:bg-[#141923]'
+            }`}
+          >
+            <span>🎟️</span>
+            <span>
+              {lang === 'en' ? 'SSD / DD Tokens' : 'SSD / DD టోకెన్లు'}
+            </span>
+          </button>
+
           {/* COMMUNITY FEEDBACK BUTTON / ADMIN INBOX */}
           <button
             onClick={() => {

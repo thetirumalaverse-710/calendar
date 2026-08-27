@@ -15,6 +15,7 @@ const CalendarView = lazy(() => import('./components/CalendarView'));
 const DailySchedule = lazy(() => import('./components/DailySchedule'));
 const CommunityFeedback = lazy(() => import('./components/CommunityFeedback'));
 const UtsavamGlossary = lazy(() => import('./components/UtsavamGlossary'));
+const SSDTokens = lazy(() => import('./components/SSDTokens'));
 const AdminPortalModal = lazy(() => import('./components/AdminPortalModal'));
 const EventDetailModal = lazy(() => import('./components/EventDetailModal'));
 const loadInitialEvents = () =>
@@ -580,6 +581,14 @@ const handleDeleteEvent = deleteEvent;
           />
         )}
 
+        {/* SSD & DD TOKENS SECTION */}
+{activeTab === 'tokens' && (
+  <SSDTokens
+    lang={lang}
+    themeMode={themeMode}
+  />
+)}
+
         {/* COMMUNITY FEEDBACK SYSTEM SECTION */}
         {activeTab === 'feedback' && (
           <CommunityFeedback
@@ -611,6 +620,7 @@ const handleDeleteEvent = deleteEvent;
       mode={adminModalMode}
       onClose={() => setAdminModalMode(null)}
       lang={lang}
+      themeMode={themeMode}
       events={safeEventsList}
       login={login}
       onAddEvent={handleAddEvent}

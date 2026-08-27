@@ -1,10 +1,11 @@
 import AdminGlossaryEditor from "./admin/AdminGlossaryEditor";
 import AdminFeedbackInbox from "./admin/AdminFeedbackInbox";
+import AdminTokenManager from "./admin/AdminTokenManager";
 import AdminYoutubeSettings from "./admin/AdminYoutubeSettings";
 import AdminCloudSync from "./admin/AdminCloudSync";
 import AdminEventEditor from "./admin/AdminEventEditor";
 import React, { useState, useEffect } from 'react';
-import { X, Plus, ShieldCheck, Lock, LogOut, MessageSquare, FileSpreadsheet, Search, Eye, CheckCircle, Cloud, RefreshCw, Database, Server, Video, } from 'lucide-react';
+import { X, Plus, ShieldCheck, Ticket, Lock, LogOut, MessageSquare, FileSpreadsheet, Search, Eye, CheckCircle, Cloud, RefreshCw, Database, Server, Video, } from 'lucide-react';
 import {getCloudConfig, saveCloudConfig, pushEventsToCloud, getLastSyncTime, uploadFileToSupabaseStorage } from '../utils/cloudSync';
 import { compressImageFile } from '../utils/eventStatus';
 
@@ -22,6 +23,7 @@ export default function AdminPortalModal({
   login,
   targetEvent,
   feedbackList,
+  themeMode,
   onUpdateFeedback,
   onDeleteFeedback,
   targetGlossaryTerm,
@@ -255,6 +257,21 @@ const handleLogin = async (e) => {
             </button>
 
             <button
+  type="button"
+  onClick={() => setActiveAdminTab('token-management')}
+  className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all ${
+    activeAdminTab === 'token-management'
+      ? 'bg-gradient-to-r from-[#FF5722] to-[#FFD700] text-black shadow'
+      : 'bg-[#141923] text-[#FFD700] border border-[#D4AF37]/40 hover:bg-[#D4AF37]/20'
+  }`}
+>
+  <Ticket className="w-4 h-4" />
+  <span>
+    {lang === 'en' ? 'SSD / DD Tokens' : 'SSD / DD టోకెన్లు'}
+  </span>
+</button>
+
+            <button
               type="button"
               onClick={() => setActiveAdminTab('youtube-live')}
               className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all ${
@@ -395,6 +412,15 @@ const handleLogin = async (e) => {
     compressImageFile={compressImageFile}
   />
   </>
+)}
+
+
+{/* SSD / DD TOKEN MANAGEMENT TAB */}
+{isAdminLoggedIn && activeAdminTab === "token-management" && (
+  <AdminTokenManager
+    lang={lang}
+    themeMode={themeMode}
+  />
 )}
 
       {/* YOUTUBE LIVE STREAM CONFIGURATION TAB */}
