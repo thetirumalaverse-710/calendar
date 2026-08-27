@@ -15,7 +15,8 @@
     "jspdf-autotable": "^5.0.8",
     "lucide-react": "^0.475.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "teleproto": "^1.229.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
