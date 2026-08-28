@@ -24,17 +24,19 @@ if (!supabaseUrl || !supabaseServiceRoleKey) {
   throw new Error("Missing Supabase server environment variables.");
 }
 
-if (!fs.existsSync(SESSION_FILE)) {
-  throw new Error("Telegram session file is missing.");
+let sessionString = process.env.TELEGRAM_SESSION?.trim();
+
+if (!sessionString && fs.existsSync(SESSION_FILE)) {
+  sessionString = fs.readFileSync(
+    SESSION_FILE,
+    "utf8"
+  ).trim();
 }
 
-const sessionString = fs.readFileSync(
-  SESSION_FILE,
-  "utf8"
-).trim();
-
 if (!sessionString) {
-  throw new Error("Telegram session file is empty.");
+  throw new Error(
+    "Missing Telegram session. Set TELEGRAM_SESSION or provide .telegram-session."
+  );
 }
 
 const telegramClient = new TelegramClient(
