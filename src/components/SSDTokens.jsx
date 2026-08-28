@@ -67,6 +67,15 @@ export default function SSDDTokens({ lang = "en", themeMode = "dark" }) {
       ? tokenData.observations[tokenData.observations.length - 1]
       : null;
 
+  const liveSource =
+  latestObservation?.source_type === "telegram"
+    ? "Telegram"
+    : latestObservation?.source_type || null;
+
+  const lastUpdated = latestObservation?.observed_at
+  ? new Date(latestObservation.observed_at)
+  : null;
+
   const tokenDay = tokenData.tokenDay;
 
 const isNoIssuance =
@@ -132,9 +141,9 @@ const ddStatus =
         : "Live token information is not available yet.",
 
     awaiting:
-      lang === "te"
-        ? "ప్రత్యక్ష డేటా మూలాన్ని అనుసంధానించిన తర్వాత తాజా సమాచారం ఇక్కడ కనిపిస్తుంది."
-        : "Live information will appear here once an approved live data source is connected.",
+  lang === "te"
+    ? "ప్రత్యక్ష డేటా అందుబాటులో ఉంది — మూలం: Telegram."
+    : "Live data connected — Source: Telegram",
 
     source:
       lang === "te"
@@ -277,8 +286,23 @@ const ddStatus =
             </div>
 
             <div className={`text-[10px] font-bold ${mutedClass}`}>
-              {text.source}: {text.notAvailable}
-            </div>
+  {text.source}: {liveSource || text.notAvailable}
+</div>
+
+{lastUpdated && (
+  <div className={`text-[10px] font-bold ${mutedClass}`}>
+    Last updated:{" "}
+    {lastUpdated.toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      day: "2-digit",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    })}{" "}
+    IST
+  </div>
+)}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -327,6 +351,8 @@ const ddStatus =
                 <p className={`text-2xl font-black mt-1 ${headingClass}`}>
                   {tokenLoading
   ? "..."
+  : latestObservation?.ssd_status === "completed"
+  ? "Completed"
   : latestObservation?.ssd_remaining ?? "—"}
                 </p>
               </div>
@@ -341,18 +367,20 @@ const ddStatus =
 
                   <span
   className={`text-[10px] font-extrabold ${
-    ddStatus === "active"
+    ssdStatus === "active"
       ? "text-green-500"
       : "text-slate-500"
   }`}
 >
   {isNoIssuance
-    ? "No issuance today"
-    : ddStatus === "active"
-    ? "Active"
-    : hasObservation
-    ? "Unavailable"
-    : "Awaiting observation"}
+  ? "No issuance today"
+  : ssdStatus === "completed"
+  ? "Completed"
+  : ssdStatus === "active"
+  ? "Active"
+  : hasObservation
+  ? "Unavailable"
+  : "Awaiting observation"}
 </span>
                 </div>
               </div>
@@ -402,6 +430,8 @@ const ddStatus =
                 <p className={`text-2xl font-black mt-1 ${headingClass}`}>
                   {tokenLoading
   ? "..."
+  : latestObservation?.dd_status === "completed"
+  ? "Completed"
   : latestObservation?.dd_remaining ?? "—"}
                 </p>
               </div>
@@ -416,14 +446,16 @@ const ddStatus =
 
                 <span
   className={`text-[10px] font-extrabold ${
-    ssdStatus === "active"
+    ddStatus === "active"
       ? "text-green-500"
       : "text-slate-500"
   }`}
 >
   {isNoIssuance
     ? "No issuance today"
-    : ssdStatus === "active"
+    : ddStatus === "completed"
+    ? "Completed"
+    : ddStatus === "active"
     ? "Active"
     : hasObservation
     ? "Unavailable"
@@ -435,18 +467,18 @@ const ddStatus =
           </div>
 
           <div
-            className={`mt-4 rounded-xl border p-3 flex gap-3 ${
-              isLight
-                ? "bg-amber-50 border-amber-200"
-                : "bg-amber-500/5 border-amber-500/20"
-            }`}
-          >
-            <Info className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+  className={`mt-4 rounded-xl border p-3 flex gap-3 ${
+    isLight
+      ? "bg-green-50 border-green-200"
+      : "bg-green-500/5 border-green-500/20"
+  }`}
+>
+  <Info className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
 
-            <p className={`text-xs leading-relaxed ${mutedClass}`}>
-              {text.awaiting}
-            </p>
-          </div>
+  <p className={`text-xs leading-relaxed ${mutedClass}`}>
+    {text.awaiting}
+  </p>
+</div>
         </section>
 
         {/* ========================================================= */}
@@ -553,7 +585,9 @@ const ddStatus =
               </p>
 
               <p className={`text-lg font-black mt-1 ${headingClass}`}>
-                {observation.ssd_remaining ?? "—"}
+{observation.ssd_status === "completed"
+  ? "Completed"
+  : observation.ssd_remaining ?? "—"}
               </p>
             </div>
 
@@ -563,7 +597,9 @@ const ddStatus =
               </p>
 
               <p className={`text-lg font-black mt-1 ${headingClass}`}>
-                {observation.dd_remaining ?? "—"}
+                {observation.dd_status === "completed"
+  ? "Completed"
+  : observation.dd_remaining ?? "—"}
               </p>
             </div>
           </div>
