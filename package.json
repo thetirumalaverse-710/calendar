@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "worker": "node telegram-worker.mjs"
+    "worker": "node telegram-worker.mjs",
+    "telegram-poll": "node telegram-poll.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.3",
