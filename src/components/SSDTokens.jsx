@@ -53,8 +53,8 @@ export default function SSDDTokens({ lang = "en", themeMode = "dark" }) {
 
     loadTokenData();
 
-    // Refresh every 5 minutes while this page is open.
-    const intervalId = window.setInterval(loadTokenData, 5 * 60 * 1000);
+    // Refresh every 10 minutes while this page is open.
+    const intervalId = window.setInterval(loadTokenData, 10 * 60 * 1000);
 
     return () => {
       cancelled = true;
