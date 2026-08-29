@@ -9,5 +9,5 @@ supabase/backups/
 # Local Telegram API credentials
 .telegram.env
 .telegram-session
-
+telegram-test.mjs
 .telegram-checkpoint.json

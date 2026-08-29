@@ -71,3 +71,64 @@ export async function getTodayTokenData(dateOverride = null) {
     observations,
   };
 }
+
+/**
+ * Get recent completed token days with their observations.
+ */
+export async function getRecentTokenHistory(limit = 7) {
+  const today = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+
+  const { data: days, error } = await supabase
+    .from("token_days")
+    .select("*")
+    .lt("issuance_date", today)
+    .order("issuance_date", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.error(
+      "Failed to load recent token history:",
+      error
+    );
+    throw error;
+  }
+
+  if (!days || days.length === 0) {
+    return [];
+  }
+
+  const dayIds = days.map((day) => day.id);
+
+  const { data: observations, error: observationError } =
+    await supabase
+      .from("token_observations")
+      .select("*")
+      .in("token_day_id", dayIds)
+      .order("observed_at", { ascending: true });
+
+  if (observationError) {
+    console.error(
+      "Failed to load historical token observations:",
+      observationError
+    );
+    throw observationError;
+  }
+
+  return days.map((day) => {
+    const dayObservations =
+      (observations || []).filter(
+        (observation) =>
+          observation.token_day_id === day.id
+      );
+
+    return {
+      ...day,
+      observations: dayObservations,
+    };
+  });
+}

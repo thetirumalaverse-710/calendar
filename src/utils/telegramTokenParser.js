@@ -1,23 +1,23 @@
 /**
  * Parse SSD/DD token information from a Telegram channel message.
  *
- * Handles real-world formats such as:
+ * Handles messages such as:
  *
- * SSD & DD Tokens Issue Started @ 1.30Am
+ * SSD & DD Tokens Issue Started @ 12:30Am
+ *
+ * SSD Tokens – Current Status
+ *     Quota Completed @ 2:10Am
+ *
+ * Srivari Mettu Divya Darshan Tokens
+ *     Quota Completed @ 2:50Am
+ *
+ * Also handles availability updates such as:
  *
  * SSD Tokens – Current Status:
- * • Available Tokens: 7966
+ *     Available Tokens: 7966
  *
  * Srivari Mettu Divya Darshan Tokens:
- * • Available Tokens: 1707
- *
- * Also handles:
- *
- * SSD Tokens – Current Status:
- * • Quota Completed @ 4:45 AM
- *
- * Srivari Mettu Divya Darshan Tokens:
- * • Quota Completed @ 6:20 AM
+ *     Available Tokens: 1707
  */
 
 export function parseTelegramTokenMessage(rawText) {
@@ -26,12 +26,14 @@ export function parseTelegramTokenMessage(rawText) {
   }
 
   const text = rawText
-  .replace(/\r/g, "")
-  .replace(/[–—−]/g, "-")
-  .replace(/[â€“â€”âˆ’]/g, "-")
-  .trim();
+    .replace(/\r/g, "")
+    .replace(/[–—−]/g, "-")
+    .replace(/[â€“â€”âˆ’]/g, "-")
+    .trim();
 
-  // Make sure this looks like an SSD/DD token message.
+  /*
+   * Make sure this looks like an SSD/DD token message.
+   */
   const isTokenMessage =
     /SSD\s*&\s*DD\s+Tokens/i.test(text) ||
     /SSD\s+Tokens\s*-\s*Current\s*Status/i.test(text) ||
@@ -45,7 +47,6 @@ export function parseTelegramTokenMessage(rawText) {
    * Extract the SSD section only.
    *
    * The section ends when the DD / Srivari Mettu section begins.
-   * This prevents a DD number from accidentally becoming the SSD number.
    */
   const ssdSectionMatch = text.match(
     /SSD\s+Tokens\s*-\s*Current\s*Status\s*:?\s*([\s\S]*?)(?=Srivari\s+Mettu\s+Divya\s+Darshan\s+Tokens|$)/i
@@ -67,36 +68,74 @@ export function parseTelegramTokenMessage(rawText) {
     : "";
 
   /*
-   * Numeric availability.
-   *
-   * IMPORTANT:
-   * Numbers such as "10K" and "2K" in the opening sentence
-   * are quotas, not current remaining-token counts.
+   * Extract current SSD availability.
    */
   const ssdAvailableMatch = ssdSection.match(
     /Available\s+Tokens\s*:\s*([\d,]+)/i
   );
 
+  /*
+   * Extract current DD availability.
+   */
   const ddAvailableMatch = ddSection.match(
     /Available\s+Tokens\s*:\s*([\d,]+)/i
   );
 
   const ssd = ssdAvailableMatch
-    ? Number(ssdAvailableMatch[1].replace(/,/g, ""))
+    ? Number(
+        ssdAvailableMatch[1].replace(/,/g, "")
+      )
     : null;
 
   const dd = ddAvailableMatch
-    ? Number(ddAvailableMatch[1].replace(/,/g, ""))
+    ? Number(
+        ddAvailableMatch[1].replace(/,/g, "")
+      )
     : null;
 
   /*
-   * Detect quota completion independently for SSD and DD.
+   * Detect quota completion independently.
    */
-  const ssdCompleted = /Quota\s+Completed/i.test(ssdSection);
-  const ddCompleted = /Quota\s+Completed/i.test(ddSection);
+  const ssdCompleted =
+    /Quota\s+Completed/i.test(ssdSection);
+
+  const ddCompleted =
+    /Quota\s+Completed/i.test(ddSection);
 
   /*
-   * Determine status.
+   * Extract SSD completion time.
+   *
+   * Example:
+   * Quota Completed @ 2:10Am
+   */
+  const ssdCompletedMatch =
+    ssdSection.match(
+      /Quota\s+Completed\s*@\s*([0-9]{1,2}(?:[:.][0-9]{2})?\s*(?:AM|PM)?)/i
+    );
+
+  /*
+   * Extract DD completion time.
+   *
+   * Example:
+   * Quota Completed @ 2:50Am
+   */
+  const ddCompletedMatch =
+    ddSection.match(
+      /Quota\s+Completed\s*@\s*([0-9]{1,2}(?:[:.][0-9]{2})?\s*(?:AM|PM)?)/i
+    );
+
+  const ssdCompletedAtText =
+    ssdCompletedMatch
+      ? ssdCompletedMatch[1].trim()
+      : null;
+
+  const ddCompletedAtText =
+    ddCompletedMatch
+      ? ddCompletedMatch[1].trim()
+      : null;
+
+  /*
+   * Determine SSD/DD status.
    */
   const ssdStatus = ssdCompleted
     ? "completed"
@@ -111,28 +150,40 @@ export function parseTelegramTokenMessage(rawText) {
     : "unknown";
 
   /*
-   * Require at least one meaningful SSD/DD state.
-   */
-  if (
-    ssd === null &&
-    dd === null &&
-    !ssdCompleted &&
-    !ddCompleted
-  ) {
-    return null;
-  }
-
-  /*
-   * Extract advertised issue-start time if present.
+   * Extract advertised issuance start time.
    *
    * Examples:
-   * 1.30Am
-   * 1.30 AM
+   * 12:30Am
+   * 12.30 AM
    * 1:30 AM
    */
   const issueStartMatch = text.match(
     /Issue\s+Started\s*@\s*([0-9]{1,2}(?:[:.][0-9]{2})?\s*(?:AM|PM)?)/i
   );
+
+  const issueStartText =
+    issueStartMatch
+      ? issueStartMatch[1].trim()
+      : null;
+
+  /*
+   * A message is meaningful if it contains:
+   *
+   * - SSD availability
+   * - DD availability
+   * - SSD completion
+   * - DD completion
+   * - issuance start time
+   */
+  if (
+    ssd === null &&
+    dd === null &&
+    !ssdCompleted &&
+    !ddCompleted &&
+    !issueStartText
+  ) {
+    return null;
+  }
 
   return {
     ssd_remaining: ssd,
@@ -141,9 +192,13 @@ export function parseTelegramTokenMessage(rawText) {
     ssd_status: ssdStatus,
     dd_status: ddStatus,
 
-    issue_start_text: issueStartMatch
-      ? issueStartMatch[1].trim()
-      : null,
+    issue_start_text: issueStartText,
+
+    ssd_completed_at_text:
+      ssdCompletedAtText,
+
+    dd_completed_at_text:
+      ddCompletedAtText,
 
     source_type: "telegram",
 
