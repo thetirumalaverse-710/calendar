@@ -4,7 +4,8 @@
  */
 import { CLOUD_CONFIG } from "../config/cloudConfig";
 import { STORAGE_KEYS } from "../config/storageKeys";
-import { supabase } from "./supabaseClient";
+
+const getSupabase = () => import("./supabaseClient").then(m => m.supabase);
 
 const STORAGE_KEY_CONFIG = STORAGE_KEYS.CLOUD_CONFIG;
 const STORAGE_KEY_LAST_SYNC = STORAGE_KEYS.CLOUD_LAST_SYNC;
@@ -45,6 +46,7 @@ function updateLastSyncTimestamp() {
 
 export async function pushEventsToCloud(events) {
   try {
+    const supabase = await getSupabase();
     // Make sure an authenticated Supabase session exists.
     const {
       data: { session },
@@ -187,6 +189,7 @@ if (
  */
 export async function uploadFileToSupabaseStorage(file, folderOrId = '') {
   try {
+    const supabase = await getSupabase();
     const {
       data: { session },
       error: sessionError
@@ -260,6 +263,7 @@ export async function uploadFileToSupabaseStorage(file, folderOrId = '') {
 
 export async function deleteEventFromCloud(eventId) {
   try {
+    const supabase = await getSupabase();
     const {
       data: { session },
       error: sessionError

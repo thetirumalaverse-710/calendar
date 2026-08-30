@@ -1,5 +1,6 @@
 import { getCloudConfig } from "./cloudSync";
-import { supabase } from "./supabaseClient";
+
+const getSupabase = () => import("./supabaseClient").then(m => m.supabase);
 
 export async function pullGlossaryFromCloud() {
   const config = getCloudConfig();
@@ -79,6 +80,7 @@ export async function saveGlossaryTermToCloud(term) {
   }
 
   try {
+    const supabase = await getSupabase();
     const {
       data: { session },
       error: sessionError
@@ -146,6 +148,7 @@ export async function deleteGlossaryTermFromCloud(termId) {
   }
 
   try {
+    const supabase = await getSupabase();
     const {
       data: { session },
       error: sessionError
