@@ -8,7 +8,13 @@ import { APP_CONFIG } from "./config/appConfig";
 import React, { useState, useEffect, useMemo, lazy, Suspense } from 'react';
 import Header from './components/Header';
 import HeroBanner from './components/HeroBanner';
-import { ShieldCheck, LogOut, Edit2, X, ExternalLink, MessageSquare, Plus, Cloud, Lock } from 'lucide-react';
+import { loadStoredFeedback, saveStoredFeedback } from './utils/feedbackStorage';
+import AdminTopRibbon from './components/layout/AdminTopRibbon';
+import TodayHappeningTicker from './components/layout/TodayHappeningTicker';
+import TtdLiveStreamModal from './components/layout/TtdLiveStreamModal';
+import LogoLightboxModal from './components/layout/LogoLightboxModal';
+import AppFooter from './components/layout/AppFooter';
+
 const CalendarView = lazy(() => import('./components/CalendarView'));
 const DailySchedule = lazy(() => import('./components/DailySchedule'));
 const CommunityFeedback = lazy(() => import('./components/CommunityFeedback'));
@@ -21,14 +27,13 @@ const ReferencesList = lazy(() => import('./components/ReferencesList'));
 const loadInitialEvents = () =>
   import('./data/initialEvents').then(module => module.INITIAL_EVENTS);
 
-
 export default function App() {
   // Tab state: 'calendar-page', 'overview', 'temples', 'references', 'sevas', 'feedback'
   const [activeTab, setActiveTab] = useState('calendar-page');
   const [lang, setLang] = useState('en'); // 'en' | 'te'
-  
+
   // Theme Mode state ('dark' | 'light') 
-const {themeMode,setThemeMode,toggleTheme,} = useTheme();
+  const { themeMode, setThemeMode, toggleTheme } = useTheme();
 
   const [selectedTemple, setSelectedTemple] = useState('all');
   const [selectedEventModal, setSelectedEventModal] = useState(null);
@@ -39,81 +44,42 @@ const {themeMode,setThemeMode,toggleTheme,} = useTheme();
   const [isLogoModalOpen, setIsLogoModalOpen] = useState(false);
 
   // Admin Logged In State
-  const {isAdminLoggedIn,setIsAdminLoggedIn,login,logout,} = useAdmin();
+  const { isAdminLoggedIn, setIsAdminLoggedIn, login, logout } = useAdmin();
 
   // Dynamic Events State Initializer with complete merge for edited default events & deleted tracking
+  const [initialEvents, setInitialEvents] = useState(null);
 
-const [initialEvents, setInitialEvents] = useState(null);
-
-const {
-  events: eventsList,
-  addEvent,
-  updateEvent,
-  deleteEvent,
-  eventsInitialized,
-} = useEvents(initialEvents);
-
-useEffect(() => {
-  let cancelled = false;
-
-  loadInitialEvents()
-    .then(loadedEvents => {
-      if (!cancelled) {
-        setInitialEvents(loadedEvents);
-      }
-    })
-    .catch(err => {
-      console.error('Failed to load initial events:', err);
-    });
-
-  return () => {
-    cancelled = true;
-  };
-}, []);
-
-
-  // Defensive Community Feedback Submissions State Initializer
-  const [feedbackList, setFeedbackList] = useState(() => {
-    try {
-      const stored = localStorage.getItem('tirumala_feedback_submissions');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) {
-          return parsed;
-        }
-      }
-      return [
-        {
-          id: 'fb-demo-1',
-          refNumber: 'TU-2026-000101',
-          feedbackType: 'Feature Request',
-          title: 'Add Google Calendar Reminders for Abhishekam',
-          description: 'It would be great to have direct notification reminders before early morning Abhishekam on Fridays.',
-          name: 'Srinivas R.',
-          email: 'srinivas@example.com',
-          pageUrl: 'http://localhost:3000/',
-          browser: 'Google Chrome',
-          operatingSystem: 'Windows OS',
-          deviceType: 'Desktop',
-          screenshotUrl: null,
-          status: 'Planned',
-          adminNotes: 'Integrated .ics calendar download buttons across all event cards.',
-          createdAt: '2026-07-26T10:00:00Z',
-          updatedAt: '2026-07-27T12:00:00Z'
-        }
-      ];
-    } catch (e) {
-      console.error('Error loading feedback from storage:', e);
-      return [];
-    }
-  });
+  const {
+    events: eventsList,
+    addEvent,
+    updateEvent,
+    deleteEvent,
+    eventsInitialized,
+  } = useEvents(initialEvents);
 
   useEffect(() => {
-    try {
-      localStorage.setItem('tirumala_feedback_submissions', JSON.stringify(feedbackList));
-    } catch (e) {
-      console.error(e);
-    }
+    let cancelled = false;
+
+    loadInitialEvents()
+      .then(loadedEvents => {
+        if (!cancelled) {
+          setInitialEvents(loadedEvents);
+        }
+      })
+      .catch(err => {
+        console.error('Failed to load initial events:', err);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Defensive Community Feedback Submissions State Initializer
+  const [feedbackList, setFeedbackList] = useState(() => loadStoredFeedback());
+
+  useEffect(() => {
+    saveStoredFeedback(feedbackList);
   }, [feedbackList]);
 
   // Notifications State
@@ -176,133 +142,132 @@ useEffect(() => {
       return {};
     }
   });
-    
+
   useEffect(() => {
-  let cancelled = false;
+    let cancelled = false;
 
-  async function syncGlossaryFromCloud() {
-    const result = await pullGlossaryFromCloud();
+    async function syncGlossaryFromCloud() {
+      const result = await pullGlossaryFromCloud();
 
-    if (
-      !result.success ||
-      !Array.isArray(result.glossary)
-    ) {
+      if (
+        !result.success ||
+        !Array.isArray(result.glossary)
+      ) {
+        return;
+      }
+
+      const edits = {};
+
+      for (const term of result.glossary) {
+        edits[term.id] = term;
+      }
+
+      if (cancelled) return;
+
+      setCustomGlossaryEdits(prev => {
+        const merged = {
+          ...edits,
+          ...prev
+        };
+
+        localStorage.setItem(
+          "tirumala_custom_glossary_edits",
+          JSON.stringify(merged)
+        );
+
+        return merged;
+      });
+    }
+
+    syncGlossaryFromCloud();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const handleSaveGlossaryEdit = async (termId, updatedData) => {
+    setCustomGlossaryEdits(prev => {
+      const next = {
+        ...prev,
+        [termId]: updatedData
+      };
+
+      try {
+        localStorage.setItem(
+          "tirumala_custom_glossary_edits",
+          JSON.stringify(next)
+        );
+      } catch (e) {
+        console.error(e);
+      }
+
+      return next;
+    });
+
+    const result = await saveGlossaryTermToCloud({
+      id: termId,
+      ...updatedData
+    });
+
+    if (!result.success) {
+      console.warn("Glossary cloud sync failed:", result.message);
+    } else {
+      console.log("✅ Glossary synced to cloud");
+    }
+  };
+
+  const handleDeleteGlossaryTerm = async (termId) => {
+    if (!termId) return;
+
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this glossary term?"
+    );
+
+    if (!confirmed) return;
+
+    const result = await deleteGlossaryTermFromCloud(termId);
+
+    if (!result.success) {
+      console.warn(
+        "Glossary cloud delete failed:",
+        result.message
+      );
+
+      alert(
+        `Glossary cloud delete failed: ${result.message}`
+      );
+
       return;
     }
 
-    const edits = {};
-
-    for (const term of result.glossary) {
-      edits[term.id] = term;
-    }
-
-    if (cancelled) return;
-
+    // Remove from local custom glossary edits
     setCustomGlossaryEdits(prev => {
-      const merged = {
-        ...edits,
-        ...prev
-      };
+      const next = { ...prev };
 
-      localStorage.setItem(
-        "tirumala_custom_glossary_edits",
-        JSON.stringify(merged)
-      );
+      delete next[termId];
 
-      return merged;
+      try {
+        localStorage.setItem(
+          "tirumala_custom_glossary_edits",
+          JSON.stringify(next)
+        );
+      } catch (e) {
+        console.error(e);
+      }
+
+      return next;
     });
-  }
 
-  syncGlossaryFromCloud();
+    // Clear the selected glossary term
+    setTargetGlossaryTermId(null);
+    setTargetGlossaryTermToEdit(null);
 
-  return () => {
-    cancelled = true;
+    // Close the admin editor
+    setAdminModalMode(null);
+
+    console.log("✅ Glossary term deleted from cloud");
   };
-}, []);
-
-
-const handleSaveGlossaryEdit = async (termId, updatedData) => {
-  setCustomGlossaryEdits(prev => {
-    const next = {
-      ...prev,
-      [termId]: updatedData
-    };
-
-    try {
-      localStorage.setItem(
-        "tirumala_custom_glossary_edits",
-        JSON.stringify(next)
-      );
-    } catch (e) {
-      console.error(e);
-    }
-
-    return next;
-  });
-
-  const result = await saveGlossaryTermToCloud({
-    id: termId,
-    ...updatedData
-  });
-
-  if (!result.success) {
-    console.warn("Glossary cloud sync failed:", result.message);
-  } else {
-    console.log("✅ Glossary synced to cloud");
-  }
-};
-
-const handleDeleteGlossaryTerm = async (termId) => {
-  if (!termId) return;
-
-  const confirmed = window.confirm(
-    "Are you sure you want to delete this glossary term?"
-  );
-
-  if (!confirmed) return;
-
-  const result = await deleteGlossaryTermFromCloud(termId);
-
-  if (!result.success) {
-    console.warn(
-      "Glossary cloud delete failed:",
-      result.message
-    );
-
-    alert(
-      `Glossary cloud delete failed: ${result.message}`
-    );
-
-    return;
-  }
-
-  // Remove from local custom glossary edits
-  setCustomGlossaryEdits(prev => {
-    const next = { ...prev };
-
-    delete next[termId];
-
-    try {
-      localStorage.setItem(
-        "tirumala_custom_glossary_edits",
-        JSON.stringify(next)
-      );
-    } catch (e) {
-      console.error(e);
-    }
-
-    return next;
-  });
-
-  // Clear the selected glossary term
-  setTargetGlossaryTermId(null);
-  setTargetGlossaryTermToEdit(null);
-
-  // Close the admin editor
-  setAdminModalMode(null);
-
-  console.log("✅ Glossary term deleted from cloud");
-};
 
   // Direct Glossary Navigation State
   const [targetGlossaryTermId, setTargetGlossaryTermId] = useState(null);
@@ -320,11 +285,12 @@ const handleDeleteGlossaryTerm = async (termId) => {
 
   // Detect Today's Active Event for Rolling Ticker
   const todayStr = new Intl.DateTimeFormat('en-CA', {
-  timeZone: 'Asia/Kolkata',
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-}).format(new Date());
+    timeZone: 'Asia/Kolkata',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date());
+
   const safeEventsList = Array.isArray(eventsList) ? eventsList : [];
   const todayEvent = useMemo(() => {
     if (!Array.isArray(safeEventsList)) return null;
@@ -361,8 +327,8 @@ const handleDeleteGlossaryTerm = async (termId) => {
 
   // Admin CRUD operations for events
   const handleAddEvent = addEvent;
-const handleUpdateEvent = updateEvent;
-const handleDeleteEvent = deleteEvent;
+  const handleUpdateEvent = updateEvent;
+  const handleDeleteEvent = deleteEvent;
 
   const handleOpenEditModalForEvent = (event) => {
     setTargetEventToEdit(event);
@@ -384,80 +350,27 @@ const handleDeleteEvent = deleteEvent;
   const newFeedbackCount = safeFeedbackList.filter(f => f.status === 'New').length;
 
   if (!eventsInitialized) {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0B0E14]">
-      <div className="text-[#FFD700] font-serif text-lg">
-        Loading...
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0B0E14]">
+        <div className="text-[#FFD700] font-serif text-lg">
+          Loading...
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col transition-colors duration-300">
       
       {/* SEAMLESS ADMIN TOP BAR */}
       {isAdminLoggedIn && (
-        <div className="bg-gradient-to-r from-[#FF5722] via-[#E65100] to-[#FF5722] text-white py-1.5 px-4 text-xs font-bold flex flex-wrap items-center justify-between gap-2 shadow-lg sticky top-0 z-50">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-[#FFD700] animate-bounce shrink-0" />
-            <span className="font-extrabold text-[#FFD700]">ADMIN MODE ACTIVE:</span>
-            <span className="hidden sm:inline">You are viewing the live website. Click "Edit" or "Delete" on any card!</span>
-          </div>
-
-          <div className="flex items-center gap-2 ml-auto">
-            {/* Live ➕ Add Event Button */}
-            <button
-              onClick={handleOpenAddEventModal}
-              className="px-2.5 py-1 rounded bg-black/40 text-[#FFD700] hover:bg-black/60 font-extrabold flex items-center gap-1 border border-[#FFD700]/40"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Add Event</span>
-            </button>
-
-            {/* 💬 Devotee Feedback Inbox Button */}
-            <button
-              onClick={() => setAdminModalMode('feedback-inbox')}
-              className="px-2.5 py-1 rounded bg-black/40 text-white hover:bg-black/60 font-bold flex items-center gap-1 relative border border-white/20"
-            >
-              <MessageSquare className="w-3.5 h-3.5 text-[#FFD700]" />
-              <span>Feedback Inbox ({safeFeedbackList.length})</span>
-              {newFeedbackCount > 0 && (
-                <span className="px-1.5 py-0.2 bg-[#FFD700] text-black text-[10px] font-extrabold rounded-full animate-pulse">
-                  {newFeedbackCount} New
-                </span>
-              )}
-            </button>
-
-            {/* ⚡ Cloud Database Sync Button */}
-            <button
-              onClick={() => setAdminModalMode('cloud-sync')}
-              className="px-2.5 py-1 rounded bg-black/40 text-[#FFD700] hover:bg-black/60 font-bold flex items-center gap-1 border border-[#D4AF37]/40"
-            >
-              <Cloud className="w-3.5 h-3.5 text-[#FFD700]" />
-              <span>Cloud Sync</span>
-            </button>
-
-            {/* 🔴 TTD YouTube Live Stream Embed Settings Button */}
-            <button
-              onClick={() => setAdminModalMode('youtube-live')}
-              className="px-2.5 py-1 rounded bg-black/40 text-red-300 hover:text-white hover:bg-black/60 font-extrabold flex items-center gap-1 border border-red-500/50"
-              title="Configure TTD Daily YouTube Live Stream URL"
-            >
-              <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
-              <span>🔴 YouTube Live</span>
-            </button>
-
-            {/* Logout Admin */}
-            <button
-              onClick={logout}
-              className="px-2.5 py-1 rounded bg-black/50 text-white hover:bg-black/70 font-bold flex items-center gap-1"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>Logout</span>
-            </button>
-          </div>
-        </div>
+        <AdminTopRibbon
+          onOpenAddEventModal={handleOpenAddEventModal}
+          onOpenAdminModalMode={setAdminModalMode}
+          feedbackCount={safeFeedbackList.length}
+          newFeedbackCount={newFeedbackCount}
+          onLogout={logout}
+        />
       )}
 
       {/* Top Navigation Header */}
@@ -484,31 +397,11 @@ const handleDeleteEvent = deleteEvent;
       />
 
       {/* ROLLING TICKER BANNER FOR TODAY'S HAPPENING EVENT */}
-      {todayEvent && (
-        <div 
-          onClick={() => setSelectedEventModal(todayEvent)}
-          className="bg-gradient-to-r from-red-900 via-[#E65100] to-[#141923] text-white py-2 px-4 cursor-pointer border-b border-[#FFD700]/50 shadow-md overflow-hidden relative group"
-          title="Click to view full event card details"
-        >
-          <div className="container flex items-center justify-between gap-3 text-xs sm:text-sm font-extrabold">
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="w-2.5 h-2.5 rounded-full bg-red-400 animate-ping"></span>
-              <span className="px-2 py-0.5 rounded bg-red-600 text-white uppercase text-[10px] tracking-wider">
-                {lang === 'en' ? 'Happening Today' : 'ఈ రోజు జరుగుతోంది'}
-              </span>
-            </div>
-
-            <div className="truncate flex-grow text-center font-serif text-[#FFD700] tracking-wide">
-              {lang === 'en' ? todayEvent.title : (todayEvent.titleTe || todayEvent.title)}
-              {todayEvent.vahanam && ` — 🐎 ${todayEvent.vahanam}`}
-            </div>
-
-            <div className="shrink-0 text-[11px] font-sans underline text-[#FFD700] group-hover:scale-105 transition-transform">
-              {lang === 'en' ? 'View Details ➔' : 'వివరాలు చూడండి ➔'}
-            </div>
-          </div>
-        </div>
-      )}
+      <TodayHappeningTicker
+        todayEvent={todayEvent}
+        lang={lang}
+        onSelectEvent={setSelectedEventModal}
+      />
 
       {/* Hero Banner (Shown on Overview tab) */}
       {activeTab === 'overview' && (
@@ -521,19 +414,34 @@ const handleDeleteEvent = deleteEvent;
 
       {/* Main Content Area */}
       <main className="flex-grow container py-4">
-  <Suspense
-    fallback={
-      <div className="min-h-[300px] flex items-center justify-center">
-        <div className="text-[#FFD700] font-serif text-lg">
-          Loading...
-        </div>
-      </div>
-    }
-  >
-        
-        {/* DEDICATED FULL-PAGE CALENDAR SECTION */}
-        {activeTab === 'calendar-page' && (
-          <div className="space-y-4">
+        <Suspense
+          fallback={
+            <div className="min-h-[300px] flex items-center justify-center">
+              <div className="text-[#FFD700] font-serif text-lg">
+                Loading...
+              </div>
+            </div>
+          }
+        >
+          {/* DEDICATED FULL-PAGE CALENDAR SECTION */}
+          {activeTab === 'calendar-page' && (
+            <div className="space-y-4">
+              <CalendarView
+                events={safeEventsList}
+                lang={lang}
+                selectedTemple={selectedTemple}
+                setSelectedTemple={setSelectedTemple}
+                onSelectEvent={setSelectedEventModal}
+                isAdminLoggedIn={isAdminLoggedIn}
+                onEditEvent={handleOpenEditModalForEvent}
+                onDeleteEvent={handleDeleteEvent}
+                onOpenAddEvent={handleOpenAddEventModal}
+              />
+            </div>
+          )}
+
+          {/* OVERVIEW SECTION */}
+          {activeTab === 'overview' && (
             <CalendarView
               events={safeEventsList}
               lang={lang}
@@ -545,261 +453,123 @@ const handleDeleteEvent = deleteEvent;
               onDeleteEvent={handleDeleteEvent}
               onOpenAddEvent={handleOpenAddEventModal}
             />
-          </div>
-        )}
+          )}
 
-        {/* OVERVIEW SECTION */}
-        {activeTab === 'overview' && (
-          <CalendarView
-            events={safeEventsList}
-            lang={lang}
-            selectedTemple={selectedTemple}
-            setSelectedTemple={setSelectedTemple}
-            onSelectEvent={setSelectedEventModal}
-            isAdminLoggedIn={isAdminLoggedIn}
-            onEditEvent={handleOpenEditModalForEvent}
-            onDeleteEvent={handleDeleteEvent}
-            onOpenAddEvent={handleOpenAddEventModal}
-          />
-        )}
+          {/* SACRED SHRINES SECTION */}
+          {activeTab === 'temples' && (
+            <TempleList
+              lang={lang}
+              onSelectTemple={handleSelectTempleFromHeroOrList}
+            />
+          )}
 
-        {/* SACRED SHRINES SECTION */}
-        {activeTab === 'temples' && (
-          <TempleList
-            lang={lang}
-            onSelectTemple={handleSelectTempleFromHeroOrList}
-          />
-        )}
+          {/* REFERENCES & HISTORICAL LITERATURE SECTION */}
+          {activeTab === 'references' && (
+            <ReferencesList
+              lang={lang}
+            />
+          )}
 
-        {/* REFERENCES & HISTORICAL LITERATURE SECTION */}
-        {activeTab === 'references' && (
-          <ReferencesList
-            lang={lang}
-          />
-        )}
+          {/* UTSAVAM & FESTIVAL GLOSSARY SECTION */}
+          {activeTab === 'glossary' && (
+            <UtsavamGlossary
+              lang={lang}
+              targetTermId={targetGlossaryTermId}
+              customGlossaryEdits={customGlossaryEdits}
+              isAdminLoggedIn={isAdminLoggedIn}
+              onOpenAdminEditTerm={handleOpenAdminEditTerm}
+            />
+          )}
 
-        {/* UTSAVAM & FESTIVAL GLOSSARY SECTION */}
-        {activeTab === 'glossary' && (
-          <UtsavamGlossary
-            lang={lang}
-            targetTermId={targetGlossaryTermId}
-            customGlossaryEdits={customGlossaryEdits}
-            isAdminLoggedIn={isAdminLoggedIn}
-            onOpenAdminEditTerm={handleOpenAdminEditTerm}
-          />
-        )}
+          {/* DAILY SEVAS & ANNA PRASADAM SECTION */}
+          {activeTab === 'sevas' && (
+            <DailySchedule
+              lang={lang}
+            />
+          )}
 
-        {/* DAILY SEVAS & ANNA PRASADAM SECTION */}
-        {activeTab === 'sevas' && (
-          <DailySchedule
-            lang={lang}
-          />
-        )}
+          {/* SSD & DD TOKENS SECTION */}
+          {activeTab === 'tokens' && (
+            <SSDTokens
+              lang={lang}
+              themeMode={themeMode}
+            />
+          )}
 
-        {/* SSD & DD TOKENS SECTION */}
-{activeTab === 'tokens' && (
-  <SSDTokens
-    lang={lang}
-    themeMode={themeMode}
-  />
-)}
-
-        {/* COMMUNITY FEEDBACK SYSTEM SECTION */}
-        {activeTab === 'feedback' && (
-          <CommunityFeedback
-            lang={lang}
-            onSubmitFeedback={handleAddFeedback}
-          />
-        )}
-         </Suspense> 
+          {/* COMMUNITY FEEDBACK SYSTEM SECTION */}
+          {activeTab === 'feedback' && (
+            <CommunityFeedback
+              lang={lang}
+              onSubmitFeedback={handleAddFeedback}
+            />
+          )}
+        </Suspense>
       </main>
 
       {/* Event Detail Modal Popup */}
-   {selectedEventModal && (
-  <Suspense fallback={null}>
-    <EventDetailModal
-      event={selectedEventModal}
-      onClose={() => setSelectedEventModal(null)}
-      lang={lang}
-      isAdminLoggedIn={isAdminLoggedIn}
-      onEditEvent={handleOpenEditModalForEvent}
-      onNavigateToGlossary={handleNavigateToGlossary}
-    />
-  </Suspense>
-)}
+      {selectedEventModal && (
+        <Suspense fallback={null}>
+          <EventDetailModal
+            event={selectedEventModal}
+            onClose={() => setSelectedEventModal(null)}
+            lang={lang}
+            isAdminLoggedIn={isAdminLoggedIn}
+            onEditEvent={handleOpenEditModalForEvent}
+            onNavigateToGlossary={handleNavigateToGlossary}
+          />
+        </Suspense>
+      )}
 
       {/* Admin Quick Action Modal */}
-     {adminModalMode && (
-  <Suspense fallback={null}>
-    <AdminPortalModal
-      mode={adminModalMode}
-      onClose={() => setAdminModalMode(null)}
-      lang={lang}
-      themeMode={themeMode}
-      events={safeEventsList}
-      login={login}
-      onAddEvent={handleAddEvent}
-      onUpdateEvent={handleUpdateEvent}
-      onDeleteEvent={handleDeleteEvent}
-      isAdminLoggedIn={isAdminLoggedIn}
-      setIsAdminLoggedIn={setIsAdminLoggedIn}
-      targetEvent={targetEventToEdit}
-      feedbackList={safeFeedbackList}
-      onUpdateFeedback={handleUpdateFeedback}
-      onDeleteFeedback={handleDeleteFeedback}
-      targetGlossaryTerm={targetGlossaryTermToEdit}
-      onSaveGlossaryEdit={handleSaveGlossaryEdit}
-      onDeleteGlossaryTerm={handleDeleteGlossaryTerm}
-      ttdLiveUrl={ttdLiveUrl}
-      onSaveTtdLiveUrl={handleSaveTtdLiveUrl}
-    />
-  </Suspense>
-)}
+      {adminModalMode && (
+        <Suspense fallback={null}>
+          <AdminPortalModal
+            mode={adminModalMode}
+            onClose={() => setAdminModalMode(null)}
+            lang={lang}
+            themeMode={themeMode}
+            events={safeEventsList}
+            login={login}
+            onAddEvent={handleAddEvent}
+            onUpdateEvent={handleUpdateEvent}
+            onDeleteEvent={handleDeleteEvent}
+            isAdminLoggedIn={isAdminLoggedIn}
+            setIsAdminLoggedIn={setIsAdminLoggedIn}
+            targetEvent={targetEventToEdit}
+            feedbackList={safeFeedbackList}
+            onUpdateFeedback={handleUpdateFeedback}
+            onDeleteFeedback={handleDeleteFeedback}
+            targetGlossaryTerm={targetGlossaryTermToEdit}
+            onSaveGlossaryEdit={handleSaveGlossaryEdit}
+            onDeleteGlossaryTerm={handleDeleteGlossaryTerm}
+            ttdLiveUrl={ttdLiveUrl}
+            onSaveTtdLiveUrl={handleSaveTtdLiveUrl}
+          />
+        </Suspense>
+      )}
 
       {/* TTD YOUTUBE LIVE STREAM EMBEDDED MODAL */}
-      {isLiveStreamModalOpen && ttdLiveUrl && (
-        <div className="modal-overlay z-[99999]" onClick={() => setIsLiveStreamModalOpen(false)}>
-          <div 
-            className="glass-card p-4 border-2 border-red-500 max-w-3xl w-full bg-[#0B0E14] text-center rounded-2xl relative space-y-3 shadow-2xl animate-scale-up" 
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between border-b border-white/10 pb-2">
-              <span className="font-serif font-bold text-red-500 text-sm sm:text-base flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
-                <span>🔴 TTD Daily YouTube Live Stream</span>
-              </span>
-              <button 
-                onClick={() => setIsLiveStreamModalOpen(false)} 
-                className="p-1 rounded-full bg-[#141923] text-white hover:text-[#FFD700] text-xs border border-white/20"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-black border border-white/20">
-              <iframe
-                className="w-full h-full"
-                src={
-                  ttdLiveUrl.includes('embed/')
-                    ? ttdLiveUrl
-                    : `https://www.youtube.com/embed/${
-                        ttdLiveUrl.includes('/live/')
-                          ? ttdLiveUrl.split('/live/')[1].split('?')[0].split('&')[0]
-                          : ttdLiveUrl.includes('v=')
-                          ? ttdLiveUrl.split('v=')[1].split('&')[0]
-                          : ttdLiveUrl.includes('youtu.be/')
-                          ? ttdLiveUrl.split('youtu.be/')[1].split('?')[0]
-                          : ttdLiveUrl
-                      }?autoplay=1`
-                }
-                title="TTD Daily Live Stream"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            </div>
-
-            <div className="text-xs text-[#94A3B8] font-mono">
-              Live broadcast provided via Tirumala Tirupati Devasthanams (TTD)
-            </div>
-          </div>
-        </div>
-      )}
+      <TtdLiveStreamModal
+        isOpen={isLiveStreamModalOpen}
+        ttdLiveUrl={ttdLiveUrl}
+        onClose={() => setIsLiveStreamModalOpen(false)}
+      />
 
       {/* LOGO FULL-SIZE LIGHTBOX MODAL POPUP */}
-      {isLogoModalOpen && (
-        <div className="modal-overlay" onClick={() => setIsLogoModalOpen(false)}>
-          <div 
-            className="glass-card p-6 border-2 border-[#FFD700] max-w-sm w-full text-center relative animate-slide-up bg-[#0B0E14]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setIsLogoModalOpen(false)}
-              className="absolute top-3 right-3 text-[#94A3B8] hover:text-[#FFD700] p-2 rounded-full bg-[#141923] border border-[#D4AF37]/30"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <h3 className="font-serif text-lg font-bold gold-gradient-text mb-3">
-              The Tirumala Verse Official Symbol
-            </h3>
-
-            <div className="w-48 h-48 mx-auto rounded-full overflow-hidden border-4 border-[#FFD700] bg-[#E65100] p-2 shadow-2xl flex items-center justify-center">
-              <img 
-                src="/logo-192.png" 
-                alt="Tirumala Gopuram Logo" 
-                className="w-full h-full object-contain"
-              />
-            </div>
-
-            <p className="text-xs text-[#94A3B8] mt-4 leading-relaxed">
-              Sacred insignia representing the divine Gopuram and Srivari Tirunamam.
-            </p>
-          </div>
-        </div>
-      )}
+      <LogoLightboxModal
+        isOpen={isLogoModalOpen}
+        onClose={() => setIsLogoModalOpen(false)}
+      />
 
       {/* Footer with Disclaimer & Feedback Link */}
-      <footer className="bg-[#0B0E14] light-theme:bg-white border-t border-[#D4AF37]/40 light-theme:border-amber-300/40 py-8 mt-12 text-sm text-[#94A3B8] light-theme:text-slate-700 shadow-2xl transition-colors">
-        <div className="container flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-          <div className="flex items-center gap-3">
-            <img 
-  src="/logo-64.png" 
-  alt="The Tirumala Verse logo"
-  className="w-10 h-10 rounded-full border-2 border-[#FFD700] cursor-pointer hover:scale-110 transition-transform shadow-md" 
-  onClick={() => setIsLogoModalOpen(true)}
-/>
-            <div>
-              <p className="font-serif text-base font-bold gold-gradient-text">
-                The Tirumala Verse
-              </p>
-              <p className="text-xs text-[#94A3B8] light-theme:text-slate-600 font-medium">
-                {lang === 'en'
-                  ? 'Your Independent Guide to Tirumala'
-                  : 'మీ స్వతంత్ర తిరుమల దివ్య దర్శిని'}
-              </p>
-            </div>
-          </div>
-
-          {/* Give Feedback Button */}
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <button
-              onClick={() => {
-                setActiveTab('feedback');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#FF5722] to-[#FFD700] text-black font-extrabold text-xs flex items-center gap-2 shadow-lg hover:brightness-110 active:scale-95 transition-all"
-            >
-              <MessageSquare className="w-4 h-4 text-black" />
-              <span>Give Feedback</span>
-            </button>
-          </div>
-        </div>
-
-        {/* HIGH-CONTRAST READABLE FOOTER DISCLAIMER */}
-        <div className="container pt-6 mt-6 border-t border-white/10 light-theme:border-slate-200">
-          <div className="max-w-4xl mx-auto p-4 sm:p-5 rounded-2xl bg-[#141923] light-theme:bg-amber-50/90 border border-[#D4AF37]/40 light-theme:border-amber-300/60 shadow-xl text-xs sm:text-sm text-slate-100 light-theme:text-slate-900 leading-relaxed font-medium">
-            <p>
-              <span className="font-black text-[#FFD700] light-theme:text-[#B45309] uppercase tracking-wider block sm:inline mb-1 sm:mb-0 mr-1.5 text-xs sm:text-sm">
-                ⚠️ Disclaimer:
-              </span>
-              <span>
-                TheTirumalaVerse is an independent, privately run informational blog, cultural encyclopedia, and travel guide. This website is not affiliated with, authorized, maintained, sponsored, or endorsed by the Tirumala Tirupati Devasthanams (TTD), the Government of Andhra Pradesh, or any official religious administration. The official booking portal of the temple trust is accessible exclusively at{' '}
-              </span>
-              <a 
-                href="https://ttdevasthanams.ap.gov.in" 
-                target="_blank" 
-                rel="noreferrer" 
-                className="text-[#60A5FA] light-theme:text-[#1D4ED8] font-bold underline hover:brightness-125"
-              >
-                ttdevasthanams.ap.gov.in
-              </a>
-              <span>
-                . All official ticket quotas, seva bookings, and accommodation reservations must be made directly through their authorized platform. We do not sell tickets, collect payments, or offer commercial booking services.
-              </span>
-            </p>
-          </div>
-        </div>
-      </footer>
+      <AppFooter
+        lang={lang}
+        onOpenLogoModal={() => setIsLogoModalOpen(true)}
+        onOpenFeedbackTab={() => {
+          setActiveTab('feedback');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+      />
     </div>
   );
 }
