@@ -229,3 +229,34 @@ export function compressImageFile(file, maxWidth = 1200, maxHeight = 1200, quali
     reader.readAsDataURL(file);
   });
 }
+
+// Defensive normalization of all event images into array of { url, caption } objects
+export function normalizeEventImages(event) {
+  const allImages = [];
+  if (!event) return allImages;
+
+  if (event.images) {
+    let rawImages = event.images;
+    if (typeof rawImages === 'string') {
+      try {
+        rawImages = JSON.parse(rawImages);
+      } catch {
+        rawImages = [rawImages];
+      }
+    }
+    if (Array.isArray(rawImages)) {
+      rawImages.forEach(img => {
+        if (typeof img === 'string' && img.trim() !== '') {
+          allImages.push({ url: normalizeImageUrl(img.trim()), caption: event.title || '' });
+        } else if (img && typeof img === 'object' && img.url && String(img.url).trim() !== '') {
+          allImages.push({ url: normalizeImageUrl(String(img.url).trim()), caption: img.caption || '' });
+        }
+      });
+    }
+  }
+  if (allImages.length === 0 && event.imageUrl && String(event.imageUrl).trim() !== '') {
+    allImages.push({ url: normalizeImageUrl(String(event.imageUrl).trim()), caption: event.title || '' });
+  }
+
+  return allImages;
+}
