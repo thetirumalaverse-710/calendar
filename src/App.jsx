@@ -8,8 +8,6 @@ import { APP_CONFIG } from "./config/appConfig";
 import React, { useState, useEffect, useMemo, lazy, Suspense } from 'react';
 import Header from './components/Header';
 import HeroBanner from './components/HeroBanner';
-import TempleList from './components/TempleList';
-import ReferencesList from './components/ReferencesList';
 import { ShieldCheck, LogOut, Edit2, X, ExternalLink, MessageSquare, Plus, Cloud, Lock } from 'lucide-react';
 const CalendarView = lazy(() => import('./components/CalendarView'));
 const DailySchedule = lazy(() => import('./components/DailySchedule'));
@@ -18,6 +16,8 @@ const UtsavamGlossary = lazy(() => import('./components/UtsavamGlossary'));
 const SSDTokens = lazy(() => import('./components/SSDTokens'));
 const AdminPortalModal = lazy(() => import('./components/AdminPortalModal'));
 const EventDetailModal = lazy(() => import('./components/EventDetailModal'));
+const TempleList = lazy(() => import('./components/TempleList'));
+const ReferencesList = lazy(() => import('./components/ReferencesList'));
 const loadInitialEvents = () =>
   import('./data/initialEvents').then(module => module.INITIAL_EVENTS);
 
@@ -560,6 +560,21 @@ const handleDeleteEvent = deleteEvent;
             onEditEvent={handleOpenEditModalForEvent}
             onDeleteEvent={handleDeleteEvent}
             onOpenAddEvent={handleOpenAddEventModal}
+          />
+        )}
+
+        {/* SACRED SHRINES SECTION */}
+        {activeTab === 'temples' && (
+          <TempleList
+            lang={lang}
+            onSelectTemple={handleSelectTempleFromHeroOrList}
+          />
+        )}
+
+        {/* REFERENCES & HISTORICAL LITERATURE SECTION */}
+        {activeTab === 'references' && (
+          <ReferencesList
+            lang={lang}
           />
         )}
 
