@@ -8,46 +8,44 @@ on:
 
 jobs:
   backup:
-    name: Backup Supabase Schema & Data
+    name: Backup Supabase Roles, Schema & Data
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install PostgreSQL Client Tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
 
       - name: Create Backup Directory
         run: |
           mkdir -p supabase/backups
 
+      - name: Dump Database Roles & Privileges
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          supabase db dump --db-url "$SUPABASE_DB_URL" --role-only -f supabase/backups/roles.sql
+
       - name: Dump Database Schema & RLS Policies
         env:
-          PGHOST: db.${{ secrets.SUPABASE_PROJECT_REF }}.supabase.co
-          PGPORT: 5432
-          PGUSER: postgres
-          PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-          PGDATABASE: postgres
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
-          pg_dump -h "$PGHOST" -p "$PGPORT" -U "$PGUSER" -d "$PGDATABASE" --schema-only --no-owner -f supabase/backups/database.sql
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f supabase/backups/database.sql
 
       - name: Dump Database Table Data
         env:
-          PGHOST: db.${{ secrets.SUPABASE_PROJECT_REF }}.supabase.co
-          PGPORT: 5432
-          PGUSER: postgres
-          PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-          PGDATABASE: postgres
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
-          pg_dump -h "$PGHOST" -p "$PGPORT" -U "$PGUSER" -d "$PGDATABASE" --data-only --no-owner -f supabase/backups/data.sql
+          supabase db dump --db-url "$SUPABASE_DB_URL" --data-only --use-copy -f supabase/backups/data.sql
 
       - name: Compress Backup Files
         run: |
           TIMESTAMP=$(date -u +"%Y%m%d_%H%M%S")
-          tar -czvf "supabase-backup-${TIMESTAMP}.tar.gz" -C supabase/backups database.sql data.sql
+          tar -czvf "supabase-backup-${TIMESTAMP}.tar.gz" -C supabase/backups roles.sql database.sql data.sql
           echo "BACKUP_NAME=supabase-backup-${TIMESTAMP}.tar.gz" >> $GITHUB_ENV
 
       - name: Upload Backup Artifact
