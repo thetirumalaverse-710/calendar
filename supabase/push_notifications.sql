@@ -116,3 +116,125 @@ CREATE TABLE IF NOT EXISTS public.notification_dispatch_logs (
 
 ALTER TABLE public.notification_dispatch_logs ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "No public access dispatch logs" ON public.notification_dispatch_logs FOR ALL TO anon, authenticated USING (false);
+
+-- 5. ADMIN CUSTOM NOTIFICATIONS TABLE
+CREATE TABLE IF NOT EXISTS public.admin_custom_notifications (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title TEXT NOT NULL,
+    body TEXT NOT NULL,
+    url TEXT NOT NULL DEFAULT 'https://thetirumalaverse.in/',
+    status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'dispatching', 'completed', 'failed')),
+    created_by UUID REFERENCES auth.users(id),
+    created_at TIMESTAMPTZ DEFAULT now(),
+    dispatched_at TIMESTAMPTZ,
+    recipient_count INT DEFAULT 0,
+    success_count INT DEFAULT 0,
+    failure_count INT DEFAULT 0,
+    deactivated_count INT DEFAULT 0
+);
+
+CREATE INDEX IF NOT EXISTS idx_admin_custom_notifications_status
+    ON public.admin_custom_notifications(status);
+
+CREATE INDEX IF NOT EXISTS idx_admin_custom_notifications_created_at
+    ON public.admin_custom_notifications(created_at DESC);
+
+ALTER TABLE public.admin_custom_notifications ENABLE ROW LEVEL SECURITY;
+
+-- Strict RLS: Anon users get ZERO access
+CREATE POLICY "No anon access custom notifications"
+    ON public.admin_custom_notifications FOR ALL TO anon USING (false);
+
+-- Strict Admin RLS: Only authorized admin account can SELECT/INSERT
+CREATE POLICY "Admin select custom notifications"
+    ON public.admin_custom_notifications FOR SELECT TO authenticated
+    USING (
+        auth.uid() = '7cf7f7f7-7216-4296-8ab3-bb4a78a4b7db'::uuid OR
+        (auth.jwt() ->> 'email') = 'admin@thetirumalaverse.in'
+    );
+
+CREATE POLICY "Admin insert custom notifications"
+    ON public.admin_custom_notifications FOR INSERT TO authenticated
+    WITH CHECK (
+        auth.uid() = '7cf7f7f7-7216-4296-8ab3-bb4a78a4b7db'::uuid OR
+        (auth.jwt() ->> 'email') = 'admin@thetirumalaverse.in'
+    );
+
+-- 6. SUBSCRIBER COUNT SECURE RPC
+CREATE OR REPLACE FUNCTION public.get_active_push_subscriptions_count()
+RETURNS INT
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+    v_count INT;
+BEGIN
+    IF auth.uid() IS NULL OR (
+        auth.uid() != '7cf7f7f7-7216-4296-8ab3-bb4a78a4b7db'::uuid AND
+        coalesce(auth.jwt() ->> 'email', '') != 'admin@thetirumalaverse.in'
+    ) THEN
+        RAISE EXCEPTION 'Access denied. Only authorized admin can query subscriber counts.';
+    END IF;
+
+    SELECT COUNT(*)::INT INTO v_count
+    FROM public.push_subscriptions
+    WHERE is_active = true;
+
+    RETURN v_count;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.get_active_push_subscriptions_count() TO authenticated;
+
+-- 7. ATOMIC DISPATCH CLAIM RPC (Per Subscription)
+-- Eliminates race conditions by attempting atomic INSERT before network delivery.
+-- Returns true if claim succeeded, false if already claimed by another worker process.
+CREATE OR REPLACE FUNCTION public.claim_notification_dispatch(
+    p_notification_type TEXT,
+    p_entity_id TEXT,
+    p_subscription_id UUID
+)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+BEGIN
+    INSERT INTO public.notification_dispatch_logs (
+        notification_type,
+        entity_id,
+        subscription_id,
+        dispatched_at
+    )
+    VALUES (
+        p_notification_type,
+        p_entity_id,
+        p_subscription_id,
+        now()
+    )
+    ON CONFLICT (notification_type, entity_id, subscription_id) DO NOTHING;
+
+    RETURN FOUND;
+END;
+$$;
+
+-- 8. ATOMIC ADMIN NOTIFICATION CLAIM RPC (Per Notification Row)
+-- Ensures only one worker process claims a pending admin notification.
+CREATE OR REPLACE FUNCTION public.claim_admin_notification(p_notification_id UUID)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+    v_updated INT;
+BEGIN
+    UPDATE public.admin_custom_notifications
+    SET status = 'dispatching', dispatched_at = now()
+    WHERE id = p_notification_id AND status = 'pending';
+
+    GET DIAGNOSTICS v_updated = ROW_COUNT;
+    RETURN v_updated > 0;
+END;
+$$;

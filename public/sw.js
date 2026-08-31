@@ -101,15 +101,25 @@ self.addEventListener('push', (event) => {
     const payload = event.data.json();
 
     const title = payload.title || '🌸 Tirumala Verse Alert';
+
+    // Validate and sanitize destination URL (Must be strictly HTTPS)
+    let safeUrl = 'https://thetirumalaverse.in/';
+    if (payload.url && typeof payload.url === 'string') {
+      const trimmedUrl = payload.url.trim();
+      if (trimmedUrl.startsWith('https://')) {
+        safeUrl = trimmedUrl;
+      }
+    }
+
     const options = {
       body: payload.body || 'New Tirumala Utsavam update available.',
       icon: payload.icon || '/logo-64.png',
       badge: payload.badge || '/logo-64.png',
       data: {
-        url: payload.url || 'https://thetirumalaverse.in/',
-        type: payload.type || 'utsavam'
+        url: safeUrl,
+        type: payload.type || 'admin_custom'
       },
-      tag: payload.tag || 'tirumala-utsavam-notification',
+      tag: payload.tag || 'tirumala-custom-notification',
       renotify: true
     };
 
@@ -122,7 +132,17 @@ self.addEventListener('push', (event) => {
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
-  const targetUrl = event.notification.data?.url || 'https://thetirumalaverse.in/';
+  let targetUrl = event.notification.data?.url || 'https://thetirumalaverse.in/';
+
+  // Double-check target URL protocol safety
+  try {
+    const parsed = new URL(targetUrl);
+    if (parsed.protocol !== 'https:') {
+      targetUrl = 'https://thetirumalaverse.in/';
+    }
+  } catch (e) {
+    targetUrl = 'https://thetirumalaverse.in/';
+  }
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {

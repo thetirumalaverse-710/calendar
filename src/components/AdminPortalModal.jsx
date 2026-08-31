@@ -4,8 +4,9 @@ import AdminTokenManager from "./admin/AdminTokenManager";
 import AdminYoutubeSettings from "./admin/AdminYoutubeSettings";
 import AdminCloudSync from "./admin/AdminCloudSync";
 import AdminEventEditor from "./admin/AdminEventEditor";
+import AdminNotificationManager from "./admin/AdminNotificationManager";
 import React, { useState, useEffect } from 'react';
-import { X, Plus, ShieldCheck, Ticket, Lock, LogOut, MessageSquare, FileSpreadsheet, Search, Eye, CheckCircle, Cloud, RefreshCw, Database, Server, Video, } from 'lucide-react';
+import { X, Plus, ShieldCheck, Ticket, Lock, LogOut, MessageSquare, FileSpreadsheet, Search, Eye, CheckCircle, Cloud, RefreshCw, Database, Server, Video, Bell } from 'lucide-react';
 import {getCloudConfig, saveCloudConfig, pushEventsToCloud, getLastSyncTime, uploadFileToSupabaseStorage } from '../utils/cloudSync';
 import { compressImageFile } from '../utils/eventStatus';
 
@@ -283,6 +284,19 @@ const handleLogin = async (e) => {
               <Video className="w-3.5 h-3.5 text-red-500" />
               <span>🔴 YouTube Live</span>
             </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveAdminTab('notifications')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all ${
+                activeAdminTab === 'notifications'
+                  ? 'bg-gradient-to-r from-[#FF5722] to-[#FFD700] text-black shadow'
+                  : 'bg-[#141923] text-[#FFD700] border border-[#D4AF37]/40 hover:bg-[#D4AF37]/20'
+              }`}
+            >
+              <Bell className="w-3.5 h-3.5" />
+              <span>{lang === 'en' ? 'Push Alerts' : 'పుష్ నోటిఫికేషన్లు'}</span>
+            </button>
           </div>
         )}
 
@@ -430,6 +444,14 @@ const handleLogin = async (e) => {
     setYoutubeInput={setYoutubeInput}
     onSaveTtdLiveUrl={onSaveTtdLiveUrl}
     onClose={onClose}
+  />
+)}
+
+{/* ADMIN CUSTOM WEB PUSH NOTIFICATION TAB */}
+{isAdminLoggedIn && activeAdminTab === "notifications" && (
+  <AdminNotificationManager
+    lang={lang}
+    themeMode={themeMode}
   />
 )}
 

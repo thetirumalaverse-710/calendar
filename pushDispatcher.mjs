@@ -1,7 +1,7 @@
 /**
  * ISOLATED SERVER-SIDE WEB PUSH DISPATCHER MODULE
- * Used by Telegram Worker or Scheduled Cron Jobs.
- * Handles payload signing, duplicate logging, and dead subscription cleanup.
+ * Used by Scheduled Cron Jobs or Admin Custom Notification Workers.
+ * Handles payload signing, atomic duplicate logging, and dead subscription cleanup.
  */
 
 const VAPID_PUBLIC_KEY = process.env.VITE_VAPID_PUBLIC_KEY?.trim();
@@ -44,7 +44,7 @@ export async function dispatchWebPushNotification({
   const ready = await initWebPush();
   if (!ready || !webpush) {
     console.warn(
-      `[PUSH SKIPPED] VAPID keys or web-push library not configured for notification ${notificationType}:${entityId}.`
+      `[PUSH SKIPPED] VAPID keys or web-push library unconfigured for ${notificationType}:${entityId}.`
     );
     return { success: false, reason: "vapid_unconfigured" };
   }
@@ -57,7 +57,7 @@ export async function dispatchWebPushNotification({
   try {
     const { data: subscriptions, error: fetchError } = await supabase
       .from("push_subscriptions")
-      .select("id, endpoint, p256dh, auth")
+      .select("id, endpoint, p256dh, auth, failure_count")
       .eq("is_active", true);
 
     if (fetchError) {
@@ -65,30 +65,63 @@ export async function dispatchWebPushNotification({
       return { success: false, error: fetchError };
     }
 
-    if (!subscriptions || subscriptions.length === 0) {
+    const totalCount = subscriptions ? subscriptions.length : 0;
+    if (!subscriptions || totalCount === 0) {
       console.log("No active push subscriptions to notify.");
-      return { success: true, count: 0 };
+      return { success: true, totalCount: 0, sentCount: 0, skippedCount: 0, deactivatedCount: 0, failedCount: 0 };
     }
 
     console.log(
-      `[PUSH DISPATCH] Dispatching ${notificationType}:${entityId} to ${subscriptions.length} active subscription/s...`
+      `[PUSH DISPATCH] Dispatching ${notificationType}:${entityId} to ${totalCount} active subscription/s...`
     );
 
     let sentCount = 0;
     let skippedCount = 0;
     let deactivatedCount = 0;
+    let failedCount = 0;
+
+    const stringEntityId = String(entityId);
 
     for (const sub of subscriptions) {
-      // 1. Database-backed duplicate check
-      const { data: existingLog } = await supabase
-        .from("notification_dispatch_logs")
-        .select("id")
-        .eq("notification_type", notificationType)
-        .eq("entity_id", entityId)
-        .eq("subscription_id", sub.id)
-        .maybeSingle();
+      // 1. ATOMIC DISPATCH CLAIM BEFORE NETWORK DELIVERY
+      // Uses database RPC to insert into notification_dispatch_logs.
+      // If another worker process already claimed this pair, RPC returns false -> skip dispatching.
+      let claimed = false;
+      const { data: rpcClaimed, error: claimError } = await supabase.rpc(
+        "claim_notification_dispatch",
+        {
+          p_notification_type: notificationType,
+          p_entity_id: stringEntityId,
+          p_subscription_id: sub.id,
+        }
+      );
 
-      if (existingLog) {
+      if (claimError) {
+        // Fallback: If RPC call fails, attempt direct insert with duplicate key handling
+        const { error: directInsertErr } = await supabase
+          .from("notification_dispatch_logs")
+          .insert({
+            notification_type: notificationType,
+            entity_id: stringEntityId,
+            subscription_id: sub.id,
+          });
+
+        if (directInsertErr) {
+          // Code 23505 indicates unique constraint violation (already claimed)
+          if (directInsertErr.code === "23505") {
+            skippedCount++;
+            continue;
+          }
+          console.error(`Claim error for sub ${sub.id}:`, directInsertErr);
+          failedCount++;
+          continue;
+        }
+        claimed = true;
+      } else {
+        claimed = !!rpcClaimed;
+      }
+
+      if (!claimed) {
         skippedCount++;
         continue;
       }
@@ -109,14 +142,7 @@ export async function dispatchWebPushNotification({
 
         sentCount++;
 
-        // 2. Log duplicate prevention record
-        await supabase.from("notification_dispatch_logs").insert({
-          notification_type: notificationType,
-          entity_id: entityId,
-          subscription_id: sub.id,
-        });
-
-        // 3. Update subscription success metadata
+        // 2. Update subscription success metadata
         await supabase
           .from("push_subscriptions")
           .update({
@@ -131,7 +157,7 @@ export async function dispatchWebPushNotification({
           pushErr.message
         );
 
-        // 4. Dead Subscription Cleanup on 404 or 410
+        // 3. Dead Subscription Cleanup on 404 or 410
         if (statusCode === 404 || statusCode === 410) {
           deactivatedCount++;
           await supabase
@@ -140,6 +166,7 @@ export async function dispatchWebPushNotification({
             .eq("id", sub.id);
         } else {
           // Increment failure count for transient errors
+          failedCount++;
           await supabase
             .from("push_subscriptions")
             .update({ failure_count: (sub.failure_count || 0) + 1 })
@@ -149,10 +176,17 @@ export async function dispatchWebPushNotification({
     }
 
     console.log(
-      `[PUSH DISPATCH COMPLETE] Sent: ${sentCount}, Skipped duplicates: ${skippedCount}, Deactivated endpoints: ${deactivatedCount}`
+      `[PUSH DISPATCH COMPLETE] Total: ${totalCount}, Sent: ${sentCount}, Skipped: ${skippedCount}, Deactivated: ${deactivatedCount}, Failed: ${failedCount}`
     );
 
-    return { success: true, sentCount, skippedCount, deactivatedCount };
+    return {
+      success: true,
+      totalCount,
+      sentCount,
+      skippedCount,
+      deactivatedCount,
+      failedCount,
+    };
   } catch (err) {
     console.error("Unhandled error in dispatchWebPushNotification:", err);
     return { success: false, error: err };

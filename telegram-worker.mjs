@@ -3,6 +3,7 @@ import { TelegramClient } from "teleproto";
 import { StringSession } from "teleproto/sessions/index.js";
 import { createClient } from "@supabase/supabase-js";
 import { parseTelegramTokenMessage } from "./src/utils/telegramTokenParser.js";
+import { dispatchWebPushNotification } from "./pushDispatcher.mjs";
 
 const POLL_INTERVAL_MS = 5 * 60 * 1000;
 const CHANNEL_USERNAME = "LaxmiTeluguTechChannel";
@@ -392,6 +393,97 @@ setInterval(async () => {
     }
   }
 }, POLL_INTERVAL_MS);
+
+// ============================================================
+// ADMIN CUSTOM PUSH NOTIFICATION OUTBOX PROCESSOR
+// ============================================================
+
+const ADMIN_PUSH_POLL_INTERVAL_MS = 15 * 1000;
+
+async function processPendingAdminNotifications() {
+  try {
+    const { data: pendingNotifs, error: fetchErr } = await supabase
+      .from("admin_custom_notifications")
+      .select("id, title, body, url")
+      .eq("status", "pending")
+      .order("created_at", { ascending: true })
+      .limit(5);
+
+    if (fetchErr) {
+      console.error("[ADMIN PUSH ERROR] Failed to fetch pending notifications:", fetchErr.message || fetchErr);
+      return;
+    }
+
+    if (!pendingNotifs || pendingNotifs.length === 0) {
+      return;
+    }
+
+    console.log(`\n[ADMIN PUSH WORKER] Found ${pendingNotifs.length} pending custom notification(s).`);
+
+    for (const notif of pendingNotifs) {
+      // 1. Atomically claim notification row to prevent duplicate worker processing
+      const { data: claimed, error: claimErr } = await supabase.rpc(
+        "claim_admin_notification",
+        { p_notification_id: notif.id }
+      );
+
+      if (claimErr) {
+        console.error(`[ADMIN PUSH ERROR] Claim failed for notification ${notif.id}:`, claimErr.message || claimErr);
+        continue;
+      }
+
+      if (!claimed) {
+        // Already claimed by another worker instance
+        continue;
+      }
+
+      console.log(`[ADMIN PUSH DISPATCH START] Claimed notification ${notif.id}: "${notif.title}"`);
+
+      // 2. Execute Web Push dispatch via generic dispatcher
+      const result = await dispatchWebPushNotification({
+        supabase,
+        notificationType: "admin_custom",
+        entityId: notif.id,
+        payload: {
+          title: notif.title,
+          body: notif.body,
+          url: notif.url || "https://thetirumalaverse.in/",
+          icon: "/logo-64.png",
+          type: "admin_custom"
+        }
+      });
+
+      // 3. Update notification record status & execution stats
+      const finalStatus = result.success ? "completed" : "failed";
+      await supabase
+        .from("admin_custom_notifications")
+        .update({
+          status: finalStatus,
+          recipient_count: result.totalCount || 0,
+          success_count: result.sentCount || 0,
+          failure_count: result.failedCount || 0,
+          deactivated_count: result.deactivatedCount || 0
+        })
+        .eq("id", notif.id);
+
+      console.log(
+        `[ADMIN PUSH DISPATCH COMPLETE] Notification ${notif.id} marked ${finalStatus}. Sent: ${result.sentCount || 0}, Deactivated: ${result.deactivatedCount || 0}`
+      );
+    }
+  } catch (err) {
+    console.error("[ADMIN PUSH WORKER UNHANDLED ERROR]:", err.message || err);
+  }
+}
+
+// Initial check on worker startup
+processPendingAdminNotifications().catch((err) =>
+  console.error("Initial admin push processing error:", err)
+);
+
+// Periodic outbox polling
+setInterval(async () => {
+  await processPendingAdminNotifications();
+}, ADMIN_PUSH_POLL_INTERVAL_MS);
 
 process.on("SIGINT", async () => {
   console.log("\nStopping Telegram worker...");
