@@ -1,0 +1,54 @@
+name: Daily Supabase Database Backup
+
+on:
+  schedule:
+    # Run once daily at 02:00 UTC (07:30 IST)
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  backup:
+    name: Backup Supabase Schema & Data
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Create Backup Directory
+        run: |
+          mkdir -p supabase/backups
+
+      - name: Dump Database Schema & RLS Policies
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          supabase db dump --project-ref "$SUPABASE_PROJECT_REF" --password "$SUPABASE_DB_PASSWORD" -f supabase/backups/database.sql
+
+      - name: Dump Database Table Data
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          supabase db dump --project-ref "$SUPABASE_PROJECT_REF" --password "$SUPABASE_DB_PASSWORD" --data-only --use-copy -f supabase/backups/data.sql
+
+      - name: Compress Backup Files
+        run: |
+          TIMESTAMP=$(date -u +"%Y%m%d_%H%M%S")
+          tar -czvf "supabase-backup-${TIMESTAMP}.tar.gz" -C supabase/backups database.sql data.sql
+          echo "BACKUP_NAME=supabase-backup-${TIMESTAMP}.tar.gz" >> $GITHUB_ENV
+
+      - name: Upload Backup Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.BACKUP_NAME }}
+          path: ${{ env.BACKUP_NAME }}
+          retention-days: 30
