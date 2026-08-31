@@ -117,6 +117,11 @@ export default function SSDDTokens({ lang = "en", themeMode = "dark" }) {
         ? "లైవ్ టోకెన్ స్థితి"
         : "Live Token Status",
 
+    lastUpdated:
+      lang === "te"
+        ? "చివరిగా నవీకరించబడింది"
+        : "Last updated",
+
     todayActivity:
       lang === "te"
         ? "ఈరోజు టోకెన్ కార్యకలాపాలు"

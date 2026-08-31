@@ -337,16 +337,59 @@ console.log(
   `Polling every ${POLL_INTERVAL_MS / 1000} seconds.`
 );
 
-await pollTelegram(channel);
+const ALERT_WEBHOOK_URL = process.env.ALERT_WEBHOOK_URL?.trim();
+let consecutiveFailures = 0;
+
+async function sendAlertNotification(errorMessage) {
+  if (!ALERT_WEBHOOK_URL) {
+    console.warn(
+      "[ALERT SKIPPED] ALERT_WEBHOOK_URL environment variable is not configured."
+    );
+    return;
+  }
+
+  try {
+    const payload = {
+      text: `⚠️ Telegram Worker Warning: 3 consecutive polling failures detected.\nError: ${errorMessage}`
+    };
+
+    await fetch(ALERT_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    console.log("Alert notification dispatched to ALERT_WEBHOOK_URL.");
+  } catch (alertError) {
+    console.error("Failed to send alert notification:", alertError.message);
+  }
+}
+
+try {
+  await pollTelegram(channel);
+  consecutiveFailures = 0;
+} catch (initialError) {
+  consecutiveFailures++;
+  console.error("Initial Telegram poll error:", initialError.message || initialError);
+}
 
 setInterval(async () => {
   try {
     await pollTelegram(channel);
+    consecutiveFailures = 0;
   } catch (error) {
+    consecutiveFailures++;
     console.error(
-      "Telegram polling error:",
-      error
+      `Telegram polling error (${consecutiveFailures} consecutive failure/s):`,
+      error.message || error
     );
+
+    if (consecutiveFailures === 3) {
+      console.warn(
+        "⚠️ 3 consecutive Telegram polling failures reached. Triggering alert notification..."
+      );
+      await sendAlertNotification(error.message || "Repeated polling connection failure");
+    }
   }
 }, POLL_INTERVAL_MS);
 

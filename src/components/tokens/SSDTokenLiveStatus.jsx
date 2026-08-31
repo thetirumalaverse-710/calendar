@@ -178,7 +178,7 @@ export default function SSDTokenLiveStatus({
 
           {lastUpdated && (
             <div className={`text-[10px] font-bold ${mutedClass}`}>
-              Last updated: {formatTokenDateTime(lastUpdated)} IST
+              {text.lastUpdated || "Last updated"}: {formatTokenDateTime(lastUpdated)} IST
             </div>
           )}
         </div>
