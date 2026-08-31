@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MessageSquare, Send, Upload, CheckCircle, ShieldCheck, AlertCircle, RefreshCw, FileText, Image as ImageIcon } from 'lucide-react';
+import { toast } from '../utils/toast';
 
 export default function CommunityFeedback({ lang, onSubmitFeedback }) {
   const [feedbackType, setFeedbackType] = useState('Feature Request');
@@ -68,12 +69,12 @@ export default function CommunityFeedback({ lang, onSubmitFeedback }) {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      alert(lang === 'en' ? 'Only image files (PNG, JPG, WEBP) are allowed.' : 'చిత్ర ఫైళ్లు మాత్రమే అనుమతించబడతాయి.');
+      toast.warning(lang === 'en' ? 'Only image files (PNG, JPG, WEBP) are allowed.' : 'చిత్ర ఫైళ్లు మాత్రమే అనుమతించబడతాయి.');
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      alert(lang === 'en' ? 'Image file size must be less than 5 MB.' : 'చిత్రం సైజు 5 MB కన్నా తక్కువ ఉండాలి.');
+      toast.warning(lang === 'en' ? 'Image file size must be less than 5 MB.' : 'చిత్రం సైజు 5 MB కన్నా తక్కువ ఉండాలి.');
       return;
     }
 

@@ -14,6 +14,8 @@ import TodayHappeningTicker from './components/layout/TodayHappeningTicker';
 import TtdLiveStreamModal from './components/layout/TtdLiveStreamModal';
 import LogoLightboxModal from './components/layout/LogoLightboxModal';
 import AppFooter from './components/layout/AppFooter';
+import ToastContainer from './components/common/ToastContainer';
+import { subscribeToWebPush, unsubscribeFromWebPush } from './utils/webPush';
 
 const CalendarView = lazy(() => import('./components/CalendarView'));
 const DailySchedule = lazy(() => import('./components/DailySchedule'));
@@ -91,22 +93,15 @@ export default function App() {
     }
   });
 
-  const handleToggleNotifications = () => {
+  const handleToggleNotifications = async () => {
     if (!notificationsEnabled) {
-      if ('Notification' in window) {
-        Notification.requestPermission().then(permission => {
-          if (permission === 'granted') {
-            setNotificationsEnabled(true);
-            localStorage.setItem('tirumala_notifications_enabled', 'true');
-            alert(lang === 'te' ? 'ఉత్సవ నోటిఫికేషన్లు ప్రారంభించబడ్డాయి!' : 'Utsavam Notifications enabled successfully!');
-          } else {
-            alert(lang === 'te' ? 'నోటిఫికేషన్ల అనుమతి నిరాకరించబడింది.' : 'Notification permission was not granted by browser.');
-          }
-        });
-      } else {
-        alert('Browser does not support notifications.');
+      const sub = await subscribeToWebPush(supabase);
+      if (sub) {
+        setNotificationsEnabled(true);
+        localStorage.setItem('tirumala_notifications_enabled', 'true');
       }
     } else {
+      await unsubscribeFromWebPush(supabase);
       setNotificationsEnabled(false);
       localStorage.setItem('tirumala_notifications_enabled', 'false');
     }
@@ -485,6 +480,7 @@ export default function App() {
           {activeTab === 'sevas' && (
             <DailySchedule
               lang={lang}
+              themeMode={themeMode}
             />
           )}
 
@@ -570,6 +566,9 @@ export default function App() {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
       />
+
+      {/* Global Toast Notifications Container */}
+      <ToastContainer themeMode={themeMode} />
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import { toast } from './toast';
+
 // Helper utility to calculate live event status based on current IST date
 export function getEventStatus(startDate, endDate) {
   const now = new Date();
@@ -133,7 +135,7 @@ export function shareToPlatform(platform, event, lang = 'en') {
     case 'instagram': {
       if (navigator.clipboard) {
         navigator.clipboard.writeText(`${shareText}`);
-        alert(lang === 'te' ? 'ఉత్సవ సమాచారం కాపీ చేయబడింది! ఇన్‌స్టాగ్రామ్ ఓపెన్ అవుతోంది...' : 'Event details copied! Opening Instagram...');
+        toast.info(lang === 'te' ? 'ఉత్సవ సమాచారం కాపీ చేయబడింది! ఇన్‌స్టాగ్రామ్ ఓపెన్ అవుతోంది...' : 'Event details copied! Opening Instagram...');
       }
       window.open('https://www.instagram.com', '_blank');
       break;
@@ -146,9 +148,9 @@ export function shareToPlatform(platform, event, lang = 'en') {
     case 'copy': {
       if (navigator.clipboard) {
         navigator.clipboard.writeText(`${shareText}`);
-        alert(lang === 'te' ? 'లింక్ విజయవంతంగా కాపీ చేయబడింది!' : 'Link & event details copied to clipboard!');
+        toast.success(lang === 'te' ? 'లింక్ విజయవంతంగా కాపీ చేయబడింది!' : 'Link & event details copied to clipboard!');
       } else {
-        alert(lang === 'te' ? 'కాపీ చేయబడింది: ' + currentUrl : 'Copied link: ' + currentUrl);
+        toast.info(lang === 'te' ? 'కాపీ చేయబడింది: ' + currentUrl : 'Copied link: ' + currentUrl);
       }
       break;
     }

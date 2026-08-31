@@ -6,7 +6,7 @@ export function getLatestObservation(observations = []) {
 
 export function formatTokenTime(dateValue) {
   if (!dateValue) {
-    return "â€”";
+    return "—";
   }
 
   return new Date(dateValue).toLocaleTimeString("en-IN", {
@@ -19,7 +19,7 @@ export function formatTokenTime(dateValue) {
 
 export function formatTokenDate(dateValue) {
   if (!dateValue) {
-    return "â€”";
+    return "—";
   }
 
   return new Date(`${dateValue}T00:00:00`).toLocaleDateString(
@@ -34,7 +34,7 @@ export function formatTokenDate(dateValue) {
 
 export function formatTokenDateTime(dateValue) {
   if (!dateValue) {
-    return "â€”";
+    return "—";
   }
 
   return new Date(dateValue).toLocaleString("en-IN", {
@@ -129,21 +129,21 @@ export function getActivityTokenValues({
   ddStatus,
 }) {
   const observation = event.observation;
-  let ssdValue = "â€”";
-  let ddValue = "â€”";
+  let ssdValue = "—";
+  let ddValue = "—";
 
   if (event.type === "start") {
-    ssdValue = tokenDay?.ssd_quota ?? "â€”";
-    ddValue = tokenDay?.dd_quota ?? "â€”";
+    ssdValue = tokenDay?.ssd_quota ?? "—";
+    ddValue = tokenDay?.dd_quota ?? "—";
   }
 
   if (event.type === "ssd-completed") {
     ssdValue = "Completed";
-    ddValue = ddStatus === "completed" ? "Completed" : "â€”";
+    ddValue = ddStatus === "completed" ? "Completed" : "—";
   }
 
   if (event.type === "dd-completed") {
-    ssdValue = ssdStatus === "completed" ? "Completed" : "â€”";
+    ssdValue = ssdStatus === "completed" ? "Completed" : "—";
     ddValue = "Completed";
   }
 
@@ -151,12 +151,12 @@ export function getActivityTokenValues({
     ssdValue =
       observation?.ssd_status === "completed"
         ? "Completed"
-        : observation?.ssd_remaining ?? "â€”";
+        : observation?.ssd_remaining ?? "—";
 
     ddValue =
       observation?.dd_status === "completed"
         ? "Completed"
-        : observation?.dd_remaining ?? "â€”";
+        : observation?.dd_remaining ?? "—";
   }
 
   return { ssdValue, ddValue };

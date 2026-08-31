@@ -89,3 +89,51 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
+
+// ============================================================
+// WEB PUSH NOTIFICATION LISTENERS
+// ============================================================
+
+self.addEventListener('push', (event) => {
+  if (!event.data) return;
+
+  try {
+    const payload = event.data.json();
+
+    const title = payload.title || '🌸 Tirumala Verse Alert';
+    const options = {
+      body: payload.body || 'New Tirumala Utsavam update available.',
+      icon: payload.icon || '/logo-64.png',
+      badge: payload.badge || '/logo-64.png',
+      data: {
+        url: payload.url || 'https://thetirumalaverse.in/',
+        type: payload.type || 'utsavam'
+      },
+      tag: payload.tag || 'tirumala-utsavam-notification',
+      renotify: true
+    };
+
+    event.waitUntil(self.registration.showNotification(title, options));
+  } catch (err) {
+    console.error('Error processing Web Push payload in Service Worker:', err);
+  }
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+
+  const targetUrl = event.notification.data?.url || 'https://thetirumalaverse.in/';
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
+      for (const client of windowClients) {
+        if (client.url === targetUrl && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) {
+        return clients.openWindow(targetUrl);
+      }
+    })
+  );
+});

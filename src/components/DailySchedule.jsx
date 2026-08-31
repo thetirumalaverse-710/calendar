@@ -196,17 +196,23 @@ export const PERIODICAL_SEVAS_LIST = [
   { name: 'Pavithrotsavams', frequency: '3 days a year (August)', category: 'Annual Periodical Seva' }
 ];
 
-export default function DailySchedule({ lang }) {
+export default function DailySchedule({ lang, themeMode = 'dark' }) {
+  const isLight = themeMode === 'light';
   const [selectedDayTab, setSelectedDayTab] = useState('Monday');
   const [viewSection, setViewSection] = useState('daily'); // 'daily' | 'weekly-table' | 'periodical'
 
   const activeDayObj = WEEKLY_MAIN_TEMPLE_SEVAS.find(d => d.day === selectedDayTab) || WEEKLY_MAIN_TEMPLE_SEVAS[0];
 
+  const cardBgClass = isLight ? 'bg-white border-slate-200 text-slate-900 shadow-lg' : 'bg-[#0B0E14] border-[#D4AF37]/40 text-white shadow-2xl';
+  const itemBgClass = isLight ? 'bg-slate-50 border-slate-200 hover:border-amber-500' : 'bg-[#141923] border-[#D4AF37]/20 hover:border-[#FFD700]';
+  const itemTitleClass = isLight ? 'text-slate-900 font-bold font-serif text-base' : 'text-white font-bold font-serif text-base';
+  const timeBadgeClass = isLight ? 'bg-amber-50 border-amber-300 text-amber-900 font-mono text-xs font-bold' : 'bg-[#0B0E14] border-[#D4AF37]/40 text-[#FFD700] font-mono text-xs font-bold';
+
   return (
     <div className="space-y-6 py-4">
       
       {/* Header */}
-      <div className="glass-card p-6 border-l-4 border-l-[#FFD700] border-[#D4AF37]/30 flex flex-wrap items-center justify-between gap-4">
+      <div className={`glass-card p-6 border-l-4 border-l-[#FFD700] flex flex-wrap items-center justify-between gap-4 ${isLight ? 'bg-white border-slate-200' : 'border-[#D4AF37]/30'}`}>
         <div>
           <div className="flex items-center gap-3 mb-1">
             <Clock className="w-6 h-6 text-[#FFD700]" />
@@ -214,7 +220,7 @@ export default function DailySchedule({ lang }) {
               {lang === 'en' ? 'Srivari Temple Daily, Weekly & Periodical Sevas' : 'తిరుమల శ్రీవారి నిత్య, వారపు & కాలిక సేవల పట్టిక'}
             </h2>
           </div>
-          <p className="text-sm text-[#94A3B8]">
+          <p className={`text-sm ${isLight ? 'text-slate-600' : 'text-[#94A3B8]'}`}>
             {lang === 'en'
               ? 'Official schedules for Lord Venkateswara Main Temple in Tirumala including day-wise Kainkaryams, Weekly Seva details, and Periodical Festivals.'
               : 'శ్రీవారి ఆలయంలో జరిగే నిత్య సేవలు, వారపు సేవలు మరియు వార్షిక కాలిక సేవల పూర్తి సమాచారం.'}
@@ -222,13 +228,13 @@ export default function DailySchedule({ lang }) {
         </div>
 
         {/* Section Switcher Tabs */}
-        <div className="flex flex-wrap items-center gap-1 bg-[#0B0E14] p-1 rounded-xl border border-[#D4AF37]/40 w-full sm:w-auto overflow-x-auto no-scrollbar">
+        <div className={`flex flex-wrap items-center gap-1 p-1 rounded-xl border w-full sm:w-auto overflow-x-auto no-scrollbar ${isLight ? 'bg-slate-100 border-slate-300' : 'bg-[#0B0E14] border-[#D4AF37]/40'}`}>
           <button
             onClick={() => setViewSection('daily')}
             className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all shrink-0 ${
               viewSection === 'daily'
                 ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-black shadow-md'
-                : 'text-[#94A3B8] hover:text-white'
+                : isLight ? 'text-slate-600 hover:text-slate-900' : 'text-[#94A3B8] hover:text-white'
             }`}
           >
             <Clock className="w-3.5 h-3.5" />
@@ -240,7 +246,7 @@ export default function DailySchedule({ lang }) {
             className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all shrink-0 ${
               viewSection === 'weekly-table'
                 ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-black shadow-md'
-                : 'text-[#94A3B8] hover:text-white'
+                : isLight ? 'text-slate-600 hover:text-slate-900' : 'text-[#94A3B8] hover:text-white'
             }`}
           >
             <Ticket className="w-3.5 h-3.5" />
@@ -252,7 +258,7 @@ export default function DailySchedule({ lang }) {
             className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all shrink-0 ${
               viewSection === 'periodical'
                 ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-black shadow-md'
-                : 'text-[#94A3B8] hover:text-white'
+                : isLight ? 'text-slate-600 hover:text-slate-900' : 'text-[#94A3B8] hover:text-white'
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
@@ -273,6 +279,8 @@ export default function DailySchedule({ lang }) {
                 className={`px-4 py-2.5 rounded-xl text-xs font-extrabold shrink-0 transition-all flex items-center gap-2 shadow-md ${
                   selectedDayTab === dayItem.day
                     ? 'bg-gradient-to-r from-[#FF5722] to-[#FFD700] text-black ring-2 ring-[#FFD700]'
+                    : isLight
+                    ? 'bg-white text-slate-800 border border-slate-300 hover:bg-amber-50'
                     : 'bg-[#141923] text-[#FFD700] border border-[#D4AF37]/50 hover:bg-[#D4AF37]/20'
                 }`}
               >
@@ -283,7 +291,7 @@ export default function DailySchedule({ lang }) {
           </div>
 
           {/* Active Day Timetable Card */}
-          <div className="glass-card p-6 border-2 border-[#D4AF37]/40 space-y-4 bg-[#0B0E14] shadow-2xl">
+          <div className={`glass-card p-6 border-2 space-y-4 ${cardBgClass}`}>
             {/* Special Seva Banner */}
             <div className="p-4 rounded-xl bg-gradient-to-r from-[#990000] via-[#FF5722] to-[#990000] text-white flex flex-wrap items-center justify-between gap-3 shadow-lg">
               <div>
@@ -304,21 +312,21 @@ export default function DailySchedule({ lang }) {
               {activeDayObj.schedule.map((item, idx) => (
                 <div 
                   key={idx}
-                  className="p-3.5 rounded-xl bg-[#141923] border border-[#D4AF37]/20 hover:border-[#FFD700] transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-2"
+                  className={`p-3.5 rounded-xl border transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-2 ${itemBgClass}`}
                 >
                   <div className="flex items-center gap-3">
                     <span className="w-2.5 h-2.5 rounded-full bg-[#FF5722] shrink-0"></span>
                     <div>
-                      <h4 className="font-serif text-base font-bold text-white flex items-center gap-2">
+                      <h4 className={itemTitleClass}>
                         <span>{item.seva}</span>
                       </h4>
-                      <p className="text-xs text-[#94A3B8]">
+                      <p className={`text-xs ${isLight ? 'text-slate-600' : 'text-[#94A3B8]'}`}>
                         {item.desc}
                       </p>
                     </div>
                   </div>
 
-                  <div className="px-3 py-1 rounded-lg bg-[#0B0E14] border border-[#D4AF37]/40 text-xs font-mono font-bold text-[#FFD700] shrink-0 self-start sm:self-auto">
+                  <div className={`px-3 py-1 rounded-lg border shrink-0 self-start sm:self-auto ${timeBadgeClass}`}>
                     ⏱️ {item.time}
                   </div>
                 </div>
@@ -330,13 +338,15 @@ export default function DailySchedule({ lang }) {
 
       {/* SECTION 2: CLEAN WEEKLY SEVAS TABLE (DAY, SEVA NAME WITH WEEKLY TAG, SEVA TIME) */}
       {viewSection === 'weekly-table' && (
-        <div className="glass-card p-6 border-2 border-[#D4AF37]/40 space-y-4 bg-[#0B0E14] shadow-2xl">
-          <div className="border-b border-[#D4AF37]/30 pb-3">
+        <div className={`glass-card p-6 border-2 space-y-4 ${cardBgClass}`}>
+          <div className={`border-b pb-3 ${isLight ? 'border-slate-200' : 'border-[#D4AF37]/30'}`}>
             <h3 className="font-serif text-xl font-bold text-[#FFD700] flex items-center gap-2">
               <Ticket className="w-5 h-5 text-[#FF5722]" />
-              <span>{lang === 'en' ? 'Weekly Sevas Performed at Srivari Temple' : 'శ్రీవారి ఆలయంలో వారపు సేవల సమయాలు'}</span>
+              <span className={isLight ? 'text-amber-900' : 'text-[#FFD700]'}>
+                {lang === 'en' ? 'Weekly Sevas Performed at Srivari Temple' : 'శ్రీవారి ఆలయంలో వారపు సేవల సమయాలు'}
+              </span>
             </h3>
-            <p className="text-xs text-[#94A3B8] mt-1">
+            <p className={`text-xs mt-1 ${isLight ? 'text-slate-600' : 'text-[#94A3B8]'}`}>
               Specific day weekly sevas and their performed timing.
             </p>
           </div>
@@ -344,23 +354,23 @@ export default function DailySchedule({ lang }) {
           <div className="overflow-x-auto no-scrollbar">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-[#141923] text-[#FFD700] border-b border-[#D4AF37]/40 font-serif text-sm">
+                <tr className={isLight ? 'bg-slate-100 text-amber-900 border-b border-slate-300 font-serif text-sm' : 'bg-[#141923] text-[#FFD700] border-b border-[#D4AF37]/40 font-serif text-sm'}>
                   <th className="p-3.5">Day</th>
                   <th className="p-3.5">Seva Name</th>
                   <th className="p-3.5">Seva Time</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/10 text-white text-xs">
+              <tbody className={`divide-y text-xs ${isLight ? 'divide-slate-200 text-slate-800' : 'divide-white/10 text-white'}`}>
                 {OFFICIAL_WEEKLY_SEVAS_TABLE.map((row, rIdx) => (
-                  <tr key={rIdx} className="hover:bg-[#141923]/60 transition-colors">
+                  <tr key={rIdx} className={isLight ? 'hover:bg-slate-50 transition-colors' : 'hover:bg-[#141923]/60 transition-colors'}>
                     <td className="p-3.5 font-bold text-[#FF5722] text-sm">{row.day}</td>
-                    <td className="p-3.5 font-extrabold text-white text-sm">
+                    <td className={`p-3.5 font-extrabold text-sm ${isLight ? 'text-slate-900' : 'text-white'}`}>
                       <span>{row.sevaName}</span>
-                      <span className="ml-2 px-2 py-0.5 rounded bg-[#FFD700]/20 text-[#FFD700] text-[11px] font-bold border border-[#D4AF37]/40">
+                      <span className={isLight ? 'ml-2 px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-[11px] font-bold border border-amber-300' : 'ml-2 px-2 py-0.5 rounded bg-[#FFD700]/20 text-[#FFD700] text-[11px] font-bold border border-[#D4AF37]/40'}>
                         (Weekly Seva)
                       </span>
                     </td>
-                    <td className="p-3.5 font-mono text-[#FFD700] font-bold text-sm">⏱️ {row.sevaTime}</td>
+                    <td className={`p-3.5 font-mono font-bold text-sm ${isLight ? 'text-amber-800' : 'text-[#FFD700]'}`}>⏱️ {row.sevaTime}</td>
                   </tr>
                 ))}
               </tbody>
@@ -371,28 +381,30 @@ export default function DailySchedule({ lang }) {
 
       {/* SECTION 3: PERIODICAL SEVAS */}
       {viewSection === 'periodical' && (
-        <div className="glass-card p-6 border-2 border-[#D4AF37]/40 space-y-4 bg-[#0B0E14] shadow-2xl">
-          <div className="border-b border-[#D4AF37]/30 pb-3">
-            <h3 className="font-serif text-xl font-bold text-[#FFD700] flex items-center gap-2">
+        <div className={`glass-card p-6 border-2 space-y-4 ${cardBgClass}`}>
+          <div className={`border-b pb-3 ${isLight ? 'border-slate-200' : 'border-[#D4AF37]/30'}`}>
+            <h3 className="font-serif text-xl font-bold flex items-center gap-2">
               <Layers className="w-5 h-5 text-[#FF5722]" />
-              <span>{lang === 'en' ? 'Periodical Sevas (Annual Religious Occurrences)' : 'శ్రీవారి ఆలయంలో కాలిక సేవలు'}</span>
+              <span className={isLight ? 'text-amber-900' : 'text-[#FFD700]'}>
+                {lang === 'en' ? 'Periodical Sevas (Annual Religious Occurrences)' : 'శ్రీవారి ఆలయంలో కాలిక సేవలు'}
+              </span>
             </h3>
-            <p className="text-xs text-[#94A3B8] mt-1">
+            <p className={`text-xs mt-1 ${isLight ? 'text-slate-600' : 'text-[#94A3B8]'}`}>
               Annual events of religious significance performed in Tirumala following the importance of particular asterism.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {PERIODICAL_SEVAS_LIST.map((pSeva, pIdx) => (
-              <div key={pIdx} className="p-4 rounded-xl bg-[#141923] border border-[#D4AF37]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+              <div key={pIdx} className={`p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md ${itemBgClass}`}>
                 <div>
                   <span className="badge-gold text-[10px] uppercase font-extrabold">{pSeva.category}</span>
-                  <h4 className="font-serif text-sm sm:text-base font-bold text-white mt-1.5 leading-snug">
+                  <h4 className={`font-serif text-sm sm:text-base font-bold mt-1.5 leading-snug ${isLight ? 'text-slate-900' : 'text-white'}`}>
                     {pSeva.name}
                   </h4>
                 </div>
 
-                <div className="px-3 py-1.5 rounded-lg bg-[#0B0E14] border border-[#FF5722]/50 text-xs font-mono font-bold text-[#FFD700] self-start sm:self-auto shrink-0">
+                <div className={`px-3 py-1.5 rounded-lg border text-xs font-mono font-bold self-start sm:self-auto shrink-0 ${timeBadgeClass}`}>
                   ⏱️ {pSeva.frequency}
                 </div>
               </div>
@@ -400,8 +412,6 @@ export default function DailySchedule({ lang }) {
           </div>
         </div>
       )}
-
-
 
     </div>
   );
