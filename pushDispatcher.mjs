@@ -4,7 +4,7 @@
  * Handles payload signing, atomic duplicate logging, and dead subscription cleanup.
  */
 
-const VAPID_PUBLIC_KEY = process.env.VITE_VAPID_PUBLIC_KEY?.trim();
+let VAPID_PUBLIC_KEY = process.env.VITE_VAPID_PUBLIC_KEY?.trim() || process.env.VAPID_PUBLIC_KEY?.trim();
 const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY?.trim();
 const VAPID_SUBJECT = process.env.VAPID_SUBJECT?.trim() || "mailto:admin@thetirumalaverse.in";
 
@@ -13,6 +13,17 @@ let isVapidConfigured = false;
 
 async function initWebPush() {
   if (isVapidConfigured) return true;
+
+  if (!VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY) {
+    try {
+      const crypto = await import("node:crypto");
+      const ecdh = crypto.createECDH("prime256v1");
+      ecdh.setPrivateKey(Buffer.from(VAPID_PRIVATE_KEY, "base64url"));
+      VAPID_PUBLIC_KEY = ecdh.getPublicKey().toString("base64url");
+    } catch (e) {
+      console.warn("[PUSH MODULE WARNING] Could not derive public key from private key:", e.message);
+    }
+  }
 
   if (!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) {
     return false;
