@@ -56,7 +56,11 @@ export async function subscribeToWebPush(supabaseClient) {
       return null;
     }
 
-    const registration = await navigator.serviceWorker.ready;
+    let registration = await navigator.serviceWorker.getRegistration();
+    if (!registration) {
+      registration = await navigator.serviceWorker.register('/sw.js');
+    }
+    await navigator.serviceWorker.ready;
     const applicationServerKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
 
     let subscription = await registration.pushManager.getSubscription();

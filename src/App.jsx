@@ -16,6 +16,7 @@ import LogoLightboxModal from './components/layout/LogoLightboxModal';
 import AppFooter from './components/layout/AppFooter';
 import ToastContainer from './components/common/ToastContainer';
 import { subscribeToWebPush, unsubscribeFromWebPush } from './utils/webPush';
+import { supabase } from './utils/supabaseClient';
 
 const CalendarView = lazy(() => import('./components/CalendarView'));
 const DailySchedule = lazy(() => import('./components/DailySchedule'));
