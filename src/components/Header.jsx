@@ -108,11 +108,11 @@ export default function Header({
               </button>
             )}
 
-            {/* TTD YOUTUBE LIVE STREAM BUTTON (Shown only if Admin set active link) */}
+            {/* TTD YOUTUBE LIVE STREAM BUTTON (Desktop: top row; Mobile: rendered below top row) */}
             {ttdLiveUrl && (
               <button
                 onClick={onOpenLiveStream}
-                className="px-2 py-1 rounded-lg bg-red-600 hover:bg-red-700 text-white text-[10px] sm:text-[11px] font-extrabold flex items-center gap-1 shadow-lg animate-pulse"
+                className="hidden sm:flex px-2 py-1 rounded-lg bg-red-600 hover:bg-red-700 text-white text-[10px] sm:text-[11px] font-extrabold items-center gap-1 shadow-lg animate-pulse shrink-0"
                 title="Watch TTD Daily YouTube Live Stream"
               >
                 <span>🔴 <span className="hidden sm:inline">TTD Live</span></span>
@@ -174,6 +174,20 @@ export default function Header({
             </button>
           </div>
         </div>
+
+        {/* MOBILE TTD YOUTUBE LIVE STREAM ACTION BAR (<640px) */}
+        {ttdLiveUrl && (
+          <div className="sm:hidden flex items-center justify-center pt-0.5">
+            <button
+              onClick={onOpenLiveStream}
+              className="w-full py-1.5 px-3 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-extrabold flex items-center justify-center gap-2 shadow-md animate-pulse transition-all"
+              title="Watch TTD Daily YouTube Live Stream"
+            >
+              <span>🔴</span>
+              <span>{lang === 'en' ? 'Watch TTD Daily YouTube Live Stream' : 'TTD రోజువారీ యూట్యూబ్ లైవ్ చూడండి'}</span>
+            </button>
+          </div>
+        )}
 
         {/* BOTTOM ROW: Smooth Scrolling Navigation Tabs */}
         <nav className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar py-0.5 max-w-full">
