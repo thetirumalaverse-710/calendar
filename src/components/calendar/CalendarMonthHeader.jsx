@@ -70,7 +70,7 @@ export default function CalendarMonthHeader({
             type="button"
             onClick={onPrevMonth}
             disabled={activeMonthIndex === 0}
-            className={`px-2.5 sm:px-3 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1 transition-all shadow-md ${
+            className={`min-w-[40px] min-h-[40px] sm:min-w-0 sm:min-h-0 px-2.5 sm:px-3 py-2 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1 transition-all shadow-md ${
               activeMonthIndex === 0
                 ? 'opacity-40 cursor-not-allowed bg-[#141923] text-[#94A3B8] border border-white/10'
                 : 'bg-[#141923] text-[#FFD700] border-2 border-[#D4AF37] hover:bg-[#D4AF37]/20 active:scale-95'
@@ -90,7 +90,7 @@ export default function CalendarMonthHeader({
               activeMonthIndex ===
               MONTHS_LIST.length - 1
             }
-            className={`px-2.5 sm:px-3 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1 transition-all shadow-md ${
+            className={`min-w-[40px] min-h-[40px] sm:min-w-0 sm:min-h-0 px-2.5 sm:px-3 py-2 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1 transition-all shadow-md ${
               activeMonthIndex ===
               MONTHS_LIST.length - 1
                 ? 'opacity-40 cursor-not-allowed bg-[#141923] text-[#94A3B8] border border-white/10'
