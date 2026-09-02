@@ -12,3 +12,8 @@ supabase/backups/
 .telegram-session
 telegram-test.mjs
 .telegram-checkpoint.json
+
+# Local credential & server files
+Available MTProto servers.txt
+postgresqlpostgres.rjdltvopbejhvbhe.txt
+
