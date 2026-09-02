@@ -174,8 +174,30 @@ export default function CalendarView({
 
         </div>
 
-        {/* Bottom Filter Bar: Temple Filter + Month Filter */}
-        <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-white/10 text-xs">
+        {/* Mobile/Tablet Temple Filter Dropdown (< md) */}
+        <div className="flex md:hidden items-center gap-2.5 w-full pt-2 border-t border-white/10 text-xs">
+          <span className="text-[#FFD700] font-bold flex items-center gap-1 shrink-0">
+            <Filter className="w-3.5 h-3.5" />
+            <span>{lang === 'en' ? 'Temple Filter:' : 'క్షేత్రము:'}</span>
+          </span>
+          <select
+            value={selectedTemple}
+            onChange={(e) => setSelectedTemple(e.target.value)}
+            className="w-full bg-[#141923] text-[#FFD700] border border-[#D4AF37]/60 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#FFD700] shadow-inner cursor-pointer"
+          >
+            <option value="all" className="bg-[#141923] text-white">
+              {lang === 'en' ? 'All Temples' : 'అన్ని ఆలయాలు'}
+            </option>
+            {TEMPLES.map(temple => (
+              <option key={temple.id} value={temple.id} className="bg-[#141923] text-white">
+                {getTempleFilterLabel(temple, lang)}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Desktop Temple Filter Pills (>= md) */}
+        <div className="hidden md:flex flex-wrap items-center gap-3 pt-2 border-t border-white/10 text-xs">
           
           <span className="text-[#FFD700] font-bold flex items-center gap-1">
             <Filter className="w-3.5 h-3.5" />
