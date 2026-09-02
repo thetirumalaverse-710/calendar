@@ -54,7 +54,7 @@ export default function MobileSelectedDayEvents({
                 onClick={() =>
                   onSelectEvent(evt)
                 }
-                className="w-full text-left rounded-2xl bg-white border-2 border-[#D4AF37]/60 p-3 shadow-lg active:scale-[0.99] transition-all"
+                className="w-full text-left rounded-2xl glass-card border-2 border-[#D4AF37]/60 p-3 shadow-lg active:scale-[0.99] transition-all hover:border-[#FFD700]"
               >
                 <div className="flex items-start gap-3">
 
@@ -70,19 +70,19 @@ export default function MobileSelectedDayEvents({
                   <div className="min-w-0 flex-1">
 
                     <div className="flex items-start justify-between gap-2">
-                      <h4 className="font-serif text-sm font-black text-slate-900 leading-snug">
+                      <h4 className="font-serif text-sm font-black text-slate-900 dark:text-white leading-snug">
                         {lang === 'en'
                           ? evt.title
                           : evt.titleTe ||
                             evt.title}
                       </h4>
 
-                      <span className="shrink-0 text-[9px] font-black text-[#FF5722]">
+                      <span className="shrink-0 text-[9px] font-black text-[#FF5722] dark:text-[#FFD700]">
                         VIEW
                       </span>
                     </div>
 
-                    <p className="text-[10px] text-slate-500 font-bold mt-1">
+                    <p className="text-[10px] text-slate-500 dark:text-[#94A3B8] font-bold mt-1">
                       {lang === 'en'
                         ? temple?.name ||
                           'Tirumala'
@@ -91,7 +91,7 @@ export default function MobileSelectedDayEvents({
                           'తిరుమల'}
                     </p>
 
-                    <p className="text-[10px] text-slate-700 mt-1.5 line-clamp-2">
+                    <p className="text-[10px] text-slate-700 dark:text-[#94A3B8]/90 mt-1.5 line-clamp-2">
                       {lang === 'en'
                         ? evt.description ||
                           'Temple event'
