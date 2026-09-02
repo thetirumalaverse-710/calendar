@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MessageSquare, Send, Upload, CheckCircle, ShieldCheck, AlertCircle, RefreshCw, FileText, Image as ImageIcon } from 'lucide-react';
+import { MessageSquare, Send, Upload, CheckCircle, AlertCircle, RefreshCw, FileText, Image as ImageIcon } from 'lucide-react';
 import { toast } from '../utils/toast';
 
 export default function CommunityFeedback({ lang, onSubmitFeedback }) {
@@ -21,46 +21,12 @@ export default function CommunityFeedback({ lang, onSubmitFeedback }) {
   const [submittedRefNumber, setSubmittedRefNumber] = useState(null);
   const [formError, setFormError] = useState('');
 
-  // Automatically captured browser & device details
-  const [metadata, setMetadata] = useState({
-    pageUrl: '',
-    browser: '',
-    operatingSystem: '',
-    deviceType: ''
-  });
-
   useEffect(() => {
     // Generate fresh CAPTCHA numbers
     const num1 = Math.floor(Math.random() * 9) + 1;
     const num2 = Math.floor(Math.random() * 9) + 1;
     setCaptchaNum1(num1);
     setCaptchaNum2(num2);
-
-    // Auto-detect client info
-    const userAgent = navigator.userAgent;
-    let browser = 'Unknown Browser';
-    if (userAgent.includes('Chrome')) browser = 'Google Chrome';
-    else if (userAgent.includes('Firefox')) browser = 'Mozilla Firefox';
-    else if (userAgent.includes('Safari')) browser = 'Apple Safari';
-    else if (userAgent.includes('Edg')) browser = 'Microsoft Edge';
-
-    let os = 'Unknown OS';
-    if (userAgent.includes('Win')) os = 'Windows OS';
-    else if (userAgent.includes('Mac')) os = 'macOS';
-    else if (userAgent.includes('Android')) os = 'Android OS';
-    else if (userAgent.includes('iPhone') || userAgent.includes('iPad')) os = 'iOS';
-
-    let deviceType = 'Desktop';
-    if (/Mobi|Android|iPhone|iPad/i.test(userAgent)) {
-      deviceType = window.innerWidth < 768 ? 'Mobile' : 'Tablet';
-    }
-
-    setMetadata({
-      pageUrl: window.location.href,
-      browser,
-      operatingSystem: os,
-      deviceType
-    });
   }, []);
 
   // Handle Image File Upload (convert to Data URL with max 5MB size limit)
@@ -125,10 +91,6 @@ export default function CommunityFeedback({ lang, onSubmitFeedback }) {
       description: description.trim(),
       name: name.trim() || 'Anonymous Devotee',
       email: email.trim() || 'Not Provided',
-      pageUrl: metadata.pageUrl,
-      browser: metadata.browser,
-      operatingSystem: metadata.operatingSystem,
-      deviceType: metadata.deviceType,
       screenshotUrl: screenshotUrl || null,
       status: 'New', // New, Under Review, Planned, In Progress, Completed, Rejected, Closed
       adminNotes: '',
@@ -330,20 +292,6 @@ export default function CommunityFeedback({ lang, onSubmitFeedback }) {
                 <span>Attached: {screenshotName}</span>
               </div>
             )}
-          </div>
-
-          {/* Automatically Captured Info Badge */}
-          <div className="p-3 rounded-xl bg-[#141923]/60 border border-white/5 text-[11px] font-mono text-[#94A3B8] space-y-1">
-            <div className="flex items-center gap-1.5 text-[#FFD700] font-bold">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Automatically Captured System Diagnostic Info:</span>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-[10px]">
-              <div>OS: {metadata.operatingSystem}</div>
-              <div>Browser: {metadata.browser}</div>
-              <div>Device: {metadata.deviceType}</div>
-              <div>URL: Portal Main</div>
-            </div>
           </div>
 
           {/* Anti-Spam CAPTCHA */}
