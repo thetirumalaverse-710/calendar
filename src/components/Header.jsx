@@ -65,22 +65,22 @@ export default function Header({
         {/* TOP ROW: Brand Logo & Title on Left + Control Buttons on Right */}
         <div className="flex items-center justify-between gap-2 w-full">
           {/* Brand Logo & Title */}
-          <div className="flex items-center gap-2 sm:gap-2.5 group min-w-0 flex-1">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 group min-w-0 flex-1 ml-0.5 sm:ml-0">
             <div 
               onClick={onOpenLogoModal}
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-[#FFD700] shadow-md group-hover:scale-110 transition-transform bg-[#E65100] flex items-center justify-center cursor-pointer shrink-0"
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-[#FFD700] shadow-md group-hover:scale-110 transition-transform bg-[#E65100] flex items-center justify-center cursor-pointer shrink-0"
               title="Click to view Logo in full size"
             >
               <img 
                 src="/logo-64.png" 
                 alt="Tirumala Logo" 
                 className="w-full h-full object-contain p-0.5" 
-                style={{ width: '36px', height: '36px' }}
+                style={{ width: '32px', height: '32px' }}
               />
             </div>
 
             <div onClick={() => setActiveTab('calendar-page')} className="cursor-pointer min-w-0 flex-1">
-              <h1 className="font-serif text-[12.5px] sm:text-2xl font-extrabold gold-gradient-text tracking-wide leading-tight !block w-full truncate">
+              <h1 className="font-serif text-[12px] sm:text-2xl font-extrabold gold-gradient-text tracking-tight leading-tight !block w-full truncate">
                 The Tirumala Verse
               </h1>
               <p className="hidden sm:block text-xs text-[#94A3B8] tracking-wider font-medium">
@@ -108,21 +108,23 @@ export default function Header({
               </button>
             )}
 
-            {/* TTD YOUTUBE LIVE STREAM BUTTON (Desktop: top row; Mobile: rendered below top row) */}
+            {/* DESKTOP TTD YOUTUBE LIVE STREAM BUTTON (≥640px ONLY) */}
             {ttdLiveUrl && (
-              <button
-                onClick={onOpenLiveStream}
-                className="hidden sm:flex px-2 py-1 rounded-lg bg-red-600 hover:bg-red-700 text-white text-[10px] sm:text-[11px] font-extrabold items-center gap-1 shadow-lg animate-pulse shrink-0"
-                title="Watch TTD Daily YouTube Live Stream"
-              >
-                <span>🔴 <span className="hidden sm:inline">TTD Live</span></span>
-              </button>
+              <div className="hidden sm:block shrink-0">
+                <button
+                  onClick={onOpenLiveStream}
+                  className="px-2.5 py-1 rounded-lg bg-red-600 hover:bg-red-700 text-white text-[11px] font-extrabold flex items-center gap-1 shadow-lg shrink-0"
+                  title="Watch TTD Daily YouTube Live Stream"
+                >
+                  <span>🔴 TTD Live</span>
+                </button>
+              </div>
             )}
 
             {/* NOTIFICATIONS TOGGLE BUTTON */}
             <button
               onClick={onToggleNotifications}
-              className={`p-1.5 sm:px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition-colors border ${
+              className={`w-[30px] h-[30px] sm:w-auto sm:h-auto p-1 sm:px-2 sm:py-1 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition-colors border ${
                 notificationsEnabled
                   ? 'bg-amber-500/20 border-[#FFD700] text-[#FFD700]'
                   : 'bg-[#141923] border-[#D4AF37]/40 text-[#94A3B8] hover:text-[#FFD700]'
@@ -138,17 +140,17 @@ export default function Header({
             {/* Dark / Light Mode Toggle */}
             <button
               onClick={() => setThemeMode(themeMode === 'dark' ? 'light' : 'dark')}
-              className="p-1.5 sm:px-2.5 sm:py-1 rounded-lg bg-[#141923] border border-[#D4AF37]/50 text-[#FFD700] hover:bg-[#D4AF37]/20 transition-colors flex items-center gap-1 text-xs font-bold shadow-sm"
+              className="w-[30px] h-[30px] sm:w-auto sm:h-auto p-1 sm:px-2.5 sm:py-1 rounded-lg bg-[#141923] border border-[#D4AF37]/50 text-[#FFD700] hover:bg-[#D4AF37]/20 transition-colors flex items-center justify-center gap-1 text-xs font-bold shadow-sm"
               title={themeMode === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             >
               {themeMode === 'dark' ? (
                 <>
-                  <Sun className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#FFD700]" />
+                  <Sun className="w-3.5 h-3.5 text-[#FFD700]" />
                   <span className="hidden sm:inline text-[11px]">Light</span>
                 </>
               ) : (
                 <>
-                  <Moon className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#FF5722]" />
+                  <Moon className="w-3.5 h-3.5 text-[#FF5722]" />
                   <span className="hidden sm:inline text-[11px]">Dark</span>
                 </>
               )}
@@ -157,30 +159,30 @@ export default function Header({
             {/* Admin Login Button */}
             <button
               onClick={onOpenAdmin}
-              className="p-1.5 sm:px-2.5 sm:py-1 rounded-lg bg-[#FF5722]/20 border border-[#FF5722]/50 text-[#FF5722] hover:bg-[#FF5722]/30 text-xs font-extrabold flex items-center gap-1 transition-colors shadow-sm"
+              className="w-[30px] h-[30px] sm:w-auto sm:h-auto p-1 sm:px-2.5 sm:py-1 rounded-lg bg-[#FF5722]/20 border border-[#FF5722]/50 text-[#FF5722] hover:bg-[#FF5722]/30 text-xs font-extrabold flex items-center justify-center gap-1 transition-colors shadow-sm"
               title="Admin Login"
             >
-              <Lock className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+              <Lock className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">{lang === 'en' ? 'Admin' : 'అడ్మిన్'}</span>
             </button>
 
             {/* Language Toggle */}
             <button
               onClick={() => setLang(lang === 'en' ? 'te' : 'en')}
-              className="px-2 py-1 rounded-full border border-[#D4AF37]/50 bg-[#141923] text-[#FFD700] text-xs font-extrabold flex items-center gap-1 hover:bg-[#D4AF37]/20 transition-colors shadow-sm"
+              className="px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full border border-[#D4AF37]/50 bg-[#141923] text-[#FFD700] text-[11px] sm:text-xs font-extrabold flex items-center gap-1 hover:bg-[#D4AF37]/20 transition-colors shadow-sm shrink-0"
             >
-              <Globe className="w-3.5 h-3.5 text-[#FFD700]" />
+              <Globe className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#FFD700]" />
               <span>{lang === 'en' ? 'TE' : 'EN'}</span>
             </button>
           </div>
         </div>
 
-        {/* MOBILE TTD YOUTUBE LIVE UTILITY ROW (<640px) */}
+        {/* MOBILE TTD YOUTUBE LIVE UTILITY ROW (<640px ONLY) */}
         {ttdLiveUrl && (
           <div className="sm:hidden flex items-center justify-end pt-0.5">
             <button
               onClick={onOpenLiveStream}
-              className="px-2.5 py-1 rounded-full bg-red-950/60 border border-red-500/40 text-red-400 text-[10px] font-extrabold flex items-center gap-1 hover:bg-red-900/60 transition-colors shadow-sm"
+              className="px-2.5 py-0.5 rounded-full bg-red-950/70 border border-red-500/40 text-red-400 text-[10px] font-extrabold flex items-center gap-1 hover:bg-red-900/60 transition-colors shadow-sm"
               title="Watch TTD Daily YouTube Live Stream"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
