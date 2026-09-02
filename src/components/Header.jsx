@@ -79,8 +79,8 @@ export default function Header({
               />
             </div>
 
-            <div onClick={() => setActiveTab('calendar-page')} className="cursor-pointer min-w-0">
-              <h1 className="font-serif text-sm sm:text-2xl font-extrabold gold-gradient-text tracking-wide leading-tight truncate">
+            <div onClick={() => setActiveTab('calendar-page')} className="cursor-pointer min-w-0 flex-1">
+              <h1 className="font-serif text-[12.5px] sm:text-2xl font-extrabold gold-gradient-text tracking-wide leading-tight !block w-full truncate">
                 The Tirumala Verse
               </h1>
               <p className="hidden sm:block text-xs text-[#94A3B8] tracking-wider font-medium">
@@ -175,16 +175,16 @@ export default function Header({
           </div>
         </div>
 
-        {/* MOBILE TTD YOUTUBE LIVE STREAM ACTION BAR (<640px) */}
+        {/* MOBILE TTD YOUTUBE LIVE UTILITY ROW (<640px) */}
         {ttdLiveUrl && (
-          <div className="sm:hidden flex items-center justify-center pt-0.5">
+          <div className="sm:hidden flex items-center justify-end pt-0.5">
             <button
               onClick={onOpenLiveStream}
-              className="w-full py-1.5 px-3 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-extrabold flex items-center justify-center gap-2 shadow-md animate-pulse transition-all"
+              className="px-2.5 py-1 rounded-full bg-red-950/60 border border-red-500/40 text-red-400 text-[10px] font-extrabold flex items-center gap-1 hover:bg-red-900/60 transition-colors shadow-sm"
               title="Watch TTD Daily YouTube Live Stream"
             >
-              <span>🔴</span>
-              <span>{lang === 'en' ? 'Watch TTD Daily YouTube Live Stream' : 'TTD రోజువారీ యూట్యూబ్ లైవ్ చూడండి'}</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+              <span>{lang === 'en' ? '🔴 TTD Live' : '🔴 TTD లైవ్'}</span>
             </button>
           </div>
         )}
