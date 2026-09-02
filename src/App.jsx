@@ -30,9 +30,74 @@ const ReferencesList = lazy(() => import('./components/ReferencesList'));
 const loadInitialEvents = () =>
   import('./data/initialEvents').then(module => module.INITIAL_EVENTS);
 
+const ROUTE_MAP = {
+  '/': 'calendar-page',
+  '/calendar': 'calendar-page',
+  '/calendar-page': 'calendar-page',
+  '/glossary': 'glossary',
+  '/sevas': 'sevas',
+  '/tokens': 'tokens',
+  '/feedback': 'feedback',
+  '/temples': 'temples',
+  '/references': 'references',
+  '/overview': 'overview',
+};
+
+const TAB_TO_PATH = {
+  'calendar-page': '/',
+  'glossary': '/glossary',
+  'sevas': '/sevas',
+  'tokens': '/tokens',
+  'feedback': '/feedback',
+  'temples': '/temples',
+  'references': '/references',
+  'overview': '/overview',
+};
+
+function getTabFromPathname(pathname) {
+  if (!pathname) return 'calendar-page';
+  const cleanPath = pathname.replace(/\/+$/, '') || '/';
+  return ROUTE_MAP[cleanPath.toLowerCase()] || 'calendar-page';
+}
+
+function getPathnameFromTab(tab) {
+  return TAB_TO_PATH[tab] || '/';
+}
+
 export default function App() {
-  // Tab state: 'calendar-page', 'overview', 'temples', 'references', 'sevas', 'feedback'
-  const [activeTab, setActiveTab] = useState('calendar-page');
+  // Custom URL Routing & Tab state: 'calendar-page', 'overview', 'temples', 'references', 'sevas', 'feedback'
+  const [activeTab, setActiveTabState] = useState(() => getTabFromPathname(window.location.pathname));
+
+  const setActiveTab = (tab, replace = false) => {
+    setActiveTabState(tab);
+    const targetPath = getPathnameFromTab(tab);
+    if (window.location.pathname !== targetPath) {
+      if (replace) {
+        window.history.replaceState({ tab }, '', targetPath);
+      } else {
+        window.history.pushState({ tab }, '', targetPath);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const currentTab = getTabFromPathname(window.location.pathname);
+      setActiveTabState(currentTab);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    const cleanPath = window.location.pathname.replace(/\/+$/, '') || '/';
+    if (!ROUTE_MAP[cleanPath.toLowerCase()]) {
+      window.history.replaceState({ tab: 'calendar-page' }, '', '/');
+    }
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
   const [lang, setLang] = useState('en'); // 'en' | 'te'
 
   // Theme Mode state ('dark' | 'light') 
