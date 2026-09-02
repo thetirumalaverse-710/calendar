@@ -67,6 +67,19 @@ export const TEMPLES = [
     dressCode: 'Traditional Indian Attire'
   },
   {
+    id: 'narayanavanam',
+    name: 'Sri Kalyana Venkateswara Swamy Temple',
+    teluguName: 'శ్రీ కళ్యాణ వేంకటేశ్వర స్వామి వారి ఆలయం, నారాయణవనం',
+    location: 'Narayanavanam (40 km East of Tirupati)',
+    distanceFromStation: '40 km from Tirupati Railway Station',
+    deity: 'Lord Kalyana Venkateswara Swamy',
+    badge: 'Divine Wedding Shrine',
+    color: '#9C27B0',
+    description: 'Sacred site associated with the celestial wedding of Sri Padmavati and Srinivasa.',
+    timing: '05:30 AM - 08:30 PM',
+    dressCode: 'Traditional Indian Attire'
+  },
+  {
     id: 'kodandarama',
     name: 'Sri Kodandarama Swamy Temple',
     teluguName: 'శ్రీ కోదండరామ స్వామి వారి ఆలయం',
@@ -77,32 +90,6 @@ export const TEMPLES = [
     color: '#FB8500',
     description: 'Commemorating Lord Rama, Sita Devi, and Lakshmana who rested at this spot during their return from Lanka.',
     timing: '05:00 AM - 08:30 PM',
-    dressCode: 'Traditional Indian Attire'
-  },
-  {
-    id: 'ontimitta',
-    name: 'Ontimitta Sri Kodandarama Swamy Temple',
-    teluguName: 'ఒంటిమిట్ట శ్రీ కోదండరామస్వామి వారి ఆలయం',
-    location: 'Ontimitta, Kadapa District',
-    distanceFromStation: '85 km from Tirupati',
-    deity: 'Lord Sri Rama (Eka Shila Nagaram)',
-    badge: 'Historic Heritage Shrine',
-    color: '#E63946',
-    description: 'Ancient monolithic temple associated with Saint Bammera Potana.',
-    timing: '06:00 AM - 08:00 PM',
-    dressCode: 'Traditional Indian Attire'
-  },
-  {
-    id: 'nagalapuram',
-    name: 'Nagalapuram Sri Vedanarayana Swamy Temple',
-    teluguName: 'నాగలాపురం శ్రీ వేదనారాయణ స్వామి ఆలయం',
-    location: 'Nagalapuram',
-    distanceFromStation: '70 km from Tirupati',
-    deity: 'Lord Matsya Avatar (Vedanarayana)',
-    badge: 'First Incarnation Shrine',
-    color: '#008080',
-    description: 'Shrine of Matsya Avatara where sun rays touch the deity during Sun Worship festival.',
-    timing: '06:00 AM - 07:30 PM',
     dressCode: 'Traditional Indian Attire'
   },
   {
