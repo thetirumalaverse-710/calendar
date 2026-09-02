@@ -23,3 +23,21 @@ docs/uml/rendered/
 # Local SRS documentation - keep on this computer only
 docs/SRS.md
 
+# Local Beginner Learning Guide & Folder Documentation (Keep on this computer only)
+PROJECT_CODE_GUIDE.md
+src/README.md
+src/components/README.md
+src/components/admin/README.md
+src/components/calendar/README.md
+src/components/layout/README.md
+src/components/tokens/README.md
+src/config/README.md
+src/data/README.md
+src/hooks/README.md
+src/utils/README.md
+public/README.md
+supabase/README.md
+.github/workflows/README.md
+docs/README.md
+scripts/README.md
+
