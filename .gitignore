@@ -19,3 +19,7 @@ postgresqlpostgres.rjdltvopbejhvbhe.txt
 
 # Locally rendered UML diagrams - keep on this computer only
 docs/uml/rendered/
+
+# Local SRS documentation - keep on this computer only
+docs/SRS.md
+
