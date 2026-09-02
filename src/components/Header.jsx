@@ -80,7 +80,7 @@ export default function Header({
             </div>
 
             <div onClick={() => setActiveTab('calendar-page')} className="cursor-pointer min-w-0 flex-1">
-              <h1 className="font-serif text-[12px] sm:text-2xl font-extrabold gold-gradient-text tracking-tight leading-tight !block w-full truncate">
+              <h1 className="font-serif text-sm sm:text-2xl font-extrabold gold-gradient-text tracking-tight leading-tight !block w-full truncate">
                 The Tirumala Verse
               </h1>
               <p className="hidden sm:block text-xs text-[#94A3B8] tracking-wider font-medium">
@@ -186,7 +186,7 @@ export default function Header({
               title="Watch TTD Daily YouTube Live Stream"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-              <span>{lang === 'en' ? '🔴 TTD Live' : '🔴 TTD లైవ్'}</span>
+              <span>{lang === 'en' ? 'TTD Live' : 'TTD లైవ్'}</span>
             </button>
           </div>
         )}
