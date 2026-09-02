@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Clock, Utensils, Sparkles, Calendar, Ticket, Layers, Info } from 'lucide-react';
 
 // Exact day-by-day weekly sevas extracted from TTD Official Schedule Images
@@ -200,6 +200,23 @@ export default function DailySchedule({ lang, themeMode = 'dark' }) {
   const isLight = themeMode === 'light';
   const [selectedDayTab, setSelectedDayTab] = useState('Monday');
   const [viewSection, setViewSection] = useState('daily'); // 'daily' | 'weekly-table' | 'periodical'
+  const [showRightFade, setShowRightFade] = useState(false);
+
+  const dayNavRef = useRef(null);
+
+  const checkDayNavScroll = useCallback(() => {
+    if (dayNavRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = dayNavRef.current;
+      const hasMoreRight = scrollLeft + clientWidth < scrollWidth - 6;
+      setShowRightFade(hasMoreRight);
+    }
+  }, []);
+
+  useEffect(() => {
+    checkDayNavScroll();
+    window.addEventListener('resize', checkDayNavScroll);
+    return () => window.removeEventListener('resize', checkDayNavScroll);
+  }, [checkDayNavScroll, viewSection]);
 
   const activeDayObj = WEEKLY_MAIN_TEMPLE_SEVAS.find(d => d.day === selectedDayTab) || WEEKLY_MAIN_TEMPLE_SEVAS[0];
 
@@ -212,7 +229,7 @@ export default function DailySchedule({ lang, themeMode = 'dark' }) {
     <div className="space-y-6 py-4">
       
       {/* Header */}
-      <div className={`glass-card p-6 border-l-4 border-l-[#FFD700] flex flex-wrap items-center justify-between gap-4 ${isLight ? 'bg-white border-slate-200' : 'border-[#D4AF37]/30'}`}>
+      <div className={`glass-card p-4 sm:p-6 border-l-4 border-l-[#FFD700] flex flex-wrap items-center justify-between gap-4 ${isLight ? 'bg-white border-slate-200' : 'border-[#D4AF37]/30'}`}>
         <div>
           <div className="flex items-center gap-3 mb-1">
             <Clock className="w-6 h-6 text-[#FFD700]" />
@@ -271,27 +288,40 @@ export default function DailySchedule({ lang, themeMode = 'dark' }) {
       {viewSection === 'daily' && (
         <div className="space-y-4">
           {/* Day-by-Day Selector Tabs */}
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2">
-            {WEEKLY_MAIN_TEMPLE_SEVAS.map(dayItem => (
-              <button
-                key={dayItem.day}
-                onClick={() => setSelectedDayTab(dayItem.day)}
-                className={`px-4 py-2.5 rounded-xl text-xs font-extrabold shrink-0 transition-all flex items-center gap-2 shadow-md ${
-                  selectedDayTab === dayItem.day
-                    ? 'bg-gradient-to-r from-[#FF5722] to-[#FFD700] text-black ring-2 ring-[#FFD700]'
-                    : isLight
-                    ? 'bg-white text-slate-800 border border-slate-300 hover:bg-amber-50'
-                    : 'bg-[#141923] text-[#FFD700] border border-[#D4AF37]/50 hover:bg-[#D4AF37]/20'
-                }`}
-              >
-                <Calendar className="w-4 h-4" />
-                <span>{lang === 'en' ? dayItem.day : dayItem.dayTe}</span>
-              </button>
-            ))}
+          <div className="relative max-w-full">
+            <div
+              ref={dayNavRef}
+              onScroll={checkDayNavScroll}
+              className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2"
+            >
+              {WEEKLY_MAIN_TEMPLE_SEVAS.map(dayItem => (
+                <button
+                  key={dayItem.day}
+                  onClick={() => setSelectedDayTab(dayItem.day)}
+                  className={`px-4 py-2.5 rounded-xl text-xs font-extrabold shrink-0 transition-all flex items-center gap-2 shadow-md ${
+                    selectedDayTab === dayItem.day
+                      ? 'bg-gradient-to-r from-[#FF5722] to-[#FFD700] text-black ring-2 ring-[#FFD700]'
+                      : isLight
+                      ? 'bg-white text-slate-800 border border-slate-300 hover:bg-amber-50'
+                      : 'bg-[#141923] text-[#FFD700] border border-[#D4AF37]/50 hover:bg-[#D4AF37]/20'
+                  }`}
+                >
+                  <Calendar className="w-4 h-4" />
+                  <span>{lang === 'en' ? dayItem.day : dayItem.dayTe}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Subtle Mobile Right-Edge Fade Scroll Indicator */}
+            {showRightFade && (
+              <div
+                className="sm:hidden absolute top-0 right-0 bottom-2 w-8 pointer-events-none z-10 bg-gradient-to-l from-[#0B0E14] [.light-theme_&]:from-white to-transparent transition-opacity duration-300"
+              />
+            )}
           </div>
 
           {/* Active Day Timetable Card */}
-          <div className={`glass-card p-6 border-2 space-y-4 ${cardBgClass}`}>
+          <div className={`glass-card p-4 sm:p-6 border-2 space-y-4 ${cardBgClass}`}>
             {/* Special Seva Banner */}
             <div className="p-4 rounded-xl bg-gradient-to-r from-[#990000] via-[#FF5722] to-[#990000] text-white flex flex-wrap items-center justify-between gap-3 shadow-lg">
               <div>
@@ -338,7 +368,7 @@ export default function DailySchedule({ lang, themeMode = 'dark' }) {
 
       {/* SECTION 2: CLEAN WEEKLY SEVAS TABLE (DAY, SEVA NAME WITH WEEKLY TAG, SEVA TIME) */}
       {viewSection === 'weekly-table' && (
-        <div className={`glass-card p-6 border-2 space-y-4 ${cardBgClass}`}>
+        <div className={`glass-card p-4 sm:p-6 border-2 space-y-4 ${cardBgClass}`}>
           <div className={`border-b pb-3 ${isLight ? 'border-slate-200' : 'border-[#D4AF37]/30'}`}>
             <h3 className="font-serif text-xl font-bold text-[#FFD700] flex items-center gap-2">
               <Ticket className="w-5 h-5 text-[#FF5722]" />
@@ -381,7 +411,7 @@ export default function DailySchedule({ lang, themeMode = 'dark' }) {
 
       {/* SECTION 3: PERIODICAL SEVAS */}
       {viewSection === 'periodical' && (
-        <div className={`glass-card p-6 border-2 space-y-4 ${cardBgClass}`}>
+        <div className={`glass-card p-4 sm:p-6 border-2 space-y-4 ${cardBgClass}`}>
           <div className={`border-b pb-3 ${isLight ? 'border-slate-200' : 'border-[#D4AF37]/30'}`}>
             <h3 className="font-serif text-xl font-bold flex items-center gap-2">
               <Layers className="w-5 h-5 text-[#FF5722]" />
