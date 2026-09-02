@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Clock as ClockIcon,
   MessageSquare,
@@ -26,6 +26,18 @@ export default function Header({
 }) {
   const [isOnline, setIsOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [showRightFade, setShowRightFade] = useState(false);
+
+  const navRef = useRef(null);
+  const tabRefs = useRef({});
+
+  const checkNavScroll = useCallback(() => {
+    if (navRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = navRef.current;
+      const hasMoreRight = scrollLeft + clientWidth < scrollWidth - 6;
+      setShowRightFade(hasMoreRight);
+    }
+  }, []);
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -47,6 +59,23 @@ export default function Header({
       window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
     };
   }, []);
+
+  useEffect(() => {
+    checkNavScroll();
+    window.addEventListener('resize', checkNavScroll);
+    return () => window.removeEventListener('resize', checkNavScroll);
+  }, [checkNavScroll, lang, activeTab]);
+
+  useEffect(() => {
+    const activeEl = tabRefs.current[activeTab];
+    if (activeEl && navRef.current) {
+      activeEl.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+    }
+  }, [activeTab]);
 
   const handleInstallClick = () => {
     if (deferredPrompt) {
@@ -192,75 +221,93 @@ export default function Header({
         )}
 
         {/* BOTTOM ROW: Smooth Scrolling Navigation Tabs */}
-        <nav className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar py-0.5 max-w-full">
-          <button
-            onClick={() => setActiveTab('calendar-page')}
-            className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold flex items-center gap-1.5 shrink-0 transition-all shadow-md ${
-              activeTab === 'calendar-page'
-                ? 'bg-[#141923] text-[#FFD700] ring-2 ring-[#FFD700] border border-[#FFD700]'
-                : 'bg-[#141923] text-[#FFD700] border border-[#D4AF37]/50 hover:bg-[#D4AF37]/20'
-            }`}
+        <div className="relative max-w-full">
+          <nav
+            ref={navRef}
+            onScroll={checkNavScroll}
+            className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar py-0.5 max-w-full"
           >
-            <span>📅 {lang === 'en' ? 'Calendar' : 'క్యాలెండర్'}</span>
-          </button>
+            <button
+              ref={el => (tabRefs.current['calendar-page'] = el)}
+              onClick={() => setActiveTab('calendar-page')}
+              className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold flex items-center gap-1.5 shrink-0 transition-all shadow-md ${
+                activeTab === 'calendar-page'
+                  ? 'bg-[#141923] text-[#FFD700] ring-2 ring-[#FFD700] border border-[#FFD700]'
+                  : 'bg-[#141923] text-[#FFD700] border border-[#D4AF37]/50 hover:bg-[#D4AF37]/20'
+              }`}
+            >
+              <span>📅 {lang === 'en' ? 'Calendar' : 'క్యాలెండర్'}</span>
+            </button>
 
-          <button
-            onClick={() => setActiveTab('glossary')}
-            className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5 shrink-0 transition-all ${
-              activeTab === 'glossary'
-                ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-[#0B0E14] shadow-md font-extrabold'
-                : 'text-[#94A3B8] hover:text-[#FFD700] hover:bg-[#141923]'
-            }`}
-          >
-            <BookOpen className="w-4 h-4 text-[#FFD700]" />
-            <span>{lang === 'en' ? 'Glossary / Meanings' : 'నిఘంటువు / పదాల అర్థాలు'}</span>
-          </button>
+            <button
+              ref={el => (tabRefs.current['glossary'] = el)}
+              onClick={() => setActiveTab('glossary')}
+              className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5 shrink-0 transition-all ${
+                activeTab === 'glossary'
+                  ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-[#0B0E14] shadow-md font-extrabold'
+                  : 'text-[#94A3B8] hover:text-[#FFD700] hover:bg-[#141923]'
+              }`}
+            >
+              <BookOpen className="w-4 h-4 text-[#FFD700]" />
+              <span>{lang === 'en' ? 'Glossary / Meanings' : 'నిఘంటువు / పదాల అర్థాలు'}</span>
+            </button>
 
-          <button
-            onClick={() => setActiveTab('sevas')}
-            className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5 shrink-0 transition-all ${
-              activeTab === 'sevas'
-                ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-[#0B0E14] shadow-md'
-                : 'text-[#94A3B8] hover:text-[#FFD700] hover:bg-[#141923]'
-            }`}
-          >
-            <ClockIcon className="w-4 h-4" />
-            <span>{lang === 'en' ? 'Sevas' : 'సేవలు'}</span>
-          </button>
+            <button
+              ref={el => (tabRefs.current['sevas'] = el)}
+              onClick={() => setActiveTab('sevas')}
+              className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5 shrink-0 transition-all ${
+                activeTab === 'sevas'
+                  ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-[#0B0E14] shadow-md'
+                  : 'text-[#94A3B8] hover:text-[#FFD700] hover:bg-[#141923]'
+              }`}
+            >
+              <ClockIcon className="w-4 h-4" />
+              <span>{lang === 'en' ? 'Sevas' : 'సేవలు'}</span>
+            </button>
 
-                    <button
-            onClick={() => setActiveTab('tokens')}
-            className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5 shrink-0 transition-all ${
-              activeTab === 'tokens'
-                ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-[#0B0E14] shadow-md'
-                : 'text-[#94A3B8] hover:text-[#FFD700] hover:bg-[#141923]'
-            }`}
-          >
-            <span>🎟️</span>
-            <span>
-              {lang === 'en' ? 'SSD / DD Tokens' : 'SSD / DD టోకెన్లు'}
-            </span>
-          </button>
+            <button
+              ref={el => (tabRefs.current['tokens'] = el)}
+              onClick={() => setActiveTab('tokens')}
+              className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5 shrink-0 transition-all ${
+                activeTab === 'tokens'
+                  ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-[#0B0E14] shadow-md'
+                  : 'text-[#94A3B8] hover:text-[#FFD700] hover:bg-[#141923]'
+              }`}
+            >
+              <span>🎟️</span>
+              <span>
+                {lang === 'en' ? 'SSD / DD Tokens' : 'SSD / DD టోకెన్లు'}
+              </span>
+            </button>
 
-          {/* COMMUNITY FEEDBACK BUTTON / ADMIN INBOX */}
-          <button
-            onClick={() => {
-              if (isAdminLoggedIn) {
-                onOpenAdmin('feedback-inbox');
-              } else {
-                setActiveTab('feedback');
-              }
-            }}
-            className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5 shrink-0 transition-all ${
-              activeTab === 'feedback'
-                ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-[#0B0E14] shadow-md'
-                : 'text-[#94A3B8] hover:text-[#FFD700] hover:bg-[#141923]'
-            }`}
-          >
-            <MessageSquare className="w-4 h-4 text-[#FF5722]" />
-            <span>{isAdminLoggedIn ? (lang === 'en' ? 'Feedback Inbox' : 'అభిప్రాయాల ఇన్బాక్స్') : (lang === 'en' ? 'Feedback' : 'అభిప్రాయాలు')}</span>
-          </button>
-        </nav>
+            {/* COMMUNITY FEEDBACK BUTTON / ADMIN INBOX */}
+            <button
+              ref={el => (tabRefs.current['feedback'] = el)}
+              onClick={() => {
+                if (isAdminLoggedIn) {
+                  onOpenAdmin('feedback-inbox');
+                } else {
+                  setActiveTab('feedback');
+                }
+              }}
+              className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5 shrink-0 transition-all ${
+                activeTab === 'feedback'
+                  ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-[#0B0E14] shadow-md'
+                  : 'text-[#94A3B8] hover:text-[#FFD700] hover:bg-[#141923]'
+              }`}
+            >
+              <MessageSquare className="w-4 h-4 text-[#FF5722]" />
+              <span>{isAdminLoggedIn ? (lang === 'en' ? 'Feedback Inbox' : 'అభిప్రాయాల ఇన్బాక్స్') : (lang === 'en' ? 'Feedback' : 'అభిప్రాయాలు')}</span>
+            </button>
+          </nav>
+
+          {/* Subtle Mobile Right-Edge Fade Scroll Indicator */}
+          {showRightFade && (
+            <div
+              className="sm:hidden absolute top-0 right-0 bottom-0 w-8 pointer-events-none z-10 bg-gradient-to-l from-[#0B0E14] [.light-theme_&]:from-white to-transparent transition-opacity duration-300"
+            />
+          )}
+        </div>
 
       </div>
     </header>
