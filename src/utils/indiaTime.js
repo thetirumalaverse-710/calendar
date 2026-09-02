@@ -24,3 +24,9 @@ export function getIndiaDateTimeLocalValue(date = new Date()) {
 
   return `${values.year}-${values.month}-${values.day}T${values.hour}:${values.minute}`;
 }
+
+export function isIndiaWednesday(date = new Date()) {
+  const dateStr = getIndiaDateString(date);
+  const [year, month, day] = dateStr.split("-").map(Number);
+  return new Date(year, month - 1, day, 12, 0, 0).getDay() === 3;
+}

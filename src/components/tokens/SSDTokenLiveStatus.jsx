@@ -1,5 +1,5 @@
 import React from "react";
-import { Info, Radio } from "lucide-react";
+import { AlertTriangle, Info, Radio } from "lucide-react";
 import { TOKEN_INFO } from "../../data/tokenInfo";
 import {
   formatTokenDateTime,
@@ -69,6 +69,8 @@ function LiveTokenCard({
         <p className={`text-2xl font-black mt-1 ${headingClass}`}>
           {tokenLoading
             ? "..."
+            : isNoIssuance
+            ? "No Issuance"
             : status === "completed"
             ? "Completed"
             : latestObservation?.[remainingKey] ??
@@ -133,6 +135,7 @@ export default function SSDTokenLiveStatus({
   ssdStatus,
   ddStatus,
   isNoIssuance,
+  isTodayWednesday,
   hasObservation,
   liveSource,
 }) {
@@ -222,19 +225,42 @@ export default function SSDTokenLiveStatus({
         />
       </div>
 
-      <div
-        className={`mt-4 rounded-xl border p-3 flex gap-3 ${
-          isLight
-            ? "bg-green-50 border-green-200"
-            : "bg-green-500/5 border-green-500/20"
-        }`}
-      >
-        <Info className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+      {isNoIssuance ? (
+        <div
+          className={`mt-4 rounded-xl border p-3 flex gap-3 ${
+            isLight
+              ? "bg-amber-50 border-amber-200"
+              : "bg-amber-500/10 border-amber-500/30"
+          }`}
+        >
+          <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
 
-        <p className={`text-xs leading-relaxed ${mutedClass}`}>
-          {text.awaiting}
-        </p>
-      </div>
+          <p
+            className={`text-xs font-semibold leading-relaxed ${
+              isLight ? "text-amber-900" : "text-amber-200"
+            }`}
+          >
+            {isTodayWednesday
+              ? text.wednesdayNotice
+              : text.genericNoIssuanceNotice ||
+                "No token issuance scheduled for today."}
+          </p>
+        </div>
+      ) : (
+        <div
+          className={`mt-4 rounded-xl border p-3 flex gap-3 ${
+            isLight
+              ? "bg-green-50 border-green-200"
+              : "bg-green-500/5 border-green-500/20"
+          }`}
+        >
+          <Info className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+
+          <p className={`text-xs leading-relaxed ${mutedClass}`}>
+            {text.awaiting}
+          </p>
+        </div>
+      )}
     </section>
   );
 }

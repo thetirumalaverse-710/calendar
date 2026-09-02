@@ -11,6 +11,7 @@ import {
   getRecentTokenHistory,
   getTodayTokenData,
 } from "../utils/tokenCloud";
+import { isIndiaWednesday } from "../utils/indiaTime";
 import {
   buildTokenActivityEvents,
   getLatestObservation,
@@ -75,7 +76,9 @@ export default function SSDDTokens({ lang = "en", themeMode = "dark" }) {
 
   const latestObservation = getLatestObservation(tokenData.observations);
   const tokenDay = tokenData.tokenDay;
-  const isNoIssuance = tokenDay?.issuance_status === "no_issuance";
+  const isTodayWednesday = isIndiaWednesday();
+  const isNoIssuance =
+    isTodayWednesday || tokenDay?.issuance_status === "no_issuance";
   const hasObservation = Boolean(latestObservation);
 
   /*
@@ -183,6 +186,16 @@ export default function SSDDTokens({ lang = "en", themeMode = "dark" }) {
       lang === "te"
         ? "లైవ్ డేటా మూలం అనుసంధానమైన తర్వాత రోజువారీ చరిత్ర ఇక్కడ స్వయంచాలకంగా రూపొందుతుంది."
         : "Daily token history will automatically build once the live data source is connected.",
+
+    wednesdayNotice:
+      lang === "te"
+        ? "గురువారం దర్శనం కోసం బుధవారం టోకెన్లు జారీ చేయబడవు."
+        : "No tokens are issued on Wednesdays for Thursday darshan.",
+
+    genericNoIssuanceNotice:
+      lang === "te"
+        ? "ఈరోజు టోకెన్ల జారీ లేదు."
+        : "No token issuance scheduled for today.",
   };
 
   const pageClass = isLight
@@ -251,6 +264,7 @@ export default function SSDDTokens({ lang = "en", themeMode = "dark" }) {
           ssdStatus={ssdStatus}
           ddStatus={ddStatus}
           isNoIssuance={isNoIssuance}
+          isTodayWednesday={isTodayWednesday}
           hasObservation={hasObservation}
           liveSource={liveSource}
         />
@@ -268,6 +282,8 @@ export default function SSDDTokens({ lang = "en", themeMode = "dark" }) {
           tokenDay={tokenDay}
           ssdStatus={ssdStatus}
           ddStatus={ddStatus}
+          isNoIssuance={isNoIssuance}
+          isTodayWednesday={isTodayWednesday}
         />
 
         <SSDTokenImportantInfo

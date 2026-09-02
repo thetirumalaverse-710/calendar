@@ -18,6 +18,8 @@ export default function SSDTokenActivity({
   tokenDay,
   ssdStatus,
   ddStatus,
+  isNoIssuance,
+  isTodayWednesday,
 }) {
   return (
     <section
@@ -80,11 +82,18 @@ export default function SSDTokenActivity({
           <Clock className="w-7 h-7 mx-auto text-slate-400 mb-2" />
 
           <p className={`text-sm font-bold ${headingClass}`}>
-            No activity recorded yet
+            {isNoIssuance
+              ? "No Token Issuance Today"
+              : "No activity recorded yet"}
           </p>
 
           <p className={`text-xs mt-1 ${mutedClass}`}>
-            No SSD/DD token activity has been recorded for today.
+            {isTodayWednesday
+              ? text.wednesdayNotice
+              : isNoIssuance
+              ? text.genericNoIssuanceNotice ||
+                "No token issuance scheduled for today."
+              : "No SSD/DD token activity has been recorded for today."}
           </p>
         </div>
       ) : (
