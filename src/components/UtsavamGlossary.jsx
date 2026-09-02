@@ -1,5 +1,5 @@
 import useGlossary from "../hooks/useGlossary";
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { GLOSSARY_CATEGORIES, UTSAVA_GLOSSARY_TERMS } from '../data/utsavaGlossary';
 import { Search, BookOpen, Sparkles, HelpCircle, Info, ChevronDown, ChevronUp, Image as ImageIcon, X, ChevronLeft, ChevronRight, Edit3 } from 'lucide-react';
 
@@ -13,7 +13,24 @@ export default function UtsavamGlossary({
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [expandedTermId, setExpandedTermId] = useState(null);
-  
+  const [showRightFade, setShowRightFade] = useState(false);
+
+  const categoryNavRef = useRef(null);
+
+  const checkCategoryNavScroll = useCallback(() => {
+    if (categoryNavRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = categoryNavRef.current;
+      const hasMoreRight = scrollLeft + clientWidth < scrollWidth - 6;
+      setShowRightFade(hasMoreRight);
+    }
+  }, []);
+
+  useEffect(() => {
+    checkCategoryNavScroll();
+    window.addEventListener('resize', checkCategoryNavScroll);
+    return () => window.removeEventListener('resize', checkCategoryNavScroll);
+  }, [checkCategoryNavScroll]);
+
   // Gallery Lightbox Modal State
   const [activeGalleryTerm, setActiveGalleryTerm] = useState(null);
   const [galleryImgIndex, setGalleryImgIndex] = useState(0);
@@ -144,7 +161,7 @@ export default function UtsavamGlossary({
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm('')}
-                  className="absolute right-4 text-xs bg-[#141923] hover:bg-black/50 text-[#94A3B8] hover:text-white px-2 py-1 rounded-full border border-[#D4AF37]/30"
+                  className="absolute right-3.5 w-7 h-7 flex items-center justify-center rounded-full bg-[#141923] hover:bg-black/50 text-[#94A3B8] hover:text-white border border-[#D4AF37]/30 text-xs transition-colors"
                 >
                   ✕
                 </button>
@@ -196,24 +213,37 @@ export default function UtsavamGlossary({
       )}
 
       {/* CATEGORY FILTER CHIPS */}
-      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
-        {GLOSSARY_CATEGORIES.map(cat => {
-          const isActive = selectedCategory === cat.id;
-          return (
-            <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(cat.id)}
-              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold flex items-center gap-2 shrink-0 transition-all shadow-md ${
-                isActive
-                  ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-black border border-[#FFD700] ring-2 ring-[#FFD700]/40'
-                  : 'bg-[#141923] text-[#94A3B8] hover:text-[#FFD700] border border-[#D4AF37]/30 hover:border-[#D4AF37]/60'
-              }`}
-            >
-              <span>{cat.icon}</span>
-              <span>{lang === 'en' ? cat.labelEn : cat.labelTe}</span>
-            </button>
-          );
-        })}
+      <div className="relative max-w-full">
+        <div
+          ref={categoryNavRef}
+          onScroll={checkCategoryNavScroll}
+          className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1"
+        >
+          {GLOSSARY_CATEGORIES.map(cat => {
+            const isActive = selectedCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold flex items-center gap-2 shrink-0 transition-all shadow-md ${
+                  isActive
+                    ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-black border border-[#FFD700] ring-2 ring-[#FFD700]/40'
+                    : 'bg-[#141923] text-[#94A3B8] hover:text-[#FFD700] border border-[#D4AF37]/30 hover:border-[#D4AF37]/60'
+                }`}
+              >
+                <span>{cat.icon}</span>
+                <span>{lang === 'en' ? cat.labelEn : cat.labelTe}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Subtle Mobile Right-Edge Fade Scroll Indicator */}
+        {showRightFade && (
+          <div
+            className="sm:hidden absolute top-0 right-0 bottom-1 w-8 pointer-events-none z-10 bg-gradient-to-l from-[#0B0E14] [.light-theme_&]:from-white to-transparent transition-opacity duration-300"
+          />
+        )}
       </div>
 
       {/* RESULTS COUNT SUMMARY & SORTING INDICATOR */}
