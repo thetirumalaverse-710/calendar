@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Activity, AlertTriangle, Clock } from "lucide-react";
 import {
   formatTokenTime,
@@ -21,6 +21,23 @@ export default function SSDTokenActivity({
   isNoIssuance,
   isTodayWednesday,
 }) {
+  const [showRightFade, setShowRightFade] = useState(false);
+  const tableRef = useRef(null);
+
+  const checkTableScroll = useCallback(() => {
+    if (tableRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = tableRef.current;
+      const hasMoreRight = scrollLeft + clientWidth < scrollWidth - 6;
+      setShowRightFade(hasMoreRight);
+    }
+  }, []);
+
+  useEffect(() => {
+    checkTableScroll();
+    window.addEventListener("resize", checkTableScroll);
+    return () => window.removeEventListener("resize", checkTableScroll);
+  }, [checkTableScroll, activityEvents]);
+
   return (
     <section
       className={`rounded-2xl border p-4 sm:p-6 mb-5 ${cardClass}`}
@@ -97,106 +114,119 @@ export default function SSDTokenActivity({
           </p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-white/10">
-          <table className="w-full min-w-[720px] text-left">
-            <thead>
-              <tr
-                className={
-                  isLight
-                    ? "bg-slate-50 border-b border-slate-200"
-                    : "bg-[#0B0E14] border-b border-white/10"
-                }
-              >
-                <th
-                  className={`px-4 py-3 text-xs font-black ${headingClass}`}
+        <div className="relative max-w-full">
+          <div
+            ref={tableRef}
+            onScroll={checkTableScroll}
+            className="overflow-x-auto rounded-xl border border-slate-200 dark:border-white/10"
+          >
+            <table className="w-full min-w-[720px] text-left">
+              <thead>
+                <tr
+                  className={
+                    isLight
+                      ? "bg-slate-50 border-b border-slate-200"
+                      : "bg-[#0B0E14] border-b border-white/10"
+                  }
                 >
-                  Time
-                </th>
-
-                <th
-                  className={`px-4 py-3 text-xs font-black ${headingClass}`}
-                >
-                  Activity
-                </th>
-
-                <th
-                  className={`px-4 py-3 text-xs font-black ${headingClass}`}
-                >
-                  SSD
-                </th>
-
-                <th
-                  className={`px-4 py-3 text-xs font-black ${headingClass}`}
-                >
-                  DD
-                </th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {activityEvents.map((event) => {
-                const { ssdValue, ddValue } = getActivityTokenValues({
-                  event,
-                  tokenDay,
-                  ssdStatus,
-                  ddStatus,
-                });
-
-                return (
-                  <tr
-                    key={event.id}
-                    className={
-                      isLight
-                        ? "border-b border-slate-200 last:border-b-0 hover:bg-slate-50"
-                        : "border-b border-white/10 last:border-b-0 hover:bg-white/[0.02]"
-                    }
+                  <th
+                    className={`px-4 py-3 text-xs font-black ${headingClass}`}
                   >
-                    <td className="px-4 py-4">
-                      <span
-                        className={`text-sm font-black whitespace-nowrap ${headingClass}`}
-                      >
-                        {formatTokenTime(event.time)} IST
-                      </span>
-                    </td>
+                    Time
+                  </th>
 
-                    <td className="px-4 py-4">
-                      <div className={`text-sm font-bold ${headingClass}`}>
-                        {event.title}
-                      </div>
+                  <th
+                    className={`px-4 py-3 text-xs font-black ${headingClass}`}
+                  >
+                    Activity
+                  </th>
 
-                      <div className={`text-[10px] mt-1 ${mutedClass}`}>
-                        {event.label}
-                      </div>
-                    </td>
+                  <th
+                    className={`px-4 py-3 text-xs font-black ${headingClass}`}
+                  >
+                    SSD
+                  </th>
 
-                    <td className="px-4 py-4">
-                      <span
-                        className={`text-sm font-black ${
-                          ssdValue === "Completed"
-                            ? "text-green-500"
-                            : headingClass
-                        }`}
-                      >
-                        {ssdValue}
-                      </span>
-                    </td>
+                  <th
+                    className={`px-4 py-3 text-xs font-black ${headingClass}`}
+                  >
+                    DD
+                  </th>
+                </tr>
+              </thead>
 
-                    <td className="px-4 py-4">
-                      <span
-                        className={`text-sm font-black ${
-                          ddValue === "Completed"
-                            ? "text-green-500"
-                            : headingClass
-                        }`}
-                      >
-                        {ddValue}
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+              <tbody>
+                {activityEvents.map((event) => {
+                  const { ssdValue, ddValue } = getActivityTokenValues({
+                    event,
+                    tokenDay,
+                    ssdStatus,
+                    ddStatus,
+                  });
+
+                  return (
+                    <tr
+                      key={event.id}
+                      className={
+                        isLight
+                          ? "border-b border-slate-200 last:border-b-0 hover:bg-slate-50"
+                          : "border-b border-white/10 last:border-b-0 hover:bg-white/[0.02]"
+                      }
+                    >
+                      <td className="px-4 py-4">
+                        <span
+                          className={`text-sm font-black whitespace-nowrap ${headingClass}`}
+                        >
+                          {formatTokenTime(event.time)} IST
+                        </span>
+                      </td>
+
+                      <td className="px-4 py-4">
+                        <div className={`text-sm font-bold ${headingClass}`}>
+                          {event.title}
+                        </div>
+
+                        <div className={`text-[10px] mt-1 ${mutedClass}`}>
+                          {event.label}
+                        </div>
+                      </td>
+
+                      <td className="px-4 py-4">
+                        <span
+                          className={`text-sm font-black ${
+                            ssdValue === "Completed"
+                              ? "text-green-500"
+                              : headingClass
+                          }`}
+                        >
+                          {ssdValue}
+                        </span>
+                      </td>
+
+                      <td className="px-4 py-4">
+                        <span
+                          className={`text-sm font-black ${
+                            ddValue === "Completed"
+                              ? "text-green-500"
+                              : headingClass
+                          }`}
+                        >
+                          {ddValue}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Subtle Mobile Right-Edge Fade Scroll Indicator */}
+          {showRightFade && (
+            <div
+              className="sm:hidden absolute top-0 right-0 bottom-0 w-8 pointer-events-none z-10 rounded-r-xl bg-gradient-to-l from-[#111722] [.light-theme_&]:from-white to-transparent transition-opacity duration-300"
+            />
+          )}
         </div>
       )}
     </section>
