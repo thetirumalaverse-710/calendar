@@ -65,7 +65,7 @@ export default function Header({
         {/* TOP ROW: Brand Logo & Title on Left + Control Buttons on Right */}
         <div className="flex items-center justify-between gap-2 w-full">
           {/* Brand Logo & Title */}
-          <div className="flex items-center gap-2.5 group shrink-0">
+          <div className="flex items-center gap-2 sm:gap-2.5 group min-w-0 flex-1">
             <div 
               onClick={onOpenLogoModal}
               className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-[#FFD700] shadow-md group-hover:scale-110 transition-transform bg-[#E65100] flex items-center justify-center cursor-pointer shrink-0"
@@ -79,11 +79,11 @@ export default function Header({
               />
             </div>
 
-            <div onClick={() => setActiveTab('calendar-page')} className="cursor-pointer">
-              <h1 className="font-serif text-base sm:text-2xl font-extrabold gold-gradient-text tracking-wide leading-tight">
+            <div onClick={() => setActiveTab('calendar-page')} className="cursor-pointer min-w-0">
+              <h1 className="font-serif text-sm sm:text-2xl font-extrabold gold-gradient-text tracking-wide leading-tight truncate">
                 The Tirumala Verse
               </h1>
-              <p className="text-[9px] sm:text-xs text-[#94A3B8] tracking-wider font-medium">
+              <p className="hidden sm:block text-xs text-[#94A3B8] tracking-wider font-medium">
                 {lang === 'en' ? 'Your Independent Guide to Tirumala' : 'మీ స్వతంత్ర తిరుమల దివ్య దర్శిని'}
               </p>
             </div>
