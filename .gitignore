@@ -17,3 +17,5 @@ telegram-test.mjs
 Available MTProto servers.txt
 postgresqlpostgres.rjdltvopbejhvbhe.txt
 
+# Locally rendered UML diagrams - keep on this computer only
+docs/uml/rendered/
