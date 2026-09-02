@@ -70,7 +70,7 @@ export default function MobileSelectedDayEvents({
                   <div className="min-w-0 flex-1">
 
                     <div className="flex items-start justify-between gap-2">
-                      <h4 className="font-serif text-sm font-black text-slate-900 dark:text-white leading-snug">
+                      <h4 className="event-card-title font-serif text-sm font-black leading-snug">
                         {lang === 'en'
                           ? evt.title
                           : evt.titleTe ||
