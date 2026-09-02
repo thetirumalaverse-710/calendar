@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Sparkles, Calendar as CalendarIcon, Clock, MapPin } from 'lucide-react';
 import { TEMPLES } from '../data/templeEvents';
+import { getTempleFilterLabel } from '../utils/templeHelpers';
 
 export default function HeroBanner({ lang, onSelectTemple, events = [] }) {
   // Dynamically find next upcoming major event from today's date
@@ -93,14 +94,14 @@ const majorEvent =
                 {lang === 'en' ? 'Filter by Temple Shrine:' : 'ఆలయం వారీగా పరిలక్షించు:'}
               </span>
               <div className="flex flex-wrap gap-2">
-                {TEMPLES.slice(0, 7).map(t => (
+                {TEMPLES.map(t => (
                   <button
                     key={t.id}
                     onClick={() => onSelectTemple(t.id)}
                     className="text-xs px-2.5 py-1 rounded-md bg-[#141923] hover:bg-[#D4AF37]/20 border border-[#D4AF37]/30 text-[#FFD700] transition-colors flex items-center gap-1.5"
                   >
                     <MapPin className="w-3 h-3 text-[#FF5722]" />
-                    <span>{lang === 'en' ? t.name.split(' ')[0] + ' ' + (t.name.split(' ')[1] || '') : t.teluguName.split(' ')[0]}</span>
+                    <span>{getTempleFilterLabel(t, lang)}</span>
                   </button>
                 ))}
               </div>

@@ -6,6 +6,8 @@ import CalendarMonthGrid from './CalendarMonthGrid';
 import CalendarScheduleView from './CalendarScheduleView';
 import { Calendar, Filter, Tag, Edit, Download, Plus, Trash2, FileText, Search, X as ClearIcon, Share2, List } from 'lucide-react';
 
+import { getTempleFilterLabel } from '../utils/templeHelpers';
+
 export default function CalendarView({
   events,
   lang,
@@ -204,7 +206,7 @@ export default function CalendarView({
               }`}
             >
               <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: temple.color }}></span>
-              <span className="truncate">{lang === 'en' ? temple.name : temple.nameTe}</span>
+              <span className="truncate">{getTempleFilterLabel(temple, lang)}</span>
             </button>
           ))}
         </div>
