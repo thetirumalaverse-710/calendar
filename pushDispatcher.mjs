@@ -51,6 +51,8 @@ export async function dispatchWebPushNotification({
   notificationType,
   entityId,
   payload,
+  targetTempleId = null,
+  targetSubscriptions = null,
 }) {
   const ready = await initWebPush();
   if (!ready || !webpush) {
@@ -66,19 +68,33 @@ export async function dispatchWebPushNotification({
   }
 
   try {
-    const { data: subscriptions, error: fetchError } = await supabase
-      .from("push_subscriptions")
-      .select("id, endpoint, p256dh, auth, failure_count")
-      .eq("is_active", true);
+    let subscriptions = targetSubscriptions;
 
-    if (fetchError) {
-      console.error("Error fetching active push subscriptions:", fetchError);
-      return { success: false, error: fetchError };
+    if (!subscriptions) {
+      const { data: rawSubs, error: fetchError } = await supabase
+        .from("push_subscriptions")
+        .select("id, endpoint, p256dh, auth, failure_count, subscribed_temples")
+        .eq("is_active", true);
+
+      if (fetchError) {
+        console.error("Error fetching active push subscriptions:", fetchError);
+        return { success: false, error: fetchError };
+      }
+      subscriptions = rawSubs || [];
+    }
+
+    if (targetTempleId && Array.isArray(subscriptions)) {
+      subscriptions = subscriptions.filter((sub) => {
+        if (!sub.subscribed_temples || !Array.isArray(sub.subscribed_temples)) {
+          return true;
+        }
+        return sub.subscribed_temples.includes(targetTempleId);
+      });
     }
 
     const totalCount = subscriptions ? subscriptions.length : 0;
     if (!subscriptions || totalCount === 0) {
-      console.log("No active push subscriptions to notify.");
+      console.log(`No active push subscriptions to notify for ${notificationType}:${entityId}.`);
       return { success: true, totalCount: 0, sentCount: 0, skippedCount: 0, deactivatedCount: 0, failedCount: 0 };
     }
 
