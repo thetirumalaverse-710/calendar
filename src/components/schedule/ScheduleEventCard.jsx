@@ -27,7 +27,7 @@ export default function ScheduleEventCard({
 
   const temple = TEMPLES.find(t => t.id === evt.templeId);
 
-  const statusObj = getEventStatus(evt.startDate, evt.endDate);
+  const statusObj = getEventStatus(evt);
 
   const evtImages = [];
 
@@ -133,7 +133,7 @@ export default function ScheduleEventCard({
             </span>
 
             {evt.vahanam && (
-              <span className="text-[#FF5722] font-semibold">
+              <span className="vahanam-value font-bold">
                 🛕 {evt.vahanam}
               </span>
             )}

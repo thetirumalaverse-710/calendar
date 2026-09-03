@@ -160,8 +160,6 @@ export default function SSDTokenActivity({
                   const { ssdValue, ddValue } = getActivityTokenValues({
                     event,
                     tokenDay,
-                    ssdStatus,
-                    ddStatus,
                   });
 
                   return (

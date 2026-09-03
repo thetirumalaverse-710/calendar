@@ -125,38 +125,29 @@ export function buildTokenActivityEvents({
 export function getActivityTokenValues({
   event,
   tokenDay,
-  ssdStatus,
-  ddStatus,
 }) {
-  const observation = event.observation;
+  const observation = event?.observation;
+
+  function formatVal(val) {
+    if (val === null || val === undefined || val === "") return "—";
+    return val;
+  }
+
   let ssdValue = "—";
   let ddValue = "—";
 
-  if (event.type === "start") {
-    ssdValue = tokenDay?.ssd_quota ?? "—";
-    ddValue = tokenDay?.dd_quota ?? "—";
-  }
-
-  if (event.type === "ssd-completed") {
+  if (event?.type === "start") {
+    ssdValue = formatVal(tokenDay?.ssd_quota);
+    ddValue = formatVal(tokenDay?.dd_quota);
+  } else if (event?.type === "ssd-completed") {
     ssdValue = "Completed";
-    ddValue = ddStatus === "completed" ? "Completed" : "—";
-  }
-
-  if (event.type === "dd-completed") {
-    ssdValue = ssdStatus === "completed" ? "Completed" : "—";
+    ddValue = formatVal(observation?.dd_remaining);
+  } else if (event?.type === "dd-completed") {
+    ssdValue = formatVal(observation?.ssd_remaining);
     ddValue = "Completed";
-  }
-
-  if (event.type === "observation") {
-    ssdValue =
-      observation?.ssd_status === "completed"
-        ? "Completed"
-        : observation?.ssd_remaining ?? "—";
-
-    ddValue =
-      observation?.dd_status === "completed"
-        ? "Completed"
-        : observation?.dd_remaining ?? "—";
+  } else if (event?.type === "observation") {
+    ssdValue = formatVal(observation?.ssd_remaining);
+    ddValue = formatVal(observation?.dd_remaining);
   }
 
   return { ssdValue, ddValue };

@@ -73,7 +73,7 @@ import { getEventStatus } from './eventStatus';
     // Prepare AutoTable Data
     const tableHead = [['#', 'Date Range', 'Festival Name', 'Sacred Shrine', 'Status', 'Details & Tithi']];
     const tableRows = filtered.map((evt, idx) => {
-      const statusObj = getEventStatus(evt.startDate, evt.endDate);
+      const statusObj = getEventStatus(evt);
       const templeObj = TEMPLES.find(t => t.id === evt.templeId);
       const templeName = templeObj ? templeObj.name : 'Tirumala Temple';
 

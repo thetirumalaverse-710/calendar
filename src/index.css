@@ -347,6 +347,14 @@ body.light-theme .event-card-title:hover {
   color: #B45309 !important;
 }
 
+/* Vahanam Value High Contrast Rules for Light Theme */
+.vahanam-value {
+  color: #FFD700;
+}
+body.light-theme .vahanam-value {
+  color: #0F172A !important;
+}
+
 /* ============================================================
    TIRUMALA VERSE — REUSABLE MOTION SYSTEM
    Subtle, premium animations for cards and live information.

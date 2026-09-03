@@ -36,7 +36,7 @@ export default function EventDetailModal({
   if (!event) return null;
 
   const temple = TEMPLES.find(t => t.id === event.templeId);
-  const statusObj = getEventStatus(event.startDate, event.endDate);
+  const statusObj = getEventStatus(event);
 
   // Share dropdown menu state
   const [isShareMenuOpen, setIsShareMenuOpen] = useState(false);
@@ -170,8 +170,8 @@ export default function EventDetailModal({
             {/* Vehicle / Vahanam details if applicable */}
             {event.vahanam && (
               <div className="p-3 rounded-lg bg-[#FF5722]/10 border border-[#FF5722]/40 text-xs font-bold text-[#FF5722] flex items-center gap-2">
-                <span>🛕 Vahanam / Procession Vehicle:</span>
-                <span className="text-white">{event.vahanam}</span>
+                <span>{lang === 'en' ? '🛕 Vahanam / Procession Vehicle:' : '🛕 వాహనం / ఊరేగింపు వాహనం:'}</span>
+                <span className="vahanam-value font-extrabold">{event.vahanam}</span>
               </div>
             )}
 

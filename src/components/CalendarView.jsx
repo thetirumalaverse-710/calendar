@@ -62,6 +62,19 @@ export default function CalendarView({
     return true;
   });
 
+  // Sort filtered events chronologically by startDate in ascending order (primary sort for Card/List view)
+  const sortedFilteredEvents = React.useMemo(() => {
+    return [...filteredEvents].sort((a, b) => {
+      const dateA = (a?.startDate || '').trim();
+      const dateB = (b?.startDate || '').trim();
+      const dateCompare = dateA.localeCompare(dateB);
+      if (dateCompare !== 0) {
+        return dateCompare;
+      }
+      return (a?.title || '').localeCompare(b?.title || '');
+    });
+  }, [filteredEvents]);
+
   return (
     <div id="calendar-view-container" className="space-y-6 scroll-mt-24">
       
@@ -259,8 +272,8 @@ export default function CalendarView({
           <div className="flex items-center justify-between text-xs text-[#94A3B8]">
             <span>
   {(() => {
-    const visibleEvents = filteredEvents.filter(evt => {
-      const status = getEventStatus(evt.startDate, evt.endDate);
+    const visibleEvents = sortedFilteredEvents.filter(evt => {
+      const status = getEventStatus(evt);
       return status.status !== 'COMPLETED';
     });
 
@@ -271,8 +284,8 @@ export default function CalendarView({
 </span>
           </div>
 
-          {filteredEvents.filter(evt => {
-  const status = getEventStatus(evt.startDate, evt.endDate);
+          {sortedFilteredEvents.filter(evt => {
+  const status = getEventStatus(evt);
   return status.status !== 'COMPLETED';
 }).length === 0 ? (
             <div className="glass-card p-12 text-center text-[#94A3B8] space-y-3">
@@ -288,13 +301,13 @@ export default function CalendarView({
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredEvents
+              {sortedFilteredEvents
   .filter(evt => {
-    const status = getEventStatus(evt.startDate, evt.endDate);
+    const status = getEventStatus(evt);
     return status.status !== 'COMPLETED';
   })
   .map(evt => {
-                const statusObj = getEventStatus(evt.startDate, evt.endDate);
+                const statusObj = getEventStatus(evt);
                 const templeObj = TEMPLES.find(t => t.id === evt.templeId);
 
                 // Collect images for cover display
@@ -394,13 +407,22 @@ export default function CalendarView({
                           {lang === 'en' ? evt.title : (evt.titleTe || evt.title)}
                         </h3>
 
-                        <div className="flex items-center gap-2 text-xs font-mono text-amber-800 dark:text-[#FFD700] font-bold mt-1">
-                          <Calendar className="w-3.5 h-3.5 text-[#FF5722]" />
-                          <span>
-                            {evt.startDate === evt.endDate
-                              ? evt.startDate
-                              : `${evt.startDate} to ${evt.endDate}`}
-                          </span>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-mono text-amber-800 dark:text-[#FFD700] font-bold mt-1">
+                          <div className="flex items-center gap-1">
+                            <Calendar className="w-3.5 h-3.5 text-[#FF5722]" />
+                            <span>
+                              {evt.startDate === evt.endDate
+                                ? evt.startDate
+                                : `${evt.startDate} to ${evt.endDate}`}
+                            </span>
+                          </div>
+
+                          {evt.vahanam && (
+                            <span className="vahanam-value font-sans font-extrabold flex items-center gap-1">
+                              <span>🛕</span>
+                              <span>{evt.vahanam}</span>
+                            </span>
+                          )}
                         </div>
 
                         <p className="text-xs text-slate-700 dark:text-[#94A3B8] line-clamp-2 mt-2 leading-relaxed font-medium">

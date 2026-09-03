@@ -1,5 +1,14 @@
 // Extracted COMPLETE 2026-2027 TTD Calendar Events (From 2 uploaded English pages + original Panchangam)
-export const INITIAL_EVENTS = [
+/**
+ * DATA CLASSIFICATION NOTE:
+ * - `crowdLevel`: Internal estimated pilgrim-density/guidance classification.
+ * - `crowdBadge`: Internal UI label.
+ * - Neither field represents an official TTD-published crowd prediction or official TTD classification.
+ * - `isMajor`: Internal website display-priority flag; NOT an official TTD designation.
+ */
+import { SEPTEMBER_2026_EVENTS } from './templeEvents.js';
+
+const BASE_INITIAL_EVENTS = [
   // JANUARY 2026
   {
     id: 'ttd-2026-01-02',
@@ -30,7 +39,7 @@ export const INITIAL_EVENTS = [
   },
   {
     id: 'ttd-2026-01-04',
-    templeId: 'tirupati-main',
+    templeId: 'govindaraja',
     title: 'Sri Andal Neeratotsavam Begins',
     titleTe: 'శ్రీ ఆండాళ్ నీరాటోత్సవాలు ప్రారంభం',
     startDate: '2026-01-04',
@@ -1332,7 +1341,7 @@ export const INITIAL_EVENTS = [
   },
   {
     id: 'ttd-annamacharya-jayanthi-2026',
-    templeId: 'tirupati-main',
+    templeId: 'govindaraja',
     title: 'Sri Tallapaka Annamacharya 618th Jayanthi Utsavam & Sankeertana Aradhana',
     titleTe: 'శ్రీ తాళ్లపాక అన్నమాచార్యుల 618వ జయంతి ఉత్సవాలు & సంగీత ఆరాధన',
     startDate: '2026-05-18',
@@ -1391,3 +1400,10 @@ export const INITIAL_EVENTS = [
     description: 'Auspicious Vaikunta Ekadasi opening of the celestial northern gates (Vaikunta Dwaram) at Tirumala shrine.'
   }
 ];
+
+const baseIds = new Set(BASE_INITIAL_EVENTS.map(e => e.id));
+export const INITIAL_EVENTS = [
+  ...BASE_INITIAL_EVENTS,
+  ...SEPTEMBER_2026_EVENTS.filter(e => !baseIds.has(e.id))
+];
+

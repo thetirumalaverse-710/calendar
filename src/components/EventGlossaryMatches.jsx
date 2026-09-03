@@ -71,7 +71,9 @@ export default function EventGlossaryMatches({
         </div>
 
         <span className="text-[10px] text-[#94A3B8] font-normal lowercase">
-          (click term to read full glossary)
+          {lang === 'en'
+            ? '(click term to read full glossary)'
+            : '(పూర్తి వివరణ కోసం పదాన్ని నొక్కండి)'}
         </span>
       </div>
 
