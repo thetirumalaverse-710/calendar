@@ -12,7 +12,8 @@ export default function CalendarMonthHeader({
   activeMonthIndex,
   onMonthChange,
   onPrevMonth,
-  onNextMonth
+  onNextMonth,
+  onGoToToday
 }) {
   return (
     <div className="glass-card p-3 sm:p-4 border-2 border-[#D4AF37]/50 flex flex-wrap items-center justify-between gap-3 bg-[#0B0E14] shadow-2xl">
@@ -65,6 +66,15 @@ export default function CalendarMonthHeader({
         </select>
 
         <div className="flex items-center gap-1.5 shrink-0">
+
+          <button
+            type="button"
+            onClick={onGoToToday}
+            className="min-w-[44px] min-h-[44px] px-2.5 sm:px-3 py-2 rounded-xl text-xs font-extrabold flex items-center justify-center gap-1 transition-all shadow-md bg-[#141923] text-[#FFD700] border-2 border-[#D4AF37] hover:bg-[#D4AF37]/20 active:scale-95 cursor-pointer"
+            title={lang === 'en' ? "Jump to Today's Date" : 'ఈ రోజు తేదీకి వెళ్లండి'}
+          >
+            <span>{lang === 'en' ? 'Today' : 'ఈ రోజు'}</span>
+          </button>
 
           <button
             type="button"

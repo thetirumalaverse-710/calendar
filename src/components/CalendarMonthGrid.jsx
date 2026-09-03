@@ -72,6 +72,17 @@ export default function CalendarMonthGrid({
     }
   };
 
+  const handleGoToToday = () => {
+    const today = getTodayIST();
+    const targetIndex = getInitialMonthIndex();
+
+    if (targetIndex !== -1 && targetIndex !== activeMonthIndex) {
+      setActiveMonthIndex(targetIndex);
+    }
+
+    setSelectedDate(today);
+  };
+
   const handleMonthChange = e => {
     const nextIndex = Number(e.target.value);
     setActiveMonthIndex(nextIndex);
@@ -397,6 +408,7 @@ export default function CalendarMonthGrid({
         onMonthChange={handleMonthChange}
         onPrevMonth={handlePrevMonth}
         onNextMonth={handleNextMonth}
+        onGoToToday={handleGoToToday}
       />
 
       {/* =========================================================
