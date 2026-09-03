@@ -196,6 +196,7 @@ export default function CalendarView({
           <select
             value={selectedTemple}
             onChange={(e) => setSelectedTemple(e.target.value)}
+            aria-label={lang === 'en' ? 'Filter events by temple shrine' : 'దేవాలయ క్షేత్రం ద్వారా వడపోత'}
             className="w-full bg-[#141923] text-[#FFD700] border border-[#D4AF37]/60 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#FFD700] shadow-inner cursor-pointer"
           >
             <option value="all" className="bg-[#141923] text-white">

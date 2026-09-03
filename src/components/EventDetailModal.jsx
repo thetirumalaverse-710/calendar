@@ -93,6 +93,7 @@ export default function EventDetailModal({
           {/* Top Close Button */}
           <button
             onClick={onClose}
+            aria-label={lang === 'en' ? 'Close event details' : 'ఈ వివరాలను మూసివేయండి'}
             className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-black/70 text-[#FFD700] hover:bg-black border border-[#D4AF37]/50 flex items-center justify-center transition-colors shadow-lg"
           >
             <X className="w-5 h-5" />

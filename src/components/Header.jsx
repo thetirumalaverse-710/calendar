@@ -153,6 +153,11 @@ export default function Header({
             {/* NOTIFICATIONS TOGGLE BUTTON */}
             <button
               onClick={onToggleNotifications}
+              aria-label={
+                notificationsEnabled
+                  ? (lang === 'en' ? 'Disable notifications' : 'నోటిఫికేషన్లు నిలిపివేయండి')
+                  : (lang === 'en' ? 'Enable notifications' : 'నోటిఫికేషన్లు ప్రారంభించండి')
+              }
               className={`w-[30px] h-[30px] sm:w-auto sm:h-auto p-1 sm:px-2 sm:py-1 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition-colors border ${
                 notificationsEnabled
                   ? 'bg-amber-500/20 border-[#FFD700] text-[#FFD700]'
