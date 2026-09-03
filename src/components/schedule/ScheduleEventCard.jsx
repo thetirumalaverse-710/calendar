@@ -124,9 +124,9 @@ export default function ScheduleEventCard({
           </h4>
 
           {/* DATE RANGE / VAHANAM */}
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#94A3B8]">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#CBD5E1]">
             <span className="font-mono text-[#FFD700] font-bold flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5 text-[#FF5722]" />
+              <Calendar className="w-3.5 h-3.5 dark:text-[#FF5722] text-[#D84315]" />
               {evt.startDate === evt.endDate
                 ? evt.startDate
                 : `${evt.startDate} to ${evt.endDate}`}
@@ -141,7 +141,7 @@ export default function ScheduleEventCard({
 
           {/* DESCRIPTION */}
           {(evt.description || evt.descriptionTe) && (
-            <p className="text-xs text-[#94A3B8]/90 line-clamp-2 leading-relaxed">
+            <p className="text-xs text-[#CBD5E1] line-clamp-2 leading-relaxed">
               {lang === 'en'
                 ? evt.description
                 : evt.descriptionTe || evt.description}

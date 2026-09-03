@@ -105,7 +105,7 @@ export default function CalendarView({
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-[#94A3B8] hover:text-[#FFD700]"
+                className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-[#CBD5E1] hover:text-[#FFD700]"
                 title="Clear search"
               >
                 <ClearIcon className="w-3.5 h-3.5" />

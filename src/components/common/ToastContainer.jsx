@@ -59,7 +59,7 @@ export default function ToastContainer({ themeMode = 'dark' }) {
           >
             <div className="flex items-center gap-2.5">
               {isSuccess && <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />}
-              {isWarning && <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0" />}
+              {isWarning && <AlertTriangle className="w-5 h-5 text-amber-700 shrink-0" />}
               {isError && <AlertCircle className="w-5 h-5 text-rose-500 shrink-0" />}
               {!isSuccess && !isWarning && !isError && (
                 <Info className="w-5 h-5 text-[#D4AF37] shrink-0" />

@@ -174,6 +174,11 @@ export default function Header({
             {/* Dark / Light Mode Toggle */}
             <button
               onClick={() => setThemeMode(themeMode === 'dark' ? 'light' : 'dark')}
+              aria-label={
+                themeMode === 'dark'
+                  ? (lang === 'en' ? 'Switch to Light Mode' : 'లైట్ మోడ్‌కి మారండి')
+                  : (lang === 'en' ? 'Switch to Dark Mode' : 'డార్క్ మోడ్‌కి మారండి')
+              }
               className="w-[30px] h-[30px] sm:w-auto sm:h-auto p-1 sm:px-2.5 sm:py-1 rounded-lg bg-[#141923] border border-[#D4AF37]/50 text-[#FFD700] hover:bg-[#D4AF37]/20 transition-colors flex items-center justify-center gap-1 text-xs font-bold shadow-sm"
               title={themeMode === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             >
@@ -250,7 +255,7 @@ export default function Header({
               className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5 shrink-0 transition-all ${
                 activeTab === 'glossary'
                   ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-[#0B0E14] shadow-md font-extrabold'
-                  : 'text-[#94A3B8] hover:text-[#FFD700] hover:bg-[#141923]'
+                  : 'text-[#CBD5E1] hover:text-[#FFD700] hover:bg-[#141923]'
               }`}
             >
               <BookOpen className="w-4 h-4 text-[#FFD700]" />
@@ -263,7 +268,7 @@ export default function Header({
               className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5 shrink-0 transition-all ${
                 activeTab === 'sevas'
                   ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-[#0B0E14] shadow-md'
-                  : 'text-[#94A3B8] hover:text-[#FFD700] hover:bg-[#141923]'
+                  : 'text-[#CBD5E1] hover:text-[#FFD700] hover:bg-[#141923]'
               }`}
             >
               <ClockIcon className="w-4 h-4" />
@@ -276,7 +281,7 @@ export default function Header({
               className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5 shrink-0 transition-all ${
                 activeTab === 'tokens'
                   ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-[#0B0E14] shadow-md'
-                  : 'text-[#94A3B8] hover:text-[#FFD700] hover:bg-[#141923]'
+                  : 'text-[#CBD5E1] hover:text-[#FFD700] hover:bg-[#141923]'
               }`}
             >
               <span>🎟️</span>
@@ -298,7 +303,7 @@ export default function Header({
               className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5 shrink-0 transition-all ${
                 activeTab === 'feedback'
                   ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-[#0B0E14] shadow-md'
-                  : 'text-[#94A3B8] hover:text-[#FFD700] hover:bg-[#141923]'
+                  : 'text-[#CBD5E1] hover:text-[#FFD700] hover:bg-[#141923]'
               }`}
             >
               <MessageSquare className="w-4 h-4 text-[#FF5722]" />

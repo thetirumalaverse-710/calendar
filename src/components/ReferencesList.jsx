@@ -33,11 +33,11 @@ export default function ReferencesList({ lang }) {
               {lang === 'en' ? ref.title : ref.titleTe}
             </h3>
 
-            <p className="text-xs text-[#94A3B8] leading-relaxed bg-[#0B0E14] p-3 rounded-lg border border-white/5">
+            <p className="text-xs text-[#CBD5E1] leading-relaxed bg-[#0B0E14] p-3 rounded-lg border border-white/5">
               {lang === 'en' ? ref.summary : ref.summaryTe}
             </p>
 
-            <div className="flex items-center justify-between pt-2 border-t border-white/10 text-xs text-[#94A3B8]">
+            <div className="flex items-center justify-between pt-2 border-t border-white/10 text-xs text-[#CBD5E1]">
               <span>Publisher: {ref.publisher}</span>
               <a
                 href={ref.url}

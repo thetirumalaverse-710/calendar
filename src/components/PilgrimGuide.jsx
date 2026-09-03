@@ -37,7 +37,7 @@ export default function PilgrimGuide({ lang }) {
                 </h3>
               </div>
             </div>
-            <p className="text-xs text-[#94A3B8] leading-relaxed">
+            <p className="text-xs text-[#CBD5E1] leading-relaxed">
               {tip.content}
             </p>
           </div>
@@ -52,7 +52,7 @@ export default function PilgrimGuide({ lang }) {
               <PhoneCall className="w-5 h-5 text-[#FF5722]" />
               <span>{lang === 'en' ? 'TTD Official Pilgrim Helpline (24x7)' : 'టిటిడి 24x7 భక్తజన హెల్ప్‌లైన్'}</span>
             </h3>
-            <p className="text-xs text-[#94A3B8]">
+            <p className="text-xs text-[#CBD5E1]">
               {lang === 'en'
                 ? 'For darshan updates, cottage allocation status, and urgent pilgrimage assistance:'
                 : 'దర్శనం సమాచారం మరియు అత్యవసర సహాయం కోసం:'}

@@ -132,19 +132,19 @@ const majorEvent =
               <div className="grid grid-cols-4 gap-2 py-3 bg-[#0B0E14]/80 rounded-xl border border-[#D4AF37]/30 text-center mb-4">
                 <div>
                   <span className="block text-2xl font-extrabold gold-gradient-text">{timeLeft.days}</span>
-                  <span className="text-[10px] text-[#94A3B8] uppercase font-semibold">{lang === 'en' ? 'Days' : 'రోజులు'}</span>
+                  <span className="text-[10px] text-[#CBD5E1] uppercase font-semibold">{lang === 'en' ? 'Days' : 'రోజులు'}</span>
                 </div>
                 <div>
                   <span className="block text-2xl font-extrabold gold-gradient-text">{timeLeft.hours}</span>
-                  <span className="text-[10px] text-[#94A3B8] uppercase font-semibold">{lang === 'en' ? 'Hours' : 'గంటలు'}</span>
+                  <span className="text-[10px] text-[#CBD5E1] uppercase font-semibold">{lang === 'en' ? 'Hours' : 'గంటలు'}</span>
                 </div>
                 <div>
                   <span className="block text-2xl font-extrabold gold-gradient-text">{timeLeft.minutes}</span>
-                  <span className="text-[10px] text-[#94A3B8] uppercase font-semibold">{lang === 'en' ? 'Mins' : 'నిమిషాలు'}</span>
+                  <span className="text-[10px] text-[#CBD5E1] uppercase font-semibold">{lang === 'en' ? 'Mins' : 'నిమిషాలు'}</span>
                 </div>
                 <div>
                   <span className="block text-2xl font-extrabold gold-gradient-text">{timeLeft.seconds}</span>
-                  <span className="text-[10px] text-[#94A3B8] uppercase font-semibold">{lang === 'en' ? 'Secs' : 'సెకన్లు'}</span>
+                  <span className="text-[10px] text-[#CBD5E1] uppercase font-semibold">{lang === 'en' ? 'Secs' : 'సెకన్లు'}</span>
                 </div>
               </div>
 

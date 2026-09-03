@@ -237,7 +237,7 @@ export default function DailySchedule({ lang, themeMode = 'dark' }) {
               {lang === 'en' ? 'Srivari Temple Daily, Weekly & Periodical Sevas' : 'తిరుమల శ్రీవారి నిత్య, వారపు & కాలిక సేవల పట్టిక'}
             </h2>
           </div>
-          <p className={`text-sm ${isLight ? 'text-slate-600' : 'text-[#94A3B8]'}`}>
+          <p className={`text-sm ${isLight ? 'text-slate-700' : 'text-[#CBD5E1]'}`}>
             {lang === 'en'
               ? 'Official schedules for Lord Venkateswara Main Temple in Tirumala including day-wise Kainkaryams, Weekly Seva details, and Periodical Festivals.'
               : 'శ్రీవారి ఆలయంలో జరిగే నిత్య సేవలు, వారపు సేవలు మరియు వార్షిక కాలిక సేవల పూర్తి సమాచారం.'}

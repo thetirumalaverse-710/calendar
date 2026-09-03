@@ -246,7 +246,7 @@ export default function CommunityFeedback({ lang, onSubmitFeedback }) {
           {/* Optional Name & Email Inputs */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-bold text-[#94A3B8] block mb-1">
+              <label className="text-xs font-bold text-[#CBD5E1] block mb-1">
                 {lang === 'en' ? 'Your Name (Optional)' : 'మీ పేరు (ఐచ్ఛికం)'}
               </label>
               <input
@@ -254,12 +254,12 @@ export default function CommunityFeedback({ lang, onSubmitFeedback }) {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Devotee Name"
-                className="w-full px-3.5 py-2 rounded-xl bg-[#141923] border border-white/10 text-white text-xs placeholder-[#94A3B8] focus:outline-none focus:ring-1 focus:ring-[#FFD700]"
+                className="w-full px-3.5 py-2 rounded-xl bg-[#141923] border border-white/10 text-white text-xs placeholder-[#CBD5E1] focus:outline-none focus:ring-1 focus:ring-[#FFD700]"
               />
             </div>
 
             <div>
-              <label className="text-xs font-bold text-[#94A3B8] block mb-1">
+              <label className="text-xs font-bold text-[#CBD5E1] block mb-1">
                 {lang === 'en' ? 'Email Address (Optional)' : 'ఇమెయిల్ (ఐచ్ఛికం)'}
               </label>
               <input
