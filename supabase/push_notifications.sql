@@ -13,11 +13,23 @@ CREATE TABLE IF NOT EXISTS public.push_subscriptions (
     failure_count INT DEFAULT 0,
     last_success_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now()
+    updated_at TIMESTAMPTZ DEFAULT now(),
+    subscribed_temples TEXT[] DEFAULT ARRAY['tirumala-main', 'tiruchanur']
 );
+
+ALTER TABLE public.push_subscriptions
+    ADD COLUMN IF NOT EXISTS subscribed_temples TEXT[] DEFAULT ARRAY['tirumala-main', 'tiruchanur'];
+
+UPDATE public.push_subscriptions
+    SET subscribed_temples = ARRAY['tirumala-main', 'tiruchanur']
+    WHERE subscribed_temples IS NULL OR array_length(subscribed_temples, 1) IS NULL;
 
 CREATE INDEX IF NOT EXISTS idx_push_subscriptions_active 
     ON public.push_subscriptions(is_active) 
+    WHERE is_active = true;
+
+CREATE INDEX IF NOT EXISTS idx_push_subscriptions_temples
+    ON public.push_subscriptions USING GIN (subscribed_temples)
     WHERE is_active = true;
 
 ALTER TABLE public.push_subscriptions ENABLE ROW LEVEL SECURITY;
@@ -28,12 +40,15 @@ CREATE POLICY "No direct client select" ON public.push_subscriptions FOR SELECT 
 CREATE POLICY "No direct client update" ON public.push_subscriptions FOR UPDATE TO anon, authenticated USING (false);
 CREATE POLICY "No direct client delete" ON public.push_subscriptions FOR DELETE TO anon, authenticated USING (false);
 
--- 2. HARDENED REGISTRATION RPC
+-- 2. HARDENED REGISTRATION RPC WITH TEMPLE FILTERING & VALIDATION
+DROP FUNCTION IF EXISTS public.register_push_subscription(TEXT, TEXT, TEXT, TEXT);
+
 CREATE OR REPLACE FUNCTION public.register_push_subscription(
     p_endpoint TEXT,
     p_p256dh TEXT,
     p_auth TEXT,
-    p_user_agent TEXT DEFAULT NULL
+    p_user_agent TEXT DEFAULT NULL,
+    p_subscribed_temples TEXT[] DEFAULT ARRAY['tirumala-main', 'tiruchanur']
 )
 RETURNS UUID
 LANGUAGE plpgsql
@@ -42,11 +57,25 @@ SET search_path = public, pg_temp
 AS $$
 DECLARE
     v_id UUID;
+    v_filtered_temples TEXT[];
 BEGIN
     IF p_endpoint IS NULL OR length(trim(p_endpoint)) < 20 OR
        p_p256dh IS NULL OR length(trim(p_p256dh)) < 10 OR
        p_auth IS NULL OR length(trim(p_auth)) < 5 THEN
         RAISE EXCEPTION 'Invalid push subscription parameters.';
+    END IF;
+
+    -- Validate and filter supplied temple preferences:
+    -- STRICT ELIGIBILITY: Allow ONLY 'tirumala-main' and 'tiruchanur'. Discard all other temple IDs.
+    IF p_subscribed_temples IS NOT NULL AND array_length(p_subscribed_temples, 1) > 0 THEN
+        SELECT ARRAY_AGG(DISTINCT t) INTO v_filtered_temples
+        FROM unnest(p_subscribed_temples) AS t
+        WHERE t IN ('tirumala-main', 'tiruchanur');
+    END IF;
+
+    -- Default to both eligible temples if no valid preferences remain or if omitted
+    IF v_filtered_temples IS NULL OR array_length(v_filtered_temples, 1) IS NULL THEN
+        v_filtered_temples := ARRAY['tirumala-main', 'tiruchanur'];
     END IF;
 
     INSERT INTO public.push_subscriptions (
@@ -56,7 +85,8 @@ BEGIN
         user_agent,
         is_active,
         failure_count,
-        updated_at
+        updated_at,
+        subscribed_temples
     )
     VALUES (
         trim(p_endpoint),
@@ -65,7 +95,8 @@ BEGIN
         left(p_user_agent, 255),
         true,
         0,
-        now()
+        now(),
+        v_filtered_temples
     )
     ON CONFLICT (endpoint) DO UPDATE SET
         p256dh = EXCLUDED.p256dh,
@@ -73,14 +104,15 @@ BEGIN
         user_agent = EXCLUDED.user_agent,
         is_active = true,
         failure_count = 0,
-        updated_at = now()
+        updated_at = now(),
+        subscribed_temples = EXCLUDED.subscribed_temples
     RETURNING id INTO v_id;
 
     RETURN v_id;
 END;
 $$;
 
-GRANT EXECUTE ON FUNCTION public.register_push_subscription(TEXT, TEXT, TEXT, TEXT) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.register_push_subscription(TEXT, TEXT, TEXT, TEXT, TEXT[]) TO anon, authenticated;
 
 -- 3. HARDENED UNSUBSCRIBE RPC
 CREATE OR REPLACE FUNCTION public.unsubscribe_push_subscription(p_endpoint TEXT)

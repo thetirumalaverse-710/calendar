@@ -13,9 +13,10 @@ import AdminTopRibbon from './components/layout/AdminTopRibbon';
 import TodayHappeningTicker from './components/layout/TodayHappeningTicker';
 import TtdLiveStreamModal from './components/layout/TtdLiveStreamModal';
 import LogoLightboxModal from './components/layout/LogoLightboxModal';
+import NotificationPreferencesModal from './components/layout/NotificationPreferencesModal';
 import AppFooter from './components/layout/AppFooter';
 import ToastContainer from './components/common/ToastContainer';
-import { subscribeToWebPush, unsubscribeFromWebPush } from './utils/webPush';
+import { subscribeToWebPush, unsubscribeFromWebPush, ELIGIBLE_NOTIFICATION_TEMPLES } from './utils/webPush';
 import { supabase } from './utils/supabaseClient';
 
 const CalendarView = lazy(() => import('./components/CalendarView'));
@@ -150,7 +151,7 @@ export default function App() {
     saveStoredFeedback(feedbackList);
   }, [feedbackList]);
 
-  // Notifications State
+  // Notifications State & Preferences
   const [notificationsEnabled, setNotificationsEnabled] = useState(() => {
     try {
       return localStorage.getItem('tirumala_notifications_enabled') === 'true';
@@ -159,17 +160,46 @@ export default function App() {
     }
   });
 
-  const handleToggleNotifications = async () => {
-    if (!notificationsEnabled) {
-      const sub = await subscribeToWebPush(supabase);
-      if (sub) {
-        setNotificationsEnabled(true);
-        localStorage.setItem('tirumala_notifications_enabled', 'true');
+  const [subscribedTemples, setSubscribedTemples] = useState(() => {
+    try {
+      const stored = localStorage.getItem('tirumala_notification_temples');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
-    } else {
-      await unsubscribeFromWebPush(supabase);
-      setNotificationsEnabled(false);
+    } catch (e) {
+      console.error(e);
+    }
+    return [...ELIGIBLE_NOTIFICATION_TEMPLES];
+  });
+
+  const [isNotifModalOpen, setIsNotifModalOpen] = useState(false);
+
+  const handleToggleNotifications = () => {
+    setIsNotifModalOpen(true);
+  };
+
+  const handleSaveNotificationPreferences = async (selectedTemples) => {
+    const sub = await subscribeToWebPush(supabase, selectedTemples);
+    if (sub) {
+      setNotificationsEnabled(true);
+      setSubscribedTemples(selectedTemples);
+      try {
+        localStorage.setItem('tirumala_notifications_enabled', 'true');
+        localStorage.setItem('tirumala_notification_temples', JSON.stringify(selectedTemples));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
+
+  const handleDisableNotifications = async () => {
+    await unsubscribeFromWebPush(supabase);
+    setNotificationsEnabled(false);
+    try {
       localStorage.setItem('tirumala_notifications_enabled', 'false');
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -621,6 +651,18 @@ export default function App() {
       <LogoLightboxModal
         isOpen={isLogoModalOpen}
         onClose={() => setIsLogoModalOpen(false)}
+      />
+
+      {/* EVENT NOTIFICATION PREFERENCES MODAL */}
+      <NotificationPreferencesModal
+        isOpen={isNotifModalOpen}
+        onClose={() => setIsNotifModalOpen(false)}
+        lang={lang}
+        themeMode={themeMode}
+        notificationsEnabled={notificationsEnabled}
+        currentTemples={subscribedTemples}
+        onSave={handleSaveNotificationPreferences}
+        onDisable={handleDisableNotifications}
       />
 
       {/* Footer with Disclaimer & Feedback Link */}

@@ -2,6 +2,16 @@ import { toast } from "./toast";
 
 const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY?.trim();
 
+export const ELIGIBLE_NOTIFICATION_TEMPLES = ["tirumala-main", "tiruchanur"];
+
+export function validateNotificationTemples(templeIds) {
+  if (!Array.isArray(templeIds)) return [...ELIGIBLE_NOTIFICATION_TEMPLES];
+  const filtered = templeIds.filter((id) =>
+    ELIGIBLE_NOTIFICATION_TEMPLES.includes(id)
+  );
+  return filtered.length > 0 ? filtered : [...ELIGIBLE_NOTIFICATION_TEMPLES];
+}
+
 function urlBase64ToUint8Array(base64String) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding)
@@ -38,7 +48,10 @@ export async function getExistingPushSubscription() {
   }
 }
 
-export async function subscribeToWebPush(supabaseClient) {
+export async function subscribeToWebPush(
+  supabaseClient,
+  selectedTemples = ELIGIBLE_NOTIFICATION_TEMPLES
+) {
   if (!(await isPushSupported())) {
     toast.warning("Browser push notifications are not supported on this device.");
     return null;
@@ -49,6 +62,8 @@ export async function subscribeToWebPush(supabaseClient) {
     return null;
   }
 
+  const validTemples = validateNotificationTemples(selectedTemples);
+
   try {
     const permission = await Notification.requestPermission();
     if (permission !== "granted") {
@@ -58,7 +73,7 @@ export async function subscribeToWebPush(supabaseClient) {
 
     let registration = await navigator.serviceWorker.getRegistration();
     if (!registration) {
-      registration = await navigator.serviceWorker.register('/sw.js');
+      registration = await navigator.serviceWorker.register("/sw.js");
     }
     await navigator.serviceWorker.ready;
     const applicationServerKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
@@ -87,6 +102,7 @@ export async function subscribeToWebPush(supabaseClient) {
         p_p256dh: p256dh,
         p_auth: auth,
         p_user_agent: navigator.userAgent,
+        p_subscribed_temples: validTemples,
       }
     );
 
@@ -95,7 +111,7 @@ export async function subscribeToWebPush(supabaseClient) {
       throw rpcError;
     }
 
-    toast.success("Background Utsavam alerts enabled!");
+    toast.success("Event notification preferences saved!");
     return subscription;
   } catch (error) {
     console.error("Failed to subscribe to Web Push:", error);

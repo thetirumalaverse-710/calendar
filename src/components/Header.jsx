@@ -155,15 +155,15 @@ export default function Header({
               onClick={onToggleNotifications}
               aria-label={
                 notificationsEnabled
-                  ? (lang === 'en' ? 'Disable notifications' : 'నోటిఫికేషన్లు నిలిపివేయండి')
-                  : (lang === 'en' ? 'Enable notifications' : 'నోటిఫికేషన్లు ప్రారంభించండి')
+                  ? (lang === 'en' ? 'Manage notification preferences' : 'నోటిఫికేషన్ ప్రాధాన్యతలను నిర్వహించండి')
+                  : (lang === 'en' ? 'Enable event notifications' : 'ఈవెంట్ నోటిఫికేషన్లను ప్రారంభించండి')
               }
               className={`w-[30px] h-[30px] sm:w-auto sm:h-auto p-1 sm:px-2 sm:py-1 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition-colors border ${
                 notificationsEnabled
                   ? 'bg-amber-500/20 border-[#FFD700] text-[#FFD700]'
                   : 'bg-[#141923] border-[#D4AF37]/40 text-[#94A3B8] hover:text-[#FFD700]'
               }`}
-              title={notificationsEnabled ? 'Utsavam Notifications Enabled' : 'Enable Event & Utsavam Notifications'}
+              title={notificationsEnabled ? (lang === 'en' ? 'Manage Event Notification Preferences' : 'నోటిఫికేషన్ ప్రాధాన్యతలు') : (lang === 'en' ? 'Enable Event Notifications' : 'ఈవెంట్ నోటిఫికేషన్లు')}
             >
               <span>{notificationsEnabled ? '🔔' : '🔕'}</span>
               <span className="hidden sm:inline text-[11px]">
