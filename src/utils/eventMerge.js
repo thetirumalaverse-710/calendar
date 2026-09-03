@@ -23,11 +23,19 @@ export function mergeEvents(initialEvents, storedEvents, deletedIds) {
 
   const mergedInitial = initialEvents
     .filter(event => !deletedIds.has(event.id))
-    .map(event =>
-      storedMap.has(event.id)
-        ? storedMap.get(event.id)
-        : event
-    );
+    .map(event => {
+      if (!storedMap.has(event.id)) {
+        return event;
+      }
+      const stored = storedMap.get(event.id);
+      return {
+        ...stored,
+        // Canonical notification fields from initialEvents are ALWAYS authoritative
+        startTime: event.startTime !== undefined ? event.startTime : null,
+        notificationEligible: event.notificationEligible !== undefined ? event.notificationEligible : true,
+        isCancelled: event.isCancelled !== undefined ? event.isCancelled : false,
+      };
+    });
 
   const initialIds = new Set(
     initialEvents.map(event => event.id)

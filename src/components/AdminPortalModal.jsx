@@ -118,7 +118,20 @@ useEffect(() => {
     saveCloudConfig(cloudConfig);
     setIsSyncing(true);
     setSyncStatusMsg('Synchronizing temple events to cloud database...');
-    const result = await pushEventsToCloud(events);
+
+    // Load canonical initial events directly from source to ensure 100% data integrity
+    const { INITIAL_EVENTS } = await import('../data/initialEvents');
+    const initialIds = new Set(INITIAL_EVENTS.map(e => e.id));
+
+    // Preserve genuine user custom events (events added by user that are not in initial catalog)
+    const genuineCustomEvents = (Array.isArray(events) ? events : []).filter(
+      e => e && e.id && !initialIds.has(e.id)
+    );
+
+    // Merge: Canonical INITIAL_EVENTS (authoritative for all official events) + genuine custom events
+    const syncPayload = [...INITIAL_EVENTS, ...genuineCustomEvents];
+
+    const result = await pushEventsToCloud(syncPayload);
     setIsSyncing(false);
     setSyncStatusMsg(result.message);
     setLastSyncTime(result.timestamp);

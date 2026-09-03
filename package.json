@@ -10,7 +10,8 @@
     "worker": "node telegram-worker.mjs",
     "telegram-poll": "node telegram-poll.mjs",
     "process-admin-notifications": "node processAdminNotifications.mjs",
-    "process-event-notifications": "node processEventNotifications.mjs"
+    "process-event-notifications": "node processEventNotifications.mjs",
+    "sync-events": "node syncEventsToCloud.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.3",
