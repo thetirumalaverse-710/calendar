@@ -286,7 +286,21 @@ export default function UtsavamGlossary({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {filteredTerms.map((item) => {
             const isExpanded = expandedTermId === item.id;
-            const hasAdminImages = Array.isArray(item.images) && item.images.length > 0;
+            const validImages = Array.isArray(item.images)
+  ? item.images.filter(img => {
+      if (typeof img === 'string') {
+        return img.trim() !== '';
+      }
+
+      return (
+        img &&
+        typeof img.url === 'string' &&
+        img.url.trim() !== ''
+      );
+    })
+  : [];
+
+const hasAdminImages = validImages.length > 0;
 
             return (
               <div
@@ -344,7 +358,7 @@ export default function UtsavamGlossary({
                   {hasAdminImages && (
                     <div className="pt-2" onClick={e => e.stopPropagation()}>
                       <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
-                        {item.images.map((img, imgIdx) => (
+                        {validImages.map((img, imgIdx) => (
                           <div
                             key={imgIdx}
                             onClick={() => {
@@ -352,15 +366,15 @@ export default function UtsavamGlossary({
                               setGalleryImgIndex(imgIdx);
                             }}
                             className="relative h-20 w-28 rounded-xl overflow-hidden border border-[#D4AF37]/50 cursor-pointer group/img shrink-0"
-                            title={img.caption || item.term}
+                            title={(typeof img === 'string' ? '' : img.caption) || item.term}
                           >
                             <img
-                              src={img.url}
-                              alt={img.caption || item.term}
+                              src={typeof img === 'string' ? img : img.url}
+                              alt={(typeof img === 'string' ? '' : img.caption) || item.term}
                               className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300"
                             />
                             <div className="absolute inset-0 bg-black/30 group-hover/img:bg-transparent transition-colors"></div>
-                            {img.caption && (
+                            {typeof img !== 'string' && img.caption && (
                               <div className="absolute bottom-0 inset-x-0 bg-black/80 px-1 py-0.5 text-[9px] text-[#FFD700] truncate text-center">
                                 {img.caption}
                               </div>

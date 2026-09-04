@@ -279,10 +279,26 @@ export default function App() {
   }, []);
 
   const handleSaveGlossaryEdit = async (termId, updatedData) => {
+    const cleanedData = {
+  ...updatedData,
+  images: Array.isArray(updatedData.images)
+    ? updatedData.images.filter(img => {
+        if (typeof img === 'string') {
+          return img.trim() !== '';
+        }
+
+        return (
+          img &&
+          typeof img.url === 'string' &&
+          img.url.trim() !== ''
+        );
+      })
+    : []
+};
     setCustomGlossaryEdits(prev => {
       const next = {
         ...prev,
-        [termId]: updatedData
+        [termId]: cleanedData
       };
 
       try {
@@ -299,7 +315,7 @@ export default function App() {
 
     const result = await saveGlossaryTermToCloud({
       id: termId,
-      ...updatedData
+      ...cleanedData
     });
 
     if (!result.success) {
