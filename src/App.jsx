@@ -389,19 +389,58 @@ export default function App() {
   }, [safeEventsList, todayStr]);
 
   // Automatic Daily Desktop/Mobile Push Notification for Today's Active Utsavam
-  useEffect(() => {
-    if (notificationsEnabled && todayEvent && 'Notification' in window && Notification.permission === 'granted') {
-      const lastNotifiedDate = localStorage.getItem('tirumala_last_notified_date');
-      if (lastNotifiedDate !== todayStr) {
-        new Notification('🌸 Today Tirumala Utsavam Alert!', {
-          body: `${todayEvent.title} is taking place today at Tirumala Tirupati temples! Tap to view details.`,
-          icon: '/logo-64.png',
-          badge: '/logo-64.png'
-        });
-        localStorage.setItem('tirumala_last_notified_date', todayStr);
+  // Automatic Daily Desktop/Mobile Push Notification for Today's Active Utsavam
+useEffect(() => {
+  if (
+    !notificationsEnabled ||
+    !todayEvent ||
+    !('Notification' in window) ||
+    Notification.permission !== 'granted'
+  ) {
+    return;
+  }
+
+  const lastNotifiedDate = localStorage.getItem(
+    'tirumala_last_notified_date'
+  );
+
+  if (lastNotifiedDate === todayStr) {
+    return;
+  }
+
+  const showTodayNotification = async () => {
+    try {
+      if ('serviceWorker' in navigator) {
+        const registration = await navigator.serviceWorker.ready;
+
+        await registration.showNotification(
+          '🌸 Today Tirumala Utsavam Alert!',
+          {
+            body: `${todayEvent.title} is taking place today at Tirumala Tirupati temples! Tap to view details.`,
+            icon: '/logo-64.png',
+            badge: '/logo-64.png',
+            data: {
+              url: 'https://thetirumalaverse.in/'
+            },
+            tag: `tirumala-daily-${todayStr}`
+          }
+        );
+
+        localStorage.setItem(
+          'tirumala_last_notified_date',
+          todayStr
+        );
       }
+    } catch (error) {
+      console.warn(
+        'Could not show daily Utsavam notification:',
+        error
+      );
     }
-  }, [notificationsEnabled, todayEvent, todayStr]);
+  };
+
+  showTodayNotification();
+}, [notificationsEnabled, todayEvent, todayStr]);
 
   // Feedback Handlers
   const handleAddFeedback = (newFeedback) => {
