@@ -1,15 +1,24 @@
 import React from 'react';
 import {
   Calendar as CalendarIcon,
-  Sparkles
+  Sparkles,
+  Clock
 } from 'lucide-react';
 import { TEMPLES } from '../../data/templeEvents';
+import { getEventStatus } from '../../utils/eventStatus';
+import { formatEventTiming, getIndiaDateString } from '../../utils/indiaTime';
 
 export default function MobileSelectedDayEvents({
   lang,
   selectedDayEvents,
+  selectedDate,
+  todayIST,
+  currentIST,
   onSelectEvent
 }) {
+  const effectiveToday = todayIST || getIndiaDateString();
+  const isTodayDate = selectedDate === effectiveToday;
+
   return (
     <div className="mt-3 space-y-2">
 
@@ -35,9 +44,9 @@ export default function MobileSelectedDayEvents({
             <Sparkles className="w-4 h-4 text-[#FFD700]" />
 
             <h3 className="font-serif text-base font-extrabold text-[#FFD700]">
-              {lang === 'en'
-                ? "Today's / Selected Events"
-                : 'ఎంచుకున్న తేదీ ఉత్సవాలు'}
+              {isTodayDate
+                ? (lang === 'en' ? "Today's Events" : 'ఈ రోజు ఉత్సవాలు')
+                : (lang === 'en' ? 'Events on Selected Date' : 'ఎంచుకున్న తేదీ ఉత్సవాలు')}
             </h3>
           </div>
 
@@ -46,6 +55,7 @@ export default function MobileSelectedDayEvents({
               TEMPLES.find(
                 t => t.id === evt.templeId
               );
+            const statusObj = getEventStatus(evt, currentIST);
 
             return (
               <button
@@ -77,19 +87,26 @@ export default function MobileSelectedDayEvents({
                             evt.title}
                       </h4>
 
-                      <span className="shrink-0 text-[9px] font-black text-[#FF5722] dark:text-[#FFD700]">
-                        VIEW
+                      <span className={`shrink-0 px-2 py-0.5 rounded text-[9px] font-extrabold uppercase shadow ${statusObj.colorClass}`}>
+                        {lang === 'en' ? statusObj.status : statusObj.statusTe}
                       </span>
                     </div>
 
-                    <p className="text-[10px] text-slate-500 dark:text-[#94A3B8] font-bold mt-1">
-                      {lang === 'en'
-                        ? temple?.name ||
-                          'Tirumala'
-                        : temple?.nameTe ||
-                          temple?.name ||
-                          'తిరుమల'}
-                    </p>
+                    <div className="flex flex-wrap items-center gap-2 mt-1">
+                      <p className="text-[10px] text-slate-500 dark:text-[#94A3B8] font-bold">
+                        {lang === 'en'
+                          ? temple?.name ||
+                            'Tirumala'
+                          : temple?.nameTe ||
+                            temple?.name ||
+                            'తిరుమల'}
+                      </p>
+
+                      <span className="text-[10px] font-mono text-amber-500 dark:text-[#FFD700] font-bold flex items-center gap-1">
+                        <Clock className="w-3 h-3 text-[#FF5722]" />
+                        {formatEventTiming(evt)}
+                      </span>
+                    </div>
 
                     <p className="text-[10px] text-slate-700 dark:text-[#94A3B8]/90 mt-1.5 line-clamp-2">
                       {lang === 'en'

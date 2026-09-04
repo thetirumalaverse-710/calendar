@@ -1,3 +1,5 @@
+import { getISTNowComponents, parseTimeToMinutes } from './indiaTime.js';
+
 /**
  * DATA CLASSIFICATION & TIME WINDOW DOCUMENTATION:
  * - `getEventStatus` calculates time-aware live event status in Indian Standard Time (IST / Asia-Kolkata).
@@ -72,11 +74,13 @@ export function parseTimeWindow(timeStr) {
 }
 
 export function getEventStatus(eventOrStartDate, endDateParam, timeParam, customIST) {
-  let startDate, endDate, timeStr, istOverride;
+  let startDate, endDate, startTimeStr, endTimeStr, timeStr, istOverride;
 
   if (typeof eventOrStartDate === 'object' && eventOrStartDate !== null) {
     startDate = eventOrStartDate.startDate;
     endDate = eventOrStartDate.endDate || eventOrStartDate.startDate;
+    startTimeStr = eventOrStartDate.startTime;
+    endTimeStr = eventOrStartDate.endTime;
     timeStr = eventOrStartDate.time;
     istOverride = endDateParam;
   } else {
@@ -86,37 +90,27 @@ export function getEventStatus(eventOrStartDate, endDateParam, timeParam, custom
     istOverride = customIST;
   }
 
-  // Helper to extract current IST date and time components
-  let currentIST = istOverride;
-  if (!currentIST) {
-    const now = new Date();
-    const parts = new Intl.DateTimeFormat('en-US', {
-      timeZone: 'Asia/Kolkata',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false,
-    }).formatToParts(now);
-
-    const getPart = type => parts.find(p => p.type === type)?.value;
-    const year = getPart('year');
-    const month = getPart('month');
-    const day = getPart('day');
-    let hour = parseInt(getPart('hour'), 10);
-    if (hour === 24) hour = 0;
-    const minute = parseInt(getPart('minute'), 10);
-
+  // Canonical IST date and time components
+  let currentIST;
+  if (istOverride && typeof istOverride === 'object') {
     currentIST = {
-      dateStr: `${year}-${month}-${day}`,
-      minutesSinceMidnight: hour * 60 + minute,
+      dateStr: istOverride.dateStr || istOverride.todayIST || istOverride.date,
+      totalMinutes: typeof istOverride.totalMinutes === 'number'
+        ? istOverride.totalMinutes
+        : (typeof istOverride.nowMinutesIST === 'number'
+            ? istOverride.nowMinutesIST
+            : (typeof istOverride.minutesSinceMidnight === 'number'
+                ? istOverride.minutesSinceMidnight
+                : 0))
     };
+  } else if (istOverride) {
+    currentIST = getISTNowComponents(istOverride);
+  } else {
+    currentIST = getISTNowComponents();
   }
 
   const liveObj = {
-    status: 'LIVE NOW',
+    status: 'LIVE',
     statusTe: '🔴 ప్రత్యక్ష సేవ / ప్రసారం',
     colorClass: 'bg-red-600 text-white font-extrabold animate-pulse shadow-lg ring-2 ring-red-400',
     bgCardBorder: 'border-red-500/80 shadow-[0_0_20px_rgba(239,68,68,0.3)]',
@@ -136,6 +130,7 @@ export function getEventStatus(eventOrStartDate, endDateParam, timeParam, custom
     bgCardBorder: 'border-white/10',
   };
 
+  // Rule A & C: Canonical calendar date string comparison
   // 1. Completely before startDate
   if (currentIST.dateStr < startDate) {
     return upcomingObj;
@@ -146,41 +141,72 @@ export function getEventStatus(eventOrStartDate, endDateParam, timeParam, custom
     return completedObj;
   }
 
-  // 3. Current date is within startDate and endDate
-  const timeWin = parseTimeWindow(timeStr);
+  // 3. Resolve start & end times in minutes past midnight
+  let startMins = null;
+  let endMins = null;
 
-  if (!timeWin) {
-    // Missing / unparseable time: Fallback to date-based full day active
-    return liveObj;
+  if (startTimeStr) {
+    startMins = parseTimeToMinutes(startTimeStr);
+  }
+  if (endTimeStr) {
+    endMins = parseTimeToMinutes(endTimeStr);
   }
 
-  // Single-day event
-  if (currentIST.dateStr === startDate && currentIST.dateStr === endDate) {
-    if (currentIST.minutesSinceMidnight < timeWin.startMins) {
-      return upcomingObj;
-    } else if (currentIST.minutesSinceMidnight <= timeWin.endMins) {
-      return liveObj;
-    } else {
-      return completedObj;
+  // If machine-readable startTime wasn't set, try parsing legacy human-readable time string
+  if (startMins === null && timeStr) {
+    const timeWin = parseTimeWindow(timeStr);
+    if (timeWin) {
+      startMins = timeWin.startMins;
+      // Only set endMins if the legacy window actually had a range and wasn't single-time
+      // Note: parseTimeWindow sets endMins = 24*60 for single times, but single time has no explicit end
+      if (timeWin.endMins !== 24 * 60) {
+        endMins = timeWin.endMins;
+      }
     }
   }
 
-  // Multi-day event boundary logic
+  // Rule E: Default timing for unknown events = 07:00 IST (420 mins), do NOT invent end time
+  if (startMins === null) {
+    startMins = 7 * 60; // 07:00 AM IST
+    endMins = null;
+  }
+
+  const nowMinutes = currentIST.totalMinutes;
+
+  // Single-day event
+  if (startDate === endDate) {
+    if (nowMinutes < startMins) {
+      return upcomingObj;
+    }
+    if (endMins !== null) {
+      if (nowMinutes <= endMins) {
+        return liveObj;
+      }
+      return completedObj;
+    }
+    // No end time: remains LIVE until end of calendar day
+    return liveObj;
+  }
+
+  // Multi-day event: start applies to first day, end applies to final day
   if (currentIST.dateStr === startDate) {
-    if (currentIST.minutesSinceMidnight < timeWin.startMins) {
+    if (nowMinutes < startMins) {
       return upcomingObj;
     }
     return liveObj;
   }
 
   if (currentIST.dateStr === endDate) {
-    if (currentIST.minutesSinceMidnight <= timeWin.endMins) {
-      return liveObj;
+    if (endMins !== null) {
+      if (nowMinutes <= endMins) {
+        return liveObj;
+      }
+      return completedObj;
     }
-    return completedObj;
+    return liveObj;
   }
 
-  // Intermediate days of multi-day event
+  // Intermediate days of multi-day event: always LIVE
   return liveObj;
 }
 

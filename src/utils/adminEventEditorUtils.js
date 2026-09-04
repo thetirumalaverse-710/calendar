@@ -1,10 +1,6 @@
-export const getTodayIST = () =>
-  new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Kolkata',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(new Date());
+import { getIndiaDateString } from './indiaTime.js';
+
+export const getTodayIST = () => getIndiaDateString();
 
 export const getInitialImages = (evt) => {
   if (
@@ -47,6 +43,9 @@ export const getEmptyEventForm = () => ({
   templeId: 'tirumala-main',
   startDate: getTodayIST(),
   endDate: getTodayIST(),
+  startTime: '07:00',
+  endTime: '',
+  timingSource: 'default',
   category: 'brahmotsavam',
   vahanam: '',
   description: '',

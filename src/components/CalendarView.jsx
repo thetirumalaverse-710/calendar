@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { TEMPLES } from '../data/templeEvents';
 import { getEventStatus, openGoogleCalendar, downloadIcsCalendarFile, shareToWhatsApp, normalizeImageUrl } from '../utils/eventStatus';
 import { exportPanchangamPdf } from '../utils/pdfExport';
+import { formatEventTiming } from '../utils/indiaTime';
+import useCurrentIST from '../hooks/useCurrentIST';
 import CalendarMonthGrid from './CalendarMonthGrid';
 import CalendarScheduleView from './CalendarScheduleView';
-import { Calendar, Filter, Tag, Edit, Download, Plus, Trash2, FileText, Search, X as ClearIcon, Share2, List } from 'lucide-react';
+import { Calendar, Clock, Filter, Tag, Edit, Download, Plus, Trash2, FileText, Search, X as ClearIcon, Share2, List } from 'lucide-react';
 
 import { getTempleFilterLabel } from '../utils/templeHelpers';
 
@@ -19,6 +21,7 @@ export default function CalendarView({
   onDeleteEvent,
   onOpenAddEvent
 }) {
+  const currentIST = useCurrentIST();
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'schedule' | 'cards'
   const [selectedMonthFilter, setSelectedMonthFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -274,7 +277,7 @@ export default function CalendarView({
             <span>
   {(() => {
     const visibleEvents = sortedFilteredEvents.filter(evt => {
-      const status = getEventStatus(evt);
+      const status = getEventStatus(evt, currentIST);
       return status.status !== 'COMPLETED';
     });
 
@@ -286,7 +289,7 @@ export default function CalendarView({
           </div>
 
           {sortedFilteredEvents.filter(evt => {
-  const status = getEventStatus(evt);
+  const status = getEventStatus(evt, currentIST);
   return status.status !== 'COMPLETED';
 }).length === 0 ? (
             <div className="glass-card p-12 text-center text-[#94A3B8] space-y-3">
@@ -304,11 +307,11 @@ export default function CalendarView({
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {sortedFilteredEvents
   .filter(evt => {
-    const status = getEventStatus(evt);
+    const status = getEventStatus(evt, currentIST);
     return status.status !== 'COMPLETED';
   })
   .map(evt => {
-                const statusObj = getEventStatus(evt);
+                const statusObj = getEventStatus(evt, currentIST);
                 const templeObj = TEMPLES.find(t => t.id === evt.templeId);
 
                 // Collect images for cover display
@@ -368,6 +371,15 @@ export default function CalendarView({
                         >
                           {lang === 'en' ? templeObj?.name : templeObj?.nameTe}
                         </span>
+
+                        {isAdminLoggedIn && evt.timingSource === 'default' && (
+                          <span 
+                            className="text-[9px] text-amber-300 font-mono font-bold bg-amber-400/10 px-1.5 py-0.5 rounded border border-amber-400/30"
+                            title="Unconfigured timing: Default 7:00 AM"
+                          >
+                            Default 7:00 AM
+                          </span>
+                        )}
                       </div>
 
                       {/* Inline Admin Edit & Delete Buttons */}
@@ -416,6 +428,11 @@ export default function CalendarView({
                                 ? evt.startDate
                                 : `${evt.startDate} to ${evt.endDate}`}
                             </span>
+                          </div>
+
+                          <div className="flex items-center gap-1 text-amber-600 dark:text-[#FFD700]">
+                            <Clock className="w-3.5 h-3.5 text-[#FF5722]" />
+                            <span>{formatEventTiming(evt)}</span>
                           </div>
 
                           {evt.vahanam && (

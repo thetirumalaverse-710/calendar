@@ -3,30 +3,30 @@ import { Sparkles, Calendar as CalendarIcon, Clock, MapPin } from 'lucide-react'
 import { TEMPLES } from '../data/templeEvents';
 import { getTempleFilterLabel } from '../utils/templeHelpers';
 
-export default function HeroBanner({ lang, onSelectTemple, events = [] }) {
-  // Dynamically find next upcoming major event from today's date
-  const todayStr = new Intl.DateTimeFormat('en-CA', {
-  timeZone: 'Asia/Kolkata',
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-}).format(new Date());
- const upcomingMajorEvents = events.filter(
-  e => (e.isMajor || e.highlight) && e.startDate >= todayStr
-);
+import { getIndiaDateString } from '../utils/indiaTime';
 
-const majorEvent =
-  upcomingMajorEvents.length > 0
-    ? upcomingMajorEvents[0]
-    : (events.find(e => e.isMajor) || events[0]);
+export default function HeroBanner({ lang, onSelectTemple, events = [] }) {
+  // Dynamically find next upcoming major event from today's date in IST
+  const todayStr = getIndiaDateString();
+  const upcomingMajorEvents = events.filter(
+    e => (e.isMajor || e.highlight) && (e.endDate || e.startDate) >= todayStr
+  );
+
+  const majorEvent =
+    upcomingMajorEvents.length > 0
+      ? upcomingMajorEvents[0]
+      : (events.find(e => e.isMajor) || events[0]);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
     if (!majorEvent || !majorEvent.startDate) return;
 
-    // Use event time if available or default to 08:00 AM
-    let timePart = '08:00:00';
-    if (majorEvent.time && majorEvent.time.includes(':')) {
+    // Use event startTime if available, or parse time, or default to 07:00 AM
+    let timePart = majorEvent.startTime
+      ? (majorEvent.startTime.length === 5 ? `${majorEvent.startTime}:00` : majorEvent.startTime)
+      : '07:00:00';
+
+    if (!majorEvent.startTime && majorEvent.time && majorEvent.time.includes(':')) {
       const match = majorEvent.time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
       if (match) {
         let hrs = parseInt(match[1], 10);
@@ -38,7 +38,8 @@ const majorEvent =
       }
     }
 
-    const targetDate = new Date(`${majorEvent.startDate}T${timePart}`).getTime();
+    // Explicit +05:30 offset ensures accurate IST countdown across any browser timezone
+    const targetDate = new Date(`${majorEvent.startDate}T${timePart}+05:30`).getTime();
 
     const interval = setInterval(() => {
       const now = new Date().getTime();

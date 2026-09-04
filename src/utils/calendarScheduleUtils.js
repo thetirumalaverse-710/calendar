@@ -28,13 +28,10 @@ export const monthsTe = [
   'డిసెంబరు'
 ];
 
+import { getIndiaDateString } from './indiaTime.js';
+
 export function getTodayStr() {
-  return new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Kolkata',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  }).format(new Date());
+  return getIndiaDateString();
 }
 
 export function getCurrentMonthKey(todayStr, lang) {

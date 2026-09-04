@@ -12,6 +12,8 @@ import {
   formatScheduleDate
 } from '../utils/calendarScheduleUtils';
 
+import useCurrentIST from '../hooks/useCurrentIST';
+
 import ScheduleViewHeader from './schedule/ScheduleViewHeader';
 import ScheduleEmptyState from './schedule/ScheduleEmptyState';
 import ScheduleEventCard from './schedule/ScheduleEventCard';
@@ -25,7 +27,8 @@ export default function CalendarScheduleView({
   onEditEvent,
   onDeleteEvent
 }) {
-  const todayStr = getTodayStr();
+  const currentIST = useCurrentIST();
+  const todayStr = currentIST.dateStr;
 
   const [activeMonthFilter, setActiveMonthFilter] = useState(() =>
     getCurrentMonthKey(todayStr, lang)
@@ -187,6 +190,7 @@ export default function CalendarScheduleView({
                   evt={evt}
                   lang={lang}
                   todayStr={todayStr}
+                  currentIST={currentIST}
                   onSelectEvent={onSelectEvent}
                   isAdminLoggedIn={isAdminLoggedIn}
                   openShareMenuId={openShareMenuId}

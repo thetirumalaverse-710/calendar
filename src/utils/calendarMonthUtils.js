@@ -1,3 +1,5 @@
+import { getIndiaDateString } from './indiaTime.js';
+
 export const MONTHS_LIST = [
   { year: 2026, month: 0, label: 'January 2026', labelTe: 'జనవరి 2026' },
   { year: 2026, month: 1, label: 'February 2026', labelTe: 'ఫిబ్రవరి 2026' },
@@ -17,13 +19,7 @@ export const MONTHS_LIST = [
   { year: 2027, month: 3, label: 'April 2027', labelTe: 'ఏప్రిల్ 2027' }
 ];
 
-export const getTodayIST = () =>
-  new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Kolkata',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  }).format(new Date());
+export const getTodayIST = () => getIndiaDateString();
 
 export const getDateString = (year, month, day) => {
   const monthStr = String(month + 1).padStart(2, '0');
@@ -47,12 +43,10 @@ export const getInitialMonthIndex = () => {
 };
 
 export const getEventsForDate = (events, dateStr) => {
-  return (events || []).filter(evt => {
-    if (!evt?.startDate || !evt?.endDate) return false;
-
-    return (
-      evt.startDate <= dateStr &&
-      evt.endDate >= dateStr
-    );
+  if (!dateStr || !Array.isArray(events)) return [];
+  return events.filter(evt => {
+    if (!evt?.startDate) return false;
+    const end = evt.endDate || evt.startDate;
+    return evt.startDate <= dateStr && dateStr <= end;
   });
 };

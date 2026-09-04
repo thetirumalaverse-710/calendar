@@ -1,14 +1,16 @@
 import React from 'react';
-import { Calendar, Image as ImageIcon } from 'lucide-react';
+import { Calendar, Clock, Image as ImageIcon } from 'lucide-react';
 import { TEMPLES } from '../../data/templeEvents';
 import { getEventStatus, normalizeImageUrl } from '../../utils/eventStatus';
 import { formatScheduleDate } from '../../utils/calendarScheduleUtils';
+import { formatEventTiming } from '../../utils/indiaTime';
 import ScheduleEventActions from './ScheduleEventActions';
 
 export default function ScheduleEventCard({
   evt,
   lang,
   todayStr,
+  currentIST,
   onSelectEvent,
   isAdminLoggedIn,
   openShareMenuId,
@@ -27,7 +29,7 @@ export default function ScheduleEventCard({
 
   const temple = TEMPLES.find(t => t.id === evt.templeId);
 
-  const statusObj = getEventStatus(evt);
+  const statusObj = getEventStatus(evt, currentIST);
 
   const evtImages = [];
 
@@ -97,18 +99,12 @@ export default function ScheduleEventCard({
                 : temple?.nameTe || temple?.name || 'తిరుమల'}
             </span>
 
-            {/* TODAY / UPCOMING STATUS */}
-            {isToday ? (
-              <span className="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase bg-[#FF5722] text-white shadow">
-                {lang === 'en' ? 'TODAY' : 'ఈ రోజు'}
-              </span>
-            ) : isFuture ? (
-              <span
-                className={`px-2 py-0.5 rounded text-[10px] font-extrabold uppercase ${statusObj.colorClass}`}
-              >
-                {lang === 'en' ? statusObj.status : statusObj.statusTe}
-              </span>
-            ) : null}
+            {/* DYNAMIC EVENT STATUS (Rule H: Never hardcode TODAY as status) */}
+            <span
+              className={`px-2 py-0.5 rounded text-[10px] font-extrabold uppercase shadow ${statusObj.colorClass}`}
+            >
+              {lang === 'en' ? statusObj.status : statusObj.statusTe}
+            </span>
 
             {evtImages.length > 0 && (
               <span className="px-1.5 py-0.5 rounded bg-black/60 text-[#FFD700] text-[10px] font-bold flex items-center gap-1 border border-[#FFD700]/30">
@@ -123,13 +119,18 @@ export default function ScheduleEventCard({
             {lang === 'en' ? evt.title : evt.titleTe || evt.title}
           </h4>
 
-          {/* DATE RANGE / VAHANAM */}
+          {/* DATE RANGE / TIMING / VAHANAM */}
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#CBD5E1]">
             <span className="font-mono text-[#FFD700] font-bold flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5 dark:text-[#FF5722] text-[#D84315]" />
               {evt.startDate === evt.endDate
                 ? evt.startDate
                 : `${evt.startDate} to ${evt.endDate}`}
+            </span>
+
+            <span className="font-mono text-amber-500 dark:text-[#FFD700] font-bold flex items-center gap-1">
+              <Clock className="w-3.5 h-3.5 text-[#FF5722]" />
+              {formatEventTiming(evt)}
             </span>
 
             {evt.vahanam && (

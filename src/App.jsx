@@ -3,6 +3,7 @@ import useEvents from "./hooks/useEvents";
 import useAdmin from "./hooks/useAdmin";
 import useTheme from "./hooks/useTheme";
 import useLocalStorage from "./hooks/usePersistentState";
+import useCurrentIST from "./hooks/useCurrentIST";
 import { STORAGE_KEYS } from "./config/storageKeys";
 import { APP_CONFIG } from "./config/appConfig";
 import React, { useState, useEffect, useMemo, lazy, Suspense } from 'react';
@@ -374,18 +375,18 @@ export default function App() {
     setAdminModalMode('edit-glossary');
   };
 
-  // Detect Today's Active Event for Rolling Ticker
-  const todayStr = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Kolkata',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(new Date());
+  // Detect Today's Active Event for Rolling Ticker (Strict Rule A & I: IST canonical comparison)
+  const currentIST = useCurrentIST();
+  const todayStr = currentIST.dateStr;
 
   const safeEventsList = Array.isArray(eventsList) ? eventsList : [];
   const todayEvent = useMemo(() => {
     if (!Array.isArray(safeEventsList)) return null;
-    return safeEventsList.find(e => e && typeof e === 'object' && e.startDate && e.endDate && e.startDate <= todayStr && e.endDate >= todayStr);
+    return safeEventsList.find(e => {
+      if (!e || typeof e !== 'object' || !e.startDate) return false;
+      const end = e.endDate || e.startDate;
+      return e.startDate <= todayStr && todayStr <= end;
+    });
   }, [safeEventsList, todayStr]);
 
   // Automatic Daily Desktop/Mobile Push Notification for Today's Active Utsavam

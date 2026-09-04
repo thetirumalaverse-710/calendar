@@ -1,7 +1,8 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { TEMPLES } from '../data/templeEvents';
 import { getEventStatus, openGoogleCalendar, openAppleCalendar, shareToPlatform, normalizeEventImages } from '../utils/eventStatus';
-import { X, Calendar, Edit } from 'lucide-react';
+import { formatEventTiming } from '../utils/indiaTime';
+import { X, Calendar, Clock, Edit } from 'lucide-react';
 import EventGalleryCarousel from './event/EventGalleryCarousel';
 import EventShareDropdown from './event/EventShareDropdown';
 import EventImageLightbox from './event/EventImageLightbox';
@@ -150,14 +151,21 @@ export default function EventDetailModal({
                 {eventTitle}
               </h2>
 
-              {/* Date Indicator */}
-              <div className="flex items-center gap-2 text-sm font-mono font-bold text-[#FFD700] mt-2">
-                <Calendar className="w-4 h-4 text-[#FF5722]" />
-                <span>
-                  {event.startDate === event.endDate
-                    ? event.startDate
-                    : `${event.startDate} to ${event.endDate}`}
-                </span>
+              {/* Date & Time Indicator */}
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm font-mono font-bold text-[#FFD700] mt-2">
+                <div className="flex items-center gap-1.5">
+                  <Calendar className="w-4 h-4 text-[#FF5722]" />
+                  <span>
+                    {event.startDate === event.endDate
+                      ? event.startDate
+                      : `${event.startDate} to ${event.endDate}`}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-1.5 text-amber-400">
+                  <Clock className="w-4 h-4 text-[#FF5722]" />
+                  <span>{formatEventTiming(event)} (IST)</span>
+                </div>
               </div>
             </div>
 

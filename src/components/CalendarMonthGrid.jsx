@@ -15,6 +15,7 @@ import {
   getEventsForDate,
   getMonthPrefix
 } from '../utils/calendarMonthUtils';
+import useCurrentIST from '../hooks/useCurrentIST';
 
 export default function CalendarMonthGrid({
   events,
@@ -22,6 +23,7 @@ export default function CalendarMonthGrid({
   onSelectEvent,
   selectedTemple
 }) {
+  const currentIST = useCurrentIST();
   const [activeMonthIndex, setActiveMonthIndex] = useState(
     getInitialMonthIndex
   );
@@ -436,6 +438,9 @@ export default function CalendarMonthGrid({
         <MobileSelectedDayEvents
           lang={lang}
           selectedDayEvents={selectedDayEvents}
+          selectedDate={selectedDate}
+          todayIST={currentIST.dateStr}
+          currentIST={currentIST}
           onSelectEvent={onSelectEvent}
         />
       </div>
