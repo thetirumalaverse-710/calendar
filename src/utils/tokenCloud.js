@@ -72,10 +72,14 @@ export async function getTodayTokenData(dateOverride = null) {
   };
 }
 
+
 /**
- * Get recent completed token days with their observations.
+ * Get all historical token days with their observations.
+ *
+ * Historical data is loaded from oldest available records to the
+ * most recent previous issuance day. No fixed day limit is applied.
  */
-export async function getRecentTokenHistory(limit = 7) {
+export async function getRecentTokenHistory() {
   const today = new Intl.DateTimeFormat("en-CA", {
     timeZone: "Asia/Kolkata",
     year: "numeric",
@@ -87,12 +91,11 @@ export async function getRecentTokenHistory(limit = 7) {
     .from("token_days")
     .select("*")
     .lt("issuance_date", today)
-    .order("issuance_date", { ascending: false })
-    .limit(limit);
+    .order("issuance_date", { ascending: false });
 
   if (error) {
     console.error(
-      "Failed to load recent token history:",
+      "Failed to load token history:",
       error
     );
     throw error;

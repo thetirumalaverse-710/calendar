@@ -40,7 +40,7 @@ export default function SSDDTokens({ lang = "en", themeMode = "dark" }) {
 
         const [todayResult, historyResult] = await Promise.all([
           getTodayTokenData(),
-          getRecentTokenHistory(7),
+          getRecentTokenHistory(),
         ]);
 
         if (!cancelled) {
