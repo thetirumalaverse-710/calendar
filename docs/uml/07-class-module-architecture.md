@@ -18,6 +18,7 @@ flowchart LR
         UseAdmin["useAdmin.js Auth Hook"]:::core
         UseEvents["useEvents.js Events Hook"]:::core
         UseTheme["useTheme.js Theme Hook"]:::core
+        UseCurrentIST["useCurrentIST.js IST Timer Hook"]:::core
     end
 
     subgraph Layer_Features ["2. Main Feature Modules"]
@@ -62,6 +63,7 @@ flowchart LR
         TelegramPollScript["telegram-poll.mjs"]:::auto
         TelegramParser["telegramTokenParser.js"]:::auto
         ProcessAdminNotifications["processAdminNotifications.mjs"]:::auto
+        ProcessEventNotifications["processEventNotifications.mjs"]:::auto
         PushDispatcher["pushDispatcher.mjs"]:::auto
     end
 

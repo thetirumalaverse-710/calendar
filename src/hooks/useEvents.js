@@ -78,14 +78,15 @@ export default function useEvents(initialEvents = []) {
         }
 
         setEvents(prevEvents => {
-          const deletedIds = loadDeletedEventIds();
+  const deletedIds = loadDeletedEventIds();
 
-          return mergeEvents(
-            result.events,
-            prevEvents,
-            deletedIds
-          );
-        });
+  return mergeEvents(
+    result.events,
+    prevEvents,
+    deletedIds,
+    { preferInitial: true }
+  );
+});
       } catch (error) {
         console.warn(
           "Automatic cloud event pull warning:",

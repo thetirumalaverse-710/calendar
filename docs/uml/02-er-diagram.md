@@ -27,6 +27,11 @@ erDiagram
         string description_te "Telugu Description"
         string image_url "Primary Banner Image URL"
         jsonb images "Gallery Images Metadata Array"
+        time start_time "Start Time in IST (HH:mm:ss)"
+        time end_time "Optional End Time in IST (HH:mm:ss)"
+        string timing_source "Timing Source (admin, default)"
+        boolean is_cancelled "Event Cancellation Flag"
+        boolean notification_eligible "Automated Push Eligibility Flag"
     }
 
     glossary {

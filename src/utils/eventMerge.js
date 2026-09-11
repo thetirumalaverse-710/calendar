@@ -1,4 +1,11 @@
-export function mergeEvents(initialEvents, storedEvents, deletedIds) {
+export function mergeEvents(
+  initialEvents,
+  storedEvents,
+  deletedIds,
+  options = {}
+) {
+  const { preferInitial = false } = options;
+
   if (!Array.isArray(storedEvents) || storedEvents.length === 0) {
     return initialEvents.filter(event => !deletedIds.has(event.id));
   }
@@ -27,13 +34,44 @@ export function mergeEvents(initialEvents, storedEvents, deletedIds) {
       if (!storedMap.has(event.id)) {
         return event;
       }
+
       const stored = storedMap.get(event.id);
+
+      /*
+       * When the fresh source is Supabase, it is authoritative.
+       *
+       * This is especially important for image deletion:
+       *
+       * Supabase:
+       *   images: []
+       *   image_url: ""
+       *
+       * must NOT be overwritten by an old localStorage copy
+       * containing the deleted image URL.
+       */
+      if (preferInitial) {
+        return event;
+      }
+
       return {
         ...stored,
-        // Canonical notification fields from initialEvents are ALWAYS authoritative
-        startTime: event.startTime !== undefined ? event.startTime : null,
-        notificationEligible: event.notificationEligible !== undefined ? event.notificationEligible : true,
-        isCancelled: event.isCancelled !== undefined ? event.isCancelled : false,
+
+        // Canonical notification fields from initialEvents
+        // are ALWAYS authoritative.
+        startTime:
+          event.startTime !== undefined
+            ? event.startTime
+            : null,
+
+        notificationEligible:
+          event.notificationEligible !== undefined
+            ? event.notificationEligible
+            : true,
+
+        isCancelled:
+          event.isCancelled !== undefined
+            ? event.isCancelled
+            : false,
       };
     });
 
@@ -41,6 +79,10 @@ export function mergeEvents(initialEvents, storedEvents, deletedIds) {
     initialEvents.map(event => event.id)
   );
 
+  /*
+   * Keep local-only custom events.
+   * These may exist locally before cloud synchronization.
+   */
   const customEvents = cleanStored.filter(
     event => !initialIds.has(event.id)
   );
