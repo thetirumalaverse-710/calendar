@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Ticket } from "lucide-react";
+import { Ticket, CalendarDays } from "lucide-react";
 import SSDTokenActivity from "./tokens/SSDTokenActivity";
 import SSDTokenHistory from "./tokens/SSDTokenHistory";
 import SSDTokenHowItWorks from "./tokens/SSDTokenHowItWorks";
@@ -192,6 +192,11 @@ export default function SSDDTokens({ lang = "en", themeMode = "dark" }) {
         ? "గురువారం దర్శనం కోసం బుధవారం టోకెన్లు జారీ చేయబడవు."
         : "No tokens are issued on Wednesdays for Thursday darshan.",
 
+        brahmotsavamNotice:
+      lang === "te"
+        ? "సాలకట్ల బ్రహ్మోత్సవాల కారణంగా సెప్టెంబర్ 14 నుండి 20 వరకు SSD / DD టోకెన్ల జారీ నిలిపివేయబడింది. సెప్టెంబర్ 21 తేదీ టోకెన్లు సెప్టెంబర్ 20 సాయంత్రం 4:00 గంటలకు జారీ చేయబడతాయి."
+        : "SSD / DD token issuance is paused from September 14 to 20 due to Salakatla Brahmotsavams. Tokens for September 21 will be issued on September 20 at 4:00 PM.",
+
     genericNoIssuanceNotice:
       lang === "te"
         ? "ఈరోజు టోకెన్ల జారీ లేదు."
@@ -252,6 +257,50 @@ export default function SSDDTokens({ lang = "en", themeMode = "dark" }) {
           </div>
         </section>
 
+              {(() => {
+          const indiaDate = new Date(
+            new Date().toLocaleString("en-US", {
+              timeZone: "Asia/Kolkata",
+            })
+          );
+
+          const month = indiaDate.getMonth();
+          const day = indiaDate.getDate();
+
+          // September 14–20, 2026
+          const showBrahmotsavamNotice =
+            month === 8 && day >= 14 && day <= 20;
+
+          if (!showBrahmotsavamNotice) return null;
+
+          return (
+            <section
+              className={`rounded-2xl border p-4 sm:p-5 mb-5 ${
+                isLight
+                  ? "bg-amber-50 border-amber-200"
+                  : "bg-amber-500/10 border-amber-500/30"
+              }`}
+            >
+              <div className="flex gap-3 items-start">
+                <CalendarDays className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+
+                <div>
+                  <h2 className={`font-black text-base ${headingClass}`}>
+                    {lang === "te"
+                      ? "టోకెన్ జారీ తాత్కాలికంగా నిలిపివేత"
+                      : "Temporary Token Issuance Pause"}
+                  </h2>
+
+                  <p
+                    className={`text-xs sm:text-sm mt-2 leading-relaxed ${mutedClass}`}
+                  >
+                    {text.brahmotsavamNotice}
+                  </p>
+                </div>
+              </div>
+            </section>
+          );
+        })()}
         <SSDTokenLiveStatus
           isLight={isLight}
           cardClass={cardClass}
