@@ -129,6 +129,7 @@ export default function SSDTokenLiveStatus({
   headingClass,
   mutedClass,
   text,
+  lang,
   tokenDay,
   latestObservation,
   tokenLoading,
@@ -226,28 +227,7 @@ export default function SSDTokenLiveStatus({
         />
       </div>
 
-      {isNoIssuance ? (
-        <div
-          className={`mt-4 rounded-xl border p-3 flex gap-3 ${
-            isLight
-              ? "bg-amber-50 border-amber-200"
-              : "bg-amber-500/10 border-amber-500/30"
-          }`}
-        >
-          <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-
-          <p
-            className={`text-xs font-semibold leading-relaxed ${
-              isLight ? "text-amber-900" : "text-amber-200"
-            }`}
-          >
-            {isTodayWednesday
-              ? text.wednesdayNotice
-              : text.genericNoIssuanceNotice ||
-                "No token issuance scheduled for today."}
-          </p>
-        </div>
-      ) : isBrahmotsavamPause ? (
+      {isBrahmotsavamPause ? (
   <div
     className={`mt-4 rounded-xl border-2 p-4 flex gap-3 ${
       isLight
@@ -276,6 +256,27 @@ export default function SSDTokenLiveStatus({
           : "No tokens are issued Sep 14–20. Sep 21 tokens will be issued Sep 20 at 4:00 PM."}
       </p>
     </div>
+  </div>
+) : isNoIssuance ? (
+  <div
+    className={`mt-4 rounded-xl border p-3 flex gap-3 ${
+      isLight
+        ? "bg-amber-50 border-amber-200"
+        : "bg-amber-500/10 border-amber-500/30"
+    }`}
+  >
+    <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+
+    <p
+      className={`text-xs font-semibold leading-relaxed ${
+        isLight ? "text-amber-900" : "text-amber-200"
+      }`}
+    >
+      {isTodayWednesday
+        ? text.wednesdayNotice
+        : text.genericNoIssuanceNotice ||
+          "No token issuance scheduled for today."}
+    </p>
   </div>
 ) : (
   <div
