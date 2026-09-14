@@ -77,8 +77,23 @@ export default function SSDDTokens({ lang = "en", themeMode = "dark" }) {
   const latestObservation = getLatestObservation(tokenData.observations);
   const tokenDay = tokenData.tokenDay;
   const isTodayWednesday = isIndiaWednesday();
-  const isNoIssuance =
-    isTodayWednesday || tokenDay?.issuance_status === "no_issuance";
+
+const indiaDate = new Date(
+  new Date().toLocaleString("en-US", {
+    timeZone: "Asia/Kolkata",
+  })
+);
+
+const isBrahmotsavamPause =
+  indiaDate.getFullYear() === 2026 &&
+  indiaDate.getMonth() === 8 &&
+  indiaDate.getDate() >= 14 &&
+  indiaDate.getDate() <= 20;
+
+const isNoIssuance =
+  isTodayWednesday ||
+  isBrahmotsavamPause ||
+  tokenDay?.issuance_status === "no_issuance";
   const hasObservation = Boolean(latestObservation);
 
   /*
@@ -311,6 +326,7 @@ export default function SSDDTokens({ lang = "en", themeMode = "dark" }) {
           headingClass={headingClass}
           mutedClass={mutedClass}
           text={text}
+          lang={lang}
           tokenDay={tokenDay}
           latestObservation={latestObservation}
           tokenLoading={tokenLoading}
