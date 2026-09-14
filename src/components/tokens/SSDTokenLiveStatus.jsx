@@ -136,6 +136,7 @@ export default function SSDTokenLiveStatus({
   ddStatus,
   isNoIssuance,
   isTodayWednesday,
+  isBrahmotsavamPause,
   hasObservation,
   liveSource,
 }) {
@@ -246,21 +247,51 @@ export default function SSDTokenLiveStatus({
                 "No token issuance scheduled for today."}
           </p>
         </div>
-      ) : (
-        <div
-          className={`mt-4 rounded-xl border p-3 flex gap-3 ${
-            isLight
-              ? "bg-green-50 border-green-200"
-              : "bg-green-500/5 border-green-500/20"
-          }`}
-        >
-          <Info className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+      ) : isBrahmotsavamPause ? (
+  <div
+    className={`mt-4 rounded-xl border-2 p-4 flex gap-3 ${
+      isLight
+        ? "bg-amber-50 border-amber-300"
+        : "bg-amber-500/10 border-amber-500/40"
+    }`}
+  >
+    <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
 
-          <p className={`text-xs leading-relaxed ${mutedClass}`}>
-            {text.awaiting}
-          </p>
-        </div>
-      )}
+    <div>
+      <p
+        className={`text-sm font-black ${
+          isLight ? "text-amber-900" : "text-amber-200"
+        }`}
+      >
+        {lang === "te"
+          ? "బ్రహ్మోత్సవాల కారణంగా టోకెన్ల జారీ నిలిపివేత"
+          : "Token issuance paused for Brahmotsavams"}
+      </p>
+
+      <p
+        className={`text-xs sm:text-sm mt-1 leading-relaxed ${mutedClass}`}
+      >
+        {lang === "te"
+          ? "సెప్టెంబర్ 14–20 టోకెన్లు లేవు. సెప్టెంబర్ 21 టోకెన్లు సెప్టెంబర్ 20 సాయంత్రం 4:00 గంటలకు జారీ."
+          : "No tokens are issued Sep 14–20. Sep 21 tokens will be issued Sep 20 at 4:00 PM."}
+      </p>
+    </div>
+  </div>
+) : (
+  <div
+    className={`mt-4 rounded-xl border p-3 flex gap-3 ${
+      isLight
+        ? "bg-green-50 border-green-200"
+        : "bg-green-500/5 border-green-500/20"
+    }`}
+  >
+    <Info className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+
+    <p className={`text-xs leading-relaxed ${mutedClass}`}>
+      {text.awaiting}
+    </p>
+  </div>
+)}
     </section>
   );
 }
