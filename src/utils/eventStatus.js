@@ -271,9 +271,10 @@ export function shareToPlatform(platform, event, lang = 'en') {
   const time = event.time ? `\n⏰ Time: ${event.time}` : '';
   const location = event.location ? `\n🛕 Location: ${event.location}` : '';
   const vahanam = event.vahanam ? `\n🐎 Vahanam: ${event.vahanam}` : '';
-  const currentUrl = window.location.href;
+  const origin = window.location.origin || `${window.location.protocol}//${window.location.host}`;
+  const eventUrl = event && event.id ? `${origin}/?event=${encodeURIComponent(event.id)}` : window.location.href;
 
-  const shareText = `🙏 *Tirumala Temple Event Update* 🙏\n\n✨ *${title}*\n📅 Date: ${date}${time}${location}${vahanam}\n\n📖 Read full schedule on The Tirumala Verse:\n${currentUrl}`;
+  const shareText = `🙏 *Tirumala Temple Event Update* 🙏\n\n✨ *${title}*\n📅 Date: ${date}${time}${location}${vahanam}\n\n📖 Read full schedule on The Tirumala Verse:\n${eventUrl}`;
 
   switch (platform) {
     case 'whatsapp': {
@@ -282,18 +283,18 @@ export function shareToPlatform(platform, event, lang = 'en') {
       break;
     }
     case 'x': {
-      const tweet = `🙏 Tirumala Temple Event: ${title} (${date}) 🛕\n\nRead more on The Tirumala Verse: ${currentUrl}`;
+      const tweet = `🙏 Tirumala Temple Event: ${title} (${date}) 🛕\n\nRead more on The Tirumala Verse: ${eventUrl}`;
       const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweet)}`;
       window.open(url, '_blank');
       break;
     }
     case 'facebook': {
-      const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}&quote=${encodeURIComponent(shareText)}`;
+      const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(eventUrl)}&quote=${encodeURIComponent(shareText)}`;
       window.open(url, '_blank');
       break;
     }
     case 'reddit': {
-      const url = `https://www.reddit.com/submit?url=${encodeURIComponent(currentUrl)}&title=${encodeURIComponent(`Tirumala Utsavam: ${title}`)}`;
+      const url = `https://www.reddit.com/submit?url=${encodeURIComponent(eventUrl)}&title=${encodeURIComponent(`Tirumala Utsavam: ${title}`)}`;
       window.open(url, '_blank');
       break;
     }
@@ -311,7 +312,7 @@ export function shareToPlatform(platform, event, lang = 'en') {
       break;
     }
     case 'telegram': {
-  const url = `https://t.me/share/url?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(shareText)}`;
+  const url = `https://t.me/share/url?url=${encodeURIComponent(eventUrl)}&text=${encodeURIComponent(shareText)}`;
   window.open(url, '_blank');
   break;
 }
@@ -320,7 +321,7 @@ export function shareToPlatform(platform, event, lang = 'en') {
         navigator.clipboard.writeText(`${shareText}`);
         toast.success(lang === 'te' ? 'లింక్ విజయవంతంగా కాపీ చేయబడింది!' : 'Link & event details copied to clipboard!');
       } else {
-        toast.info(lang === 'te' ? 'కాపీ చేయబడింది: ' + currentUrl : 'Copied link: ' + currentUrl);
+        toast.info(lang === 'te' ? 'కాపీ చేయబడింది: ' + eventUrl : 'Copied link: ' + eventUrl);
       }
       break;
     }

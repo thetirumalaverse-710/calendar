@@ -1,7 +1,7 @@
 import useGlossary from "../hooks/useGlossary";
 import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
-import { GLOSSARY_CATEGORIES, UTSAVA_GLOSSARY_TERMS } from '../data/utsavaGlossary';
-import { Search, BookOpen, Sparkles, HelpCircle, Info, ChevronDown, ChevronUp, Image as ImageIcon, X, ChevronLeft, ChevronRight, Edit3 } from 'lucide-react';
+import { GLOSSARY_CATEGORIES } from '../data/utsavaGlossary';
+import { Search, BookOpen, HelpCircle, Info, ChevronDown, ChevronUp, Image as ImageIcon, X, ChevronLeft, ChevronRight, Edit3 } from 'lucide-react';
 
 export default function UtsavamGlossary({ 
   lang = 'en', 
@@ -55,10 +55,6 @@ export default function UtsavamGlossary({
   // Merge default terms with Admin custom edits
  const allTermsList = useGlossary(customGlossaryEdits);
 
-  // Featured Word of the Day
-  const featuredTerm = useMemo(() => {
-    return allTermsList.find(t => t.id === 'brahmotsavam-origin') || allTermsList[0];
-  }, [allTermsList]);
 
   // Filtered & Strictly Sorted Terms (Ascending Order A-Z / అ-ఱ)
   const filteredTerms = useMemo(() => {
@@ -110,15 +106,6 @@ export default function UtsavamGlossary({
     setExpandedTermId(prev => prev === id ? null : id);
   };
 
-  const handleScrollToFeatured = (termId) => {
-    setExpandedTermId(termId);
-    setTimeout(() => {
-      const el = termRefs.current[termId];
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }, 150);
-  };
 
   return (
     <div className="space-y-6 pb-12 animate-fade-in">
@@ -171,46 +158,6 @@ export default function UtsavamGlossary({
         </div>
       </div>
 
-      {/* FEATURED WORD OF THE DAY (Now fully Clickable with Gold Glow Hover & High Contrast) */}
-      {!searchTerm && selectedCategory === 'all' && featuredTerm && (
-        <div 
-          onClick={() => handleScrollToFeatured(featuredTerm.id)}
-          className="dark-hero-card glossary-card-hover p-5 sm:p-6 rounded-2xl border-2 border-[#FFD700]/70 bg-gradient-to-r from-[#1A1500] via-[#141923] to-[#0B0E14] relative shadow-xl cursor-pointer group"
-          title="Click to view full detailed meaning"
-        >
-          <div className="flex items-center justify-between gap-2 mb-3">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#FFD700] animate-spin" />
-              <span className="text-xs font-extrabold text-[#FFD700] uppercase tracking-wider">
-                {lang === 'en' ? 'Featured Utsavam Term' : 'ముఖ్యమైన దివ్య పదం'}
-              </span>
-            </div>
-
-            <span className="text-xs font-extrabold text-[#FFD700] group-hover:underline flex items-center gap-1">
-              <span>{lang === 'en' ? 'Read Full History ➔' : 'పూర్తి సమాచారం ➔'}</span>
-            </span>
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex items-center gap-3">
-              <h3 className="font-serif text-xl sm:text-2xl font-bold text-white group-hover:text-[#FFD700] transition-colors">
-                {lang === 'en' ? featuredTerm.term : featuredTerm.termTe}
-              </h3>
-              <span className="text-sm font-semibold text-[#FFD700] font-sans">
-                ({featuredTerm.termTe})
-              </span>
-            </div>
-
-            <p className="text-xs sm:text-sm text-slate-200 dark:text-slate-200 leading-relaxed font-medium">
-              {lang === 'en' ? featuredTerm.shortDesc : featuredTerm.shortDescTe}
-            </p>
-
-            <div className="pt-2 flex items-center gap-2 text-[11px] font-bold text-[#FFD700]/90">
-              <span>📜 {lang === 'en' ? 'Source: TTD Sapthagiri Magazine (Sept 2020)' : 'ఆధారం: టిటిడి సప్తగిరి పత్రిక (సెప్టెంబరు 2020)'}</span>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* CATEGORY FILTER CHIPS */}
       <div className="relative max-w-full">

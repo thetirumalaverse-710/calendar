@@ -6,7 +6,7 @@ import useLocalStorage from "./hooks/usePersistentState";
 import useCurrentIST from "./hooks/useCurrentIST";
 import { STORAGE_KEYS } from "./config/storageKeys";
 import { APP_CONFIG } from "./config/appConfig";
-import React, { useState, useEffect, useMemo, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useMemo, useRef, lazy, Suspense } from 'react';
 import Header from './components/Header';
 import HeroBanner from './components/HeroBanner';
 import { loadStoredFeedback, saveStoredFeedback } from './utils/feedbackStorage';
@@ -82,17 +82,33 @@ export default function App() {
     }
   };
 
+  const eventsListRef = useRef(null);
+
   useEffect(() => {
     const handlePopState = () => {
       const currentTab = getTabFromPathname(window.location.pathname);
       setActiveTabState(currentTab);
+
+      // Deep linking support when navigating browser history
+      try {
+        const searchParams = new URLSearchParams(window.location.search);
+        const eventId = searchParams.get('event');
+        if (eventId && Array.isArray(eventsListRef.current) && eventsListRef.current.length > 0) {
+          const matched = eventsListRef.current.find(e => e && String(e.id) === String(eventId));
+          if (matched) setSelectedEventModal(matched);
+        } else if (!eventId) {
+          setSelectedEventModal(null);
+        }
+      } catch (err) {
+        console.warn('Popstate event link handling error:', err);
+      }
     };
 
     window.addEventListener('popstate', handlePopState);
 
     const cleanPath = window.location.pathname.replace(/\/+$/, '') || '/';
     if (!ROUTE_MAP[cleanPath.toLowerCase()]) {
-      window.history.replaceState({ tab: 'calendar-page' }, '', '/');
+      window.history.replaceState({ tab: 'calendar-page' }, '', '/' + window.location.search + window.location.hash);
     }
 
     return () => {
@@ -126,6 +142,30 @@ export default function App() {
     deleteEvent,
     eventsInitialized,
   } = useEvents(initialEvents);
+
+  eventsListRef.current = eventsList;
+
+  // Deep linking: Automatically open event modal if ?event=<id> is present in URL on direct load
+  const handledDeepLinkRef = useRef(false);
+
+  useEffect(() => {
+    if (handledDeepLinkRef.current) return;
+    if (!eventsInitialized || !Array.isArray(eventsList) || eventsList.length === 0) return;
+
+    try {
+      const searchParams = new URLSearchParams(window.location.search);
+      const eventId = searchParams.get('event');
+      if (eventId) {
+        const matched = eventsList.find(e => e && String(e.id) === String(eventId));
+        if (matched) {
+          setSelectedEventModal(matched);
+        }
+      }
+      handledDeepLinkRef.current = true;
+    } catch (err) {
+      console.warn('Failed to parse event deep link:', err);
+    }
+  }, [eventsInitialized, eventsList]);
 
   useEffect(() => {
     let cancelled = false;
@@ -659,7 +699,20 @@ useEffect(() => {
         <Suspense fallback={null}>
           <EventDetailModal
             event={selectedEventModal}
-            onClose={() => setSelectedEventModal(null)}
+            onClose={() => {
+              setSelectedEventModal(null);
+              try {
+                if (window.location.search.includes('event=')) {
+                  const searchParams = new URLSearchParams(window.location.search);
+                  searchParams.delete('event');
+                  const remaining = searchParams.toString();
+                  const newUrl = window.location.pathname + (remaining ? `?${remaining}` : '') + window.location.hash;
+                  window.history.replaceState(window.history.state, '', newUrl);
+                }
+              } catch (e) {
+                console.warn('Failed to clean event parameter from URL:', e);
+              }
+            }}
             lang={lang}
             isAdminLoggedIn={isAdminLoggedIn}
             onEditEvent={handleOpenEditModalForEvent}
