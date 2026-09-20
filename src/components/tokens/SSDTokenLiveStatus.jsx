@@ -252,8 +252,8 @@ export default function SSDTokenLiveStatus({
         className={`text-xs sm:text-sm mt-1 leading-relaxed ${mutedClass}`}
       >
         {lang === "te"
-          ? "సెప్టెంబర్ 14–20 టోకెన్లు లేవు. సెప్టెంబర్ 21 టోకెన్లు సెప్టెంబర్ 20 సాయంత్రం 4:00 గంటలకు జారీ."
-          : "No tokens are issued Sep 14–20. Sep 21 tokens will be issued Sep 20 at 4:00 PM."}
+          ? "సెప్టెంబర్ 14–23 టోకెన్లు లేవు. సెప్టెంబర్ 24 టోకెన్లు సెప్టెంబర్ 23 సాయంత్రం 4:00 గంటలకు జారీ."
+          : "No tokens are issued Sep 14–23. Sep 24 tokens will be issued Sep 23 at 4:00 PM."}
       </p>
     </div>
   </div>

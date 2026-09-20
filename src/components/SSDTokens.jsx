@@ -88,7 +88,7 @@ const isBrahmotsavamPause =
   indiaDate.getFullYear() === 2026 &&
   indiaDate.getMonth() === 8 &&
   indiaDate.getDate() >= 14 &&
-  indiaDate.getDate() <= 20;
+  indiaDate.getDate() <= 23;
 
 const isNoIssuance =
   isTodayWednesday ||
@@ -209,8 +209,8 @@ const isNoIssuance =
 
         brahmotsavamNotice:
       lang === "te"
-        ? "సాలకట్ల బ్రహ్మోత్సవాల కారణంగా సెప్టెంబర్ 14 నుండి 20 వరకు SSD / DD టోకెన్ల జారీ నిలిపివేయబడింది. సెప్టెంబర్ 21 తేదీ టోకెన్లు సెప్టెంబర్ 20 సాయంత్రం 4:00 గంటలకు జారీ చేయబడతాయి."
-        : "SSD / DD token issuance is paused from September 14 to 20 due to Salakatla Brahmotsavams. Tokens for September 21 will be issued on September 20 at 4:00 PM.",
+        ? "సాలకట్ల బ్రహ్మోత్సవాల కారణంగా సెప్టెంబర్ 14 నుండి 23 వరకు SSD / DD టోకెన్ల జారీ నిలిపివేయబడింది. సెప్టెంబర్ 24 తేదీ టోకెన్లు సెప్టెంబర్ 23 సాయంత్రం 4:00 గంటలకు జారీ చేయబడతాయి."
+        : "SSD / DD token issuance is paused from September 14th to September 23rd due to Salakatla Brahmotsavams. Tokens for September 24 will be issued on September 23 at 4:00 PM.",
 
     genericNoIssuanceNotice:
       lang === "te"
@@ -282,9 +282,9 @@ const isNoIssuance =
   const month = indiaDate.getMonth();
   const day = indiaDate.getDate();
 
-  // September 14–20, 2026
+  // September 14–23, 2026
   const showBrahmotsavamNotice =
-    month === 8 && day >= 14 && day <= 20;
+    month === 8 && day >= 14 && day <= 23;
 
   if (!showBrahmotsavamNotice) return null;
 
