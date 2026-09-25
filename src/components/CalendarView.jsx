@@ -122,6 +122,20 @@ export default function CalendarView({
   return (
     <div id="calendar-view-container" className="space-y-6 scroll-mt-24">
       
+      {/* Route-Specific SEO Introductory Section */}
+      <section className="glass-card p-4 sm:p-5 border border-[#D4AF37]/40 rounded-2xl space-y-2 shadow-lg">
+        <h1 className="font-serif text-xl sm:text-2xl md:text-3xl font-extrabold gold-gradient-text tracking-tight leading-tight">
+          {lang === 'en'
+            ? 'Tirumala & Tirupati Temple Festival Calendar 2026–2027'
+            : 'తిరుమల & తిరుపతి దేవాలయాల ఉత్సవాల క్యాలెండర్ 2026–2027'}
+        </h1>
+        <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed max-w-4xl font-medium">
+          {lang === 'en'
+            ? 'Explore the 2026–2027 festival calendar for Tirumala and Tirupati temples, including annual Brahmotsavams, vahana sevas, utsavams, and other important temple occasions. Use the calendar filters to browse events by month, temple, or festival.'
+            : 'తిరుమల మరియు తిరుపతి దేవాలయాల 2026–2027 ఉత్సవాల క్యాలెండర్, వార్షిక బ్రహ్మోత్సవాలు, వాహన సేవలు, ఉత్సవాలు మరియు ఇతర ముఖ్యమైన పర్వదినాల వివరాలను అన్వేషించండి. నెల, ఆలయం లేదా ఉత్సవం ఆధారంగా ఈవెంట్లను వీక్షించడానికి క్యాలెండర్ ఫిల్టర్లను ఉపయోగించండి.'}
+        </p>
+      </section>
+
       {/* Search & Filter Control Deck */}
       <div className="glass-card p-4 sm:p-5 border-2 border-[#D4AF37]/40 space-y-4 shadow-xl w-full rounded-2xl">
         
