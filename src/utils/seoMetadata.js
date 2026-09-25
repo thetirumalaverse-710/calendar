@@ -8,7 +8,7 @@
  * metadata cleanly prior to build-time prerendering.
  */
 
-import { getFestivalTopic } from '../data/festivalTopics';
+import { getFestivalTopic } from '../data/festivalTopics.js';
 
 export const SITE_ORIGIN = 'https://thetirumalaverse.in';
 
@@ -145,6 +145,22 @@ export const ROUTE_SEO_METADATA = {
       'Garuda Vahanam at Tirumala | Dates, Significance & Seva Guide | The Tirumala Verse',
     twitterDescription:
       'Learn about Garuda Vahanam at Tirumala, its significance, and scheduled occurrences. Explore Garuda Vahanam dates and related events in the Tirumala festival calendar.',
+  },
+  '/festivals/rathotsavam': {
+    title:
+      'Rathotsavam at Tirumala | Dates, Significance & Chariot Festival Guide | The Tirumala Verse',
+    description:
+      'Learn about Rathotsavam at Tirumala, its spiritual significance, and scheduled chariot occurrences. Explore Rathotsavam dates across Tirumala and Tirupati shrines in the festival calendar.',
+    canonical: `${SITE_ORIGIN}/festivals/rathotsavam`,
+    ogTitle:
+      'Rathotsavam at Tirumala | Dates, Significance & Chariot Festival Guide | The Tirumala Verse',
+    ogDescription:
+      'Learn about Rathotsavam at Tirumala, its spiritual significance, and scheduled chariot occurrences. Explore Rathotsavam dates across Tirumala and Tirupati shrines in the festival calendar.',
+    ogUrl: `${SITE_ORIGIN}/festivals/rathotsavam`,
+    twitterTitle:
+      'Rathotsavam at Tirumala | Dates, Significance & Chariot Festival Guide | The Tirumala Verse',
+    twitterDescription:
+      'Learn about Rathotsavam at Tirumala, its spiritual significance, and scheduled chariot occurrences. Explore Rathotsavam dates across Tirumala and Tirupati shrines in the festival calendar.',
   },
 };
 

@@ -116,7 +116,7 @@ export default function FestivalTopicPage({
               className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#D4AF37] via-[#FFD700] to-[#FFA000] text-black font-extrabold text-sm flex items-center gap-2 shadow-xl hover:brightness-110 active:scale-95 transition-all"
             >
               <Calendar className="w-4 h-4 text-black" />
-              <span>{isTe ? 'క్యాలెండర్‌లో గరుడ వాహనం చూడండి' : 'View Garuda Vahanam in Calendar'}</span>
+              <span>{isTe ? (topic.calendarCtaTe || `క్యాలెండర్‌లో ${topic.searchQuery} చూడండి`) : (topic.calendarCta || `View ${topic.searchQuery} in Calendar`)}</span>
               <ArrowRight className="w-4 h-4 text-black" />
             </button>
             <span className="text-xs text-[#94A3B8] font-medium">
@@ -200,7 +200,7 @@ export default function FestivalTopicPage({
             <div className="flex items-center gap-2">
               <Calendar className="w-5 h-5 text-[#FFD700]" />
               <h2 className={`font-serif text-xl sm:text-2xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                {isTe ? 'గరుడ వాహన దర్శన తేదీలు & సమయాలు' : 'Scheduled Occurrences & Darshan Dates'}
+                {isTe ? (topic.occurrencesTitleTe || `${topic.searchQuery} దర్శన తేదీలు & సమయాలు`) : 'Scheduled Occurrences & Darshan Dates'}
               </h2>
             </div>
             <p className="text-xs text-[#94A3B8] mt-0.5">
@@ -226,7 +226,7 @@ export default function FestivalTopicPage({
         {matchedEvents.length === 0 ? (
           <div className="glass-card p-8 rounded-2xl text-center text-[#94A3B8] text-sm">
             {isTe
-              ? 'ప్రస్తుతం రాబోయే ఉత్సవాలలో గరుడ వాహనం వివరాలు అందుబాటులో లేవు.'
+              ? (topic.emptyOccurrencesTe || `ప్రస్తుతం రాబోయే ఉత్సవాలలో ${topic.searchQuery} వివరాలు అందుబాటులో లేవు.`)
               : 'No scheduled occurrences currently recorded in the active festival dataset.'}
           </div>
         ) : (
@@ -323,12 +323,12 @@ export default function FestivalTopicPage({
       <section className="glass-card p-6 sm:p-8 rounded-3xl border-2 border-[#D4AF37]/50 text-center space-y-3 bg-gradient-to-r from-[#141923] via-[#0B0E14] to-[#141923] shadow-2xl">
         <Sparkles className="w-8 h-8 text-[#FFD700] mx-auto animate-pulse" />
         <h2 className={`font-serif text-2xl sm:text-3xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
-          {isTe ? 'ఇంటరాక్టివ్ క్యాలెండర్‌లో గరుడ సేవను ప్లాన్ చేయండి' : 'Plan Your Garuda Seva Darshan in the Calendar'}
+          {isTe ? (topic.planDarshanTitleTe || `ఇంటరాక్టివ్ క్యాలెండర్‌లో ${topic.searchQuery}ను ప్లాన్ చేయండి`) : (topic.planDarshanTitle || `Plan Your ${topic.searchQuery} Darshan in the Calendar`)}
         </h2>
         <p className="text-xs sm:text-sm text-[#94A3B8] max-w-xl mx-auto leading-relaxed">
           {isTe
-            ? 'అన్ని ఆలయాల గరుడ వాహన సేవలను తేదీల వారీగా శోధించండి, రోజువారీ సమయాలు మరియు నిత్య సేవల వివరాలను పరిశీలించండి.'
-            : 'Explore scheduled timings, download PDF panchangams, and add Garuda Vahanam reminders directly to your calendar.'}
+            ? `అన్ని ఆలయాల ${topic.searchQuery} సేవలను తేదీల వారీగా శోధించండి, రోజువారీ సమయాలు మరియు నిత్య సేవల వివరాలను పరిశీలించండి.`
+            : `Explore scheduled timings, download PDF panchangams, and add ${topic.searchQuery} reminders directly to your calendar.`}
         </p>
         <div className="pt-2">
           <button
@@ -336,7 +336,7 @@ export default function FestivalTopicPage({
             className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-[#FF5722] via-[#FFD700] to-[#FF5722] text-black font-extrabold text-sm inline-flex items-center gap-2 shadow-xl hover:scale-105 active:scale-95 transition-all"
           >
             <Calendar className="w-4 h-4 text-black" />
-            <span>{isTe ? 'క్యాలెండర్‌లో గరుడ వాహనం శోధించండి' : 'View Garuda Vahanam in Calendar'}</span>
+            <span>{isTe ? (topic.searchCalendarCtaTe || `క్యాలెండర్‌లో ${topic.searchQuery} శోధించండి`) : (topic.calendarCta || `View ${topic.searchQuery} in Calendar`)}</span>
             <ArrowRight className="w-4 h-4 text-black" />
           </button>
         </div>
