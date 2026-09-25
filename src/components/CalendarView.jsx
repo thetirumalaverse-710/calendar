@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TEMPLES } from '../data/templeEvents';
 import { getEventStatus, openGoogleCalendar, downloadIcsCalendarFile, shareToWhatsApp, normalizeImageUrl } from '../utils/eventStatus';
 import { exportPanchangamPdf } from '../utils/pdfExport';
@@ -24,7 +24,48 @@ export default function CalendarView({
   const currentIST = useCurrentIST();
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'schedule' | 'cards'
   const [selectedMonthFilter, setSelectedMonthFilter] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('search') || '';
+    } catch {
+      return '';
+    }
+  });
+
+  const handleSearchChange = (newQuery) => {
+    setSearchQuery(newQuery);
+    try {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (newQuery && newQuery.trim()) {
+        searchParams.set('search', newQuery);
+      } else {
+        searchParams.delete('search');
+      }
+      const remaining = searchParams.toString();
+      const newUrl = window.location.pathname + (remaining ? `?${remaining}` : '') + window.location.hash;
+      window.history.replaceState(window.history.state, '', newUrl);
+    } catch (e) {
+      console.warn('Failed to update search parameter in URL:', e);
+    }
+  };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const searchVal = params.get('search') || '';
+        setSearchQuery(searchVal);
+      } catch (e) {
+        console.warn('Failed to read search parameter on popstate:', e);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
 
   // Filter events based on temple selection, month filter, and search query
   const filteredEvents = events.filter(evt => {
@@ -101,13 +142,13 @@ export default function CalendarView({
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               placeholder={lang === 'en' ? 'Search festival, ritual or vehicle (e.g. Garuda, Kalyanam)...' : 'ఉత్సవం, వాహనం లేదా సేవ వెతకండి...'}
               className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#141923] border border-[#D4AF37]/60 text-white placeholder-[#94A3B8] text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#FFD700] shadow-inner"
             />
             {searchQuery && (
               <button
-                onClick={() => setSearchQuery('')}
+                onClick={() => handleSearchChange('')}
                 className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-[#CBD5E1] hover:text-[#FFD700]"
                 title="Clear search"
               >
