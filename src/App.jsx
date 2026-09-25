@@ -20,6 +20,7 @@ import ToastContainer from './components/common/ToastContainer';
 import { subscribeToWebPush, unsubscribeFromWebPush, ELIGIBLE_NOTIFICATION_TEMPLES } from './utils/webPush';
 import { supabase } from './utils/supabaseClient';
 import { updateRouteMetadata } from './utils/seoMetadata';
+import { updateRouteStructuredData } from './utils/structuredData';
 
 const CalendarView = lazy(() => import('./components/CalendarView'));
 const DailySchedule = lazy(() => import('./components/DailySchedule'));
@@ -154,9 +155,10 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Sync route-specific SEO metadata (<title>, canonical, meta description, OG, Twitter)
+  // Sync route-specific SEO metadata and structured data
   useEffect(() => {
     updateRouteMetadata(window.location.pathname);
+    updateRouteStructuredData(window.location.pathname);
   }, [currentPath, activeTab]);
 
   const eventsListRef = useRef(null);
