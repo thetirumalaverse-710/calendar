@@ -7,6 +7,7 @@ import SSDTokenImportantInfo from "./tokens/SSDTokenImportantInfo";
 import SSDTokenLiveStatus from "./tokens/SSDTokenLiveStatus";
 import SSDTokenLocations from "./tokens/SSDTokenLocations";
 import SSDTokenRequirements from "./tokens/SSDTokenRequirements";
+import SSDTokenFAQ from "./tokens/SSDTokenFAQ";
 import {
   getRecentTokenHistory,
   getTodayTokenData,
@@ -384,6 +385,14 @@ const isNoIssuance =
           headingClass={headingClass}
           mutedClass={mutedClass}
           text={text}
+        />
+
+        <SSDTokenFAQ
+          isLight={isLight}
+          cardClass={cardClass}
+          headingClass={headingClass}
+          mutedClass={mutedClass}
+          lang={lang}
         />
 
         <SSDTokenHistory

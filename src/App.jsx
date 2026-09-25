@@ -749,6 +749,7 @@ useEffect(() => {
               customGlossaryEdits={customGlossaryEdits}
               isAdminLoggedIn={isAdminLoggedIn}
               onOpenAdminEditTerm={handleOpenAdminEditTerm}
+              onNavigate={handleNavigatePath}
             />
           )}
 
@@ -757,6 +758,7 @@ useEffect(() => {
             <DailySchedule
               lang={lang}
               themeMode={themeMode}
+              onNavigateToGlossary={handleNavigateToGlossary}
             />
           )}
 

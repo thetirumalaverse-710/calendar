@@ -5,6 +5,7 @@
 
 import { getRouteMetadata, SITE_ORIGIN } from './seoMetadata.js';
 import { getFestivalTopic } from '../data/festivalTopics.js';
+import { TOKEN_FAQS } from '../data/tokenFaqData.js';
 
 export const ROUTE_SCRIPT_ID = 'route-structured-data';
 
@@ -137,6 +138,22 @@ export function buildRouteStructuredData(pathname) {
         name: crumb.name,
         item: crumb.item
       }))
+    });
+  }
+
+  // 3. FAQPage Schema (Strictly for /tokens only, matching visible FAQ content)
+  if (normalizedPath === '/tokens' && Array.isArray(TOKEN_FAQS) && TOKEN_FAQS.length > 0) {
+    graph.push({
+      '@type': 'FAQPage',
+      '@id': `${canonicalUrl}#faq`,
+      mainEntity: TOKEN_FAQS.map((faq) => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: faq.answer,
+        },
+      })),
     });
   }
 

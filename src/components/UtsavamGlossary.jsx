@@ -1,14 +1,43 @@
 import useGlossary from "../hooks/useGlossary";
 import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { GLOSSARY_CATEGORIES } from '../data/utsavaGlossary';
-import { Search, BookOpen, HelpCircle, Info, ChevronDown, ChevronUp, Image as ImageIcon, X, ChevronLeft, ChevronRight, Edit3 } from 'lucide-react';
+import { Search, BookOpen, HelpCircle, Info, ChevronDown, ChevronUp, Image as ImageIcon, X, ChevronLeft, ChevronRight, Edit3, Compass, ArrowRight } from 'lucide-react';
+import { isModifiedClick } from '../utils/navigation';
+
+const FESTIVAL_GUIDE_MAP = {
+  'garuda-seva': {
+    href: '/festivals/garuda-vahanam',
+    name: 'Garuda Vahanam',
+    nameTe: 'గరుడ వాహన సేవ',
+    title: 'Garuda Vahanam',
+  },
+  'rathotsavam': {
+    href: '/festivals/rathotsavam',
+    name: 'Rathotsavam',
+    nameTe: 'రథోత్సవం',
+    title: 'Rathotsavam',
+  },
+  'pavithrotsavam': {
+    href: '/festivals/pavithrotsavam',
+    name: 'Pavithrotsavam',
+    nameTe: 'పవిత్రోత్సవం',
+    title: 'Pavithrotsavam',
+  },
+  'brahmotsavam-origin': {
+    href: '/festivals/brahmotsavam',
+    name: 'Brahmotsavam',
+    nameTe: 'బ్రహ్మోత్సవాలు',
+    title: 'Brahmotsavam',
+  },
+};
 
 export default function UtsavamGlossary({ 
   lang = 'en', 
   targetTermId, 
   customGlossaryEdits = {}, 
   isAdminLoggedIn,
-  onOpenAdminEditTerm
+  onOpenAdminEditTerm,
+  onNavigate
 }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -300,6 +329,37 @@ const hasAdminImages = validImages.length > 0;
                   <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
                     {lang === 'en' ? item.shortDesc : item.shortDescTe}
                   </p>
+
+                  {/* Dedicated Festival Guide Link (Phase 5A) */}
+                  {FESTIVAL_GUIDE_MAP[item.id] && (
+                    <div className="pt-1" onClick={(e) => e.stopPropagation()}>
+                      <a
+                        href={FESTIVAL_GUIDE_MAP[item.id].href}
+                        onClick={(e) => {
+                          if (isModifiedClick(e)) return;
+                          e.preventDefault();
+                          const targetHref = FESTIVAL_GUIDE_MAP[item.id].href;
+                          if (onNavigate) {
+                            onNavigate(targetHref);
+                          } else {
+                            window.history.pushState({ path: targetHref }, '', targetHref);
+                            window.dispatchEvent(new PopStateEvent('popstate'));
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }
+                        }}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#D4AF37]/15 hover:bg-[#D4AF37]/30 text-amber-900 dark:text-[#FFD700] border border-[#D4AF37]/50 transition-all hover:scale-[1.02] shadow-sm cursor-pointer group/guide"
+                        title={`Read complete ${FESTIVAL_GUIDE_MAP[item.id].title} guide`}
+                      >
+                        <Compass className="w-3.5 h-3.5 text-[#FF5722] group-hover/guide:rotate-12 transition-transform" />
+                        <span>
+                          {lang === 'en'
+                            ? `${FESTIVAL_GUIDE_MAP[item.id].name} Guide`
+                            : `${FESTIVAL_GUIDE_MAP[item.id].nameTe} సమగ్ర గైడ్`}
+                        </span>
+                        <ArrowRight className="w-3 h-3 text-[#D4AF37] group-hover/guide:translate-x-0.5 transition-transform" />
+                      </a>
+                    </div>
+                  )}
 
                   {/* ADMIN CUSTOM IMAGE GALLERY (Displayed ONLY if Admin added images) */}
                   {hasAdminImages && (

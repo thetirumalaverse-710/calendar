@@ -1,5 +1,84 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Clock, Utensils, Sparkles, Calendar, Ticket, Layers, Info } from 'lucide-react';
+import { isModifiedClick } from '../utils/navigation';
+
+/**
+ * Verified ritual terms from utsavaGlossary.js that have dedicated glossary entries.
+ * Non-matching or food/clothing-only terms (Thomala, Koluvu, Sahasra Deepalankara, Ekanta Seva)
+ * are intentionally omitted to avoid misleading cross-links.
+ */
+const GLOSSARY_RITUAL_PATTERNS = [
+  { regex: /\bSuprabhatam\b/i, id: 'suprabhatam', label: 'Suprabhatam' },
+  { regex: /\b(Kalyanotsavam|Kalyanostavam)\b/i, id: 'kalyanotsavam', label: 'Kalyanotsavam' },
+  { regex: /\bArchana\b/i, id: 'archana', label: 'Archana' },
+  { regex: /\bAbhishekam\b/i, id: 'abhishekam', label: 'Abhishekam' }
+];
+
+function renderSevaWithGlossaryLinks(text, onNavigateToGlossary) {
+  if (typeof text !== 'string') return text;
+
+  const matches = [];
+  for (const r of GLOSSARY_RITUAL_PATTERNS) {
+    const m = r.regex.exec(text);
+    if (m) {
+      matches.push({ start: m.index, end: m.index + m[0].length, id: r.id, matchText: m[0], label: r.label });
+    }
+  }
+
+  if (matches.length === 0) return text;
+
+  // Sort by start index
+  matches.sort((a, b) => a.start - b.start);
+
+  // Filter out any overlaps, keeping earliest
+  const nonOverlapping = [];
+  let lastEnd = 0;
+  for (const m of matches) {
+    if (m.start >= lastEnd) {
+      nonOverlapping.push(m);
+      lastEnd = m.end;
+    }
+  }
+
+  const nodes = [];
+  let cursor = 0;
+
+  nonOverlapping.forEach((m, idx) => {
+    if (m.start > cursor) {
+      nodes.push(text.slice(cursor, m.start));
+    }
+
+    nodes.push(
+      <a
+        key={`glossary-link-${m.id}-${idx}`}
+        href="/glossary"
+        onClick={(e) => {
+          if (isModifiedClick(e)) return;
+          e.preventDefault();
+          if (onNavigateToGlossary) {
+            onNavigateToGlossary(m.id);
+          } else {
+            window.history.pushState({ tab: 'glossary' }, '', '/glossary');
+            window.dispatchEvent(new PopStateEvent('popstate'));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }}
+        className="underline decoration-dotted decoration-[#D4AF37]/70 underline-offset-4 hover:decoration-solid hover:text-[#FF5722] dark:hover:text-[#FFD700] transition-colors cursor-pointer"
+        title={`View ${m.label} in Utsavam Glossary`}
+      >
+        {m.matchText}
+      </a>
+    );
+
+    cursor = m.end;
+  });
+
+  if (cursor < text.length) {
+    nodes.push(text.slice(cursor));
+  }
+
+  return nodes;
+}
 
 // Exact day-by-day weekly sevas extracted from TTD Official Schedule Images
 export const WEEKLY_MAIN_TEMPLE_SEVAS = [
@@ -484,7 +563,7 @@ export const BRAHMOTSAVAM_2026_SCHEDULE = [
   },
 ];
 
-export default function DailySchedule({ lang, themeMode = 'dark' }) {
+export default function DailySchedule({ lang, themeMode = 'dark', onNavigateToGlossary }) {
   const isLight = themeMode === 'light';
   const getIndiaDate = () =>
   new Intl.DateTimeFormat('en-CA', {
@@ -803,7 +882,7 @@ const isBrahmotsavamPeriod = Boolean(activeBrahmotsavam);
                     <span className="w-2.5 h-2.5 rounded-full bg-[#FF5722] shrink-0"></span>
                     <div>
                       <h4 className={itemTitleClass}>
-                        <span>{item.seva}</span>
+                        <span>{renderSevaWithGlossaryLinks(item.seva, onNavigateToGlossary)}</span>
                       </h4>
                       <p className={`text-xs ${isLight ? 'text-slate-600' : 'text-[#94A3B8]'}`}>
                         {item.desc}
@@ -850,7 +929,7 @@ const isBrahmotsavamPeriod = Boolean(activeBrahmotsavam);
                   <tr key={rIdx} className={isLight ? 'hover:bg-slate-50 transition-colors' : 'hover:bg-[#141923]/60 transition-colors'}>
                     <td className="p-3.5 font-bold text-[#FF5722] text-sm">{row.day}</td>
                     <td className={`p-3.5 font-extrabold text-sm ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                      <span>{row.sevaName}</span>
+                      <span>{renderSevaWithGlossaryLinks(row.sevaName, onNavigateToGlossary)}</span>
                       <span className={isLight ? 'ml-2 px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-[11px] font-bold border border-amber-300' : 'ml-2 px-2 py-0.5 rounded bg-[#FFD700]/20 text-[#FFD700] text-[11px] font-bold border border-[#D4AF37]/40'}>
                         (Weekly Seva)
                       </span>
