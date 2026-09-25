@@ -178,6 +178,22 @@ export const ROUTE_SEO_METADATA = {
     twitterDescription:
       'Learn about Pavithrotsavam at Tirumala, its annual purification significance, and multi-day ritual schedule. Explore Pavithrotsavam dates and ceremonies across Tirumala and Tirupati temples.',
   },
+  '/festivals/brahmotsavam': {
+    title:
+      'Brahmotsavam at Tirumala | Dates, Significance & Festival Guide | The Tirumala Verse',
+    description:
+      'Explore Brahmotsavam at Tirumala, its origins by Lord Brahma, 9-day vahana procession schedule, and divine significance. Discover Brahmotsavam dates across Tirumala and Tirupati shrines.',
+    canonical: `${SITE_ORIGIN}/festivals/brahmotsavam`,
+    ogTitle:
+      'Brahmotsavam at Tirumala | Dates, Significance & Festival Guide | The Tirumala Verse',
+    ogDescription:
+      'Explore Brahmotsavam at Tirumala, its origins by Lord Brahma, 9-day vahana procession schedule, and divine significance. Discover Brahmotsavam dates across Tirumala and Tirupati shrines.',
+    ogUrl: `${SITE_ORIGIN}/festivals/brahmotsavam`,
+    twitterTitle:
+      'Brahmotsavam at Tirumala | Dates, Significance & Festival Guide | The Tirumala Verse',
+    twitterDescription:
+      'Explore Brahmotsavam at Tirumala, its origins by Lord Brahma, 9-day vahana procession schedule, and divine significance. Discover Brahmotsavam dates across Tirumala and Tirupati shrines.',
+  },
 };
 
 /**

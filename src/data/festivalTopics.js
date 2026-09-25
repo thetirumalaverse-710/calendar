@@ -234,6 +234,88 @@ export const FESTIVAL_TOPICS = {
     planDarshanTitle: 'Plan Your Pavithrotsavam Darshan in the Calendar',
     planDarshanTitleTe: 'ఇంటరాక్టివ్ క్యాలెండర్‌లో పవిత్రోత్సవ దర్శనాన్ని ప్లాన్ చేయండి',
     searchCalendarCtaTe: 'క్యాలెండర్‌లో పవిత్రోత్సవాలు శోధించండి'
+  },
+  brahmotsavam: {
+    slug: 'brahmotsavam',
+    title:
+      'Brahmotsavam at Tirumala | Dates, Significance & Festival Guide | The Tirumala Verse',
+    titleTe:
+      'తిరుమల శ్రీవారి బ్రహ్మోత్సవాలు | తేదీలు, ప్రాశస్త్యం & ఉత్సవ సమగ్ర సమాచారం',
+    h1: 'Brahmotsavam at Tirumala',
+    h1Te: 'తిరుమలలో శ్రీవారి బ్రహ్మోత్సవాలు',
+    subtitle: 'The Grand Multi-Day Celestial Festival of Lord Venkateswara at Seshachala',
+    subtitleTe: 'శ్రీవారి పరమోత్కృష్ట వార్షిక మహోత్సవం మరియు దివ్య వాహన వైభవం',
+    canonical: 'https://thetirumalaverse.in/festivals/brahmotsavam',
+    searchQuery: 'Brahmotsavam',
+    primaryPhrase: 'brahmotsavam',
+    searchKeywords: [
+      'brahmotsavam',
+      'brahmotsavams',
+      'salakatla',
+      'navarathri brahmotsavam',
+      'బ్రహ్మోత్సవాలు',
+      'బ్రహ్మోత్సవం',
+      'సాలకట్ల',
+      'నవరాత్రి బ్రహ్మోత్సవాలు',
+      'dwajarohanam',
+      'chakrasnanam'
+    ],
+    description:
+      'Explore Brahmotsavam at Tirumala, its origins by Lord Brahma, 9-day vahana procession schedule, and divine significance. Discover Brahmotsavam dates across Tirumala and Tirupati shrines.',
+    descriptionTe:
+      'తిరుమల శ్రీవారి బ్రహ్మోత్సవాల ప్రాశస్త్యం, బ్రహ్మదేవుని ఆరాధన, నవదిన వాహన సేవల వివరాలు, చక్రస్నానం మరియు వార్షిక బ్రహ్మోత్సవాల సమగ్ర సమాచారాన్ని ఇక్కడ తెలుసుకోండి.',
+    heroBadge: 'Annual Brahmotsavam Festival of Lord Venkateswara',
+    heroBadgeTe: 'శ్రీ వేంకటేశ్వరస్వామి పరమోత్కృష్ట వార్షిక బ్రహ్మోత్సవాలు',
+    summary:
+      'Brahmotsavam (Srivari Brahmotsavams) is the crown jewel of all festivals at Tirumala, celebrated annually with majestic grandeur. Established according to the Bhavishyottara Purana by Lord Brahma Himself to ensure cosmic welfare and offer solace to mankind in the Kali Yuga, this multi-day celestial festival features morning and night processions where Lord Malayappa Swamy, flanked by Sridevi and Bhudevi, graces the four Mada Streets upon divine golden and silver vahanams. While the annual Salakatla Brahmotsavam culminates with the historic wooden Rathotsavam and sacred Chakrasnanam at the Swami Pushkarini, Adhika Masam (leap month) years witness a glorious second festival—the Srivari Navarathri Brahmotsavam featuring the Swarna Ratham.',
+    summaryTe:
+      'తిరుమల క్షేత్రంలో జరిగే ఉత్సవాలన్నింటిలోనూ అత్యంత వైభవమైనది శ్రీవారి వార్షిక బ్రహ్మోత్సవాలు. భవిష్యోత్తర పురాణోక్తంగా లోకకల్యాణార్థం సాక్షాత్తు బ్రహ్మదేవుడే స్వయంగా ప్రారంభించిన పరమ పవిత్ర ఉత్సవమిది. తొమ్మిది రోజుల పాటు జరిగే ఈ ఉత్సవాలలో ఉభయ దేవేరులతో కూడిన శ్రీ మలయప్పస్వామివారు ఉదయం మరియు రాత్రి వేళల్లో వివిధ దివ్య వాహనాలపై తిరుమాడ వీధులలో విహరిస్తూ భక్తులకు దర్శనమిస్తారు. వార్షిక సాలకట్ల బ్రహ్మోత్సవాలలో ధ్వజారోహణం, ఎనిమిదవ రోజు మహా రథోత్సవం, తొమ్మిదవ రోజు స్వామి పుష్కరిణిలో చక్రస్నానం నిర్వహించబడతాయి. అధిక మాసం వచ్చిన సంవత్సరాలలో సాలకట్ల బ్రహ్మోత్సవాలతో పాటు నవరాత్రి బ్రహ్మోత్సవాలు కూడా నిర్వహించబడతాయి.',
+    adornments: [
+      {
+        title: 'The Empty Chariot (Brahmaratham) & Divine Precedence',
+        titleTe: 'బ్రహ్మరథం & అదృశ్య బ్రహ్మదేవుని సారథ్యం',
+        desc: 'In honour of its founding creator Lord Brahma, an unadorned, empty chariot known as the Brahma Ratham leads every procession around the four Mada Streets, signifying that Lord Brahma invisibly directs the celebrations.',
+        descTe: 'ఈ మహోత్సవానికి సూత్రధారి అయిన బ్రహ్మదేవునికి గౌరవసూచకంగా ప్రతి ఊరేగింపులోనూ ముందుగా ఒక ఖాళీ రథం (బ్రహ్మరథం) కదులుతుంది. బ్రహ్మదేవుడు అదృశ్యరూపంలో ఉండి ఈ ఉత్సవాన్ని స్వయంగా నడిపిస్తున్నాడని దీని భావం.'
+      },
+      {
+        title: 'Akhanda Jyothis (Eternal Sacred Flame)',
+        titleTe: 'అఖండ జ్యోతి & పవిత్ర యాగశాల సంప్రోక్షణ',
+        desc: 'Upon Dhwajarohanam, two consecrated ghee lamps called Akhanda Jyothis are lit inside the sanctum. These eternal flames burn continuously without extinguish until the concluding Chakrasnanam to protect the cosmic sanctuary.',
+        descTe: 'ధ్వజారోహణం నాటి నుండి యాగశాలలో మరియు గర్భాలయంలో అఖండ దీపాలు వెలిగించబడతాయి. చక్రస్నానం వరకు ఇవి నిరంతరం ప్రజ్వలిస్తూ ఆలయానికి మరియు భక్తులకు దివ్య రక్షణను, శాంతిని చేకూరుస్తాయి.'
+      },
+      {
+        title: 'The 18 Celestial Vahana Processions',
+        titleTe: '18 దివ్య వాహన సేవలు & తిరుమాడ వీధి విహారం',
+        desc: 'Across nine days, Lord Malayappa Swamy rides 18 magnificent vahanams including Pedda Sesha, Chinna Sesha, Hamsa, Simha, Mutyapu Pandiri, Kalpavriksha, Sarva Bhoopala, Garuda, Hanumantha, Gaja, Suryaprabha, Chandraprabha, and Aswa Vahanams.',
+        descTe: 'తొమ్మిది రోజుల పాటు ఉదయం మరియు సాయంత్రం వేళల్లో పెద్దశేష, చిన్నశేష, హంస, సింహ, ముత్యపుపందిరి, కల్పవృక్ష, సర్వభూపాల, గరుడ, హనుమంత, గజ, సూర్యప్రభ, చంద్రప్రభ, అశ్వ వాహనాలపై స్వామివారు దర్శనమిస్తారు.'
+      }
+    ],
+    theology: [
+      {
+        title: "Puranic Inception & Lord Brahma's Offering",
+        titleTe: 'భవిష్యోత్తర పురాణ ప్రాశస్త్యం & బ్రహ్మదేవుని సంకల్పం',
+        desc: "Scriptures record that when Lord Srinivasa manifested on the Seshachala hills, Brahma prayed for permission to conduct a grand annual festival for the redemption of humanity. Pleased, the Lord ordained that it forever bear Brahma's name—Brahmotsavam.",
+        descTe: 'భవిష్యోత్తర పురాణం ప్రకారం శ్రీనివాసుడు శేషాచల క్షేత్రంలో ఆవిర్భవించినప్పుడు కలియుగ మానవుల పాపపరిహారార్థం, లోకశాంతికై బ్రహ్మదేవుడు ఈ ఉత్సవాన్ని సంకల్పించారు. ఆయన పేరు మీదుగానే ఇది బ్రహ్మోత్సవాలుగా ప్రసిద్ధి చెందింది.'
+      },
+      {
+        title: 'Salakatla vs Navarathri Brahmotsavam',
+        titleTe: 'సాలకట్ల & నవరాత్రి బ్రహ్మోత్సవాల భేదం',
+        desc: 'Salakatla Brahmotsavam is the regular annual nine-day festival featuring formal flag hoisting (Dhwajarohanam) and the colossal wooden Rathotsavam on Day 8. When the Hindu calendar features an Adhika Masam (leap month), a second festival—Navarathri Brahmotsavam—is celebrated without Dhwajarohanam, featuring the golden Swarna Ratham instead.',
+        descTe: 'ప్రతి సంవత్సరం భాద్రపద మాసంలో ధ్వజారోహణం, చెక్క రథోత్సవంతో జరిగేది సాలకట్ల బ్రహ్మోత్సవం. అధిక మాసం వచ్చిన సంవత్సరాలలో అదనంగా ఆశ్వయుజ మాసంలో ధ్వజారోహణం లేకుండా, స్వర్ణరథోత్సవంతో జరిగే ఉత్సవాన్ని నవరాత్రి బ్రహ్మోత్సవాలుగా నిర్వహిస్తారు.'
+      }
+    ],
+    occasionsInfo: {
+      title: 'Brahmotsavams at Tirumala & Historic Sister Shrines',
+      titleTe: 'తిరుమల మరియు అనుబంధ దివ్య క్షేత్రాలలో బ్రహ్మోత్సవాలు',
+      desc: 'At Tirumala, the annual Salakatla Brahmotsavams take place from September 14 to September 23, 2026, followed by the Srivari Navarathri Brahmotsavams starting October 12, 2026. Ancient affiliated shrines in Tirupati also celebrate full-fledged annual Brahmotsavams according to their unique temple Agama calendars: Sri Kalyana Venkateswara Swamy Temple at Srinivasa Mangapuram (February 2026), Sri Kodandarama Swamy Temple (March 2026), Sri Govindaraja Swamy Temple (May 2026), and Sri Padmavathi Ammavari Temple at Tiruchanur (December 2026).',
+      descTe: 'తిరుమలలో 2026 సెప్టెంబర్ 14 నుండి 23 వరకు సాలకట్ల బ్రహ్మోత్సవాలు, అక్టోబర్ 12 నుండి నవరాత్రి బ్రహ్మోత్సవాలు జరుగుతాయి. అలాగే శ్రీనివాస మంగాపురంలో ఫిబ్రవరిలో, తిరుపతి కోదండరామస్వామి ఆలయంలో మార్చిలో, గోవిందరాజస్వామి ఆలయంలో మే నెలలో, మరియు తిరుచానూరు పద్మావతి అమ్మవారి కార్తీక బ్రహ్మోత్సవాలు డిసెంబర్ నెలలో వైభవంగా జరుగుతాయి.'
+    },
+    calendarCta: 'View Brahmotsavam in Calendar',
+    calendarCtaTe: 'క్యాలెండర్‌లో బ్రహ్మోత్సవాలు చూడండి',
+    occurrencesTitleTe: 'బ్రహ్మోత్సవ దర్శన తేదీలు & వాహన సేవలు',
+    planDarshanTitle: 'Plan Your Brahmotsavam Darshan in the Calendar',
+    planDarshanTitleTe: 'ఇంటరాక్టివ్ క్యాలెండర్‌లో బ్రహ్మోత్సవ దర్శనాన్ని ప్లాన్ చేయండి',
+    searchCalendarCtaTe: 'క్యాలెండర్‌లో బ్రహ్మోత్సవాలు శోధించండి'
   }
 };
 
@@ -320,6 +402,39 @@ export function matchFestivalEvents(events, topic) {
           titleTe.includes('పవిత్రోత్సవ') ||
           titleTe.includes('పవిత్ర')
         );
+      })
+      .sort((a, b) => {
+        const dateComp = (a.startDate || '').localeCompare(b.startDate || '');
+        if (dateComp !== 0) return dateComp;
+        const timeA = (a.startTime || a.time || '').trim();
+        const timeB = (b.startTime || b.time || '').trim();
+        return timeA.localeCompare(timeB);
+      });
+  }
+
+  // Brahmotsavam (Grand Celestial Festival) specific matching:
+  // Matches actual Brahmotsavam occurrences primarily based on event title.
+  // Supports "brahmotsav" and Telugu "బ్రహ్మోత్సవ".
+  // Explicitly excludes Surya Jayanti Rathasaptami ("Mini Brahmotsavam").
+  if (topic.slug === 'brahmotsavam') {
+    return events
+      .filter(evt => {
+        if (!evt) return false;
+        const title = (evt.title || '').toLowerCase();
+        const titleTe = (evt.titleTe || '').toLowerCase();
+
+        const hasTitleMatch =
+          title.includes('brahmotsav') ||
+          titleTe.includes('బ్రహ్మోత్సవ');
+
+        if (!hasTitleMatch) return false;
+
+        // Exclude Surya Jayanti / Rathasaptami single-day festival
+        if (title.includes('rathasaptami') || titleTe.includes('రథసప్తమి')) {
+          return false;
+        }
+
+        return true;
       })
       .sort((a, b) => {
         const dateComp = (a.startDate || '').localeCompare(b.startDate || '');
