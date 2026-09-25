@@ -30,8 +30,10 @@ const AdminPortalModal = lazy(() => import('./components/AdminPortalModal'));
 const EventDetailModal = lazy(() => import('./components/EventDetailModal'));
 const TempleList = lazy(() => import('./components/TempleList'));
 const ReferencesList = lazy(() => import('./components/ReferencesList'));
+const FestivalTopicPage = lazy(() => import('./components/FestivalTopicPage'));
 const loadInitialEvents = () =>
   import('./data/initialEvents').then(module => module.INITIAL_EVENTS);
+import { getFestivalTopic } from './data/festivalTopics';
 
 const ROUTE_MAP = {
   '/': 'calendar-page',
@@ -57,10 +59,43 @@ const TAB_TO_PATH = {
   'overview': '/overview',
 };
 
+function getFestivalSlugFromPath(pathname) {
+  if (!pathname) return null;
+  const cleanPath = pathname.split('?')[0].split('#')[0].replace(/\/+$/, '') || '/';
+  const lowerPath = cleanPath.toLowerCase();
+  if (lowerPath.startsWith('/festivals/')) {
+    const slug = lowerPath.slice('/festivals/'.length);
+    if (getFestivalTopic(slug)) {
+      return slug;
+    }
+  }
+  return null;
+}
+
+function isValidRoute(pathname) {
+  if (!pathname) return false;
+  const cleanPath = pathname.split('?')[0].split('#')[0].replace(/\/+$/, '') || '/';
+  const lowerPath = cleanPath.toLowerCase();
+  if (ROUTE_MAP[lowerPath]) return true;
+  if (lowerPath.startsWith('/festivals/')) {
+    const slug = lowerPath.slice('/festivals/'.length);
+    return Boolean(getFestivalTopic(slug));
+  }
+  return false;
+}
+
 function getTabFromPathname(pathname) {
   if (!pathname) return 'calendar-page';
-  const cleanPath = pathname.replace(/\/+$/, '') || '/';
-  return ROUTE_MAP[cleanPath.toLowerCase()] || 'calendar-page';
+  const cleanPath = pathname.split('?')[0].split('#')[0].replace(/\/+$/, '') || '/';
+  const lowerPath = cleanPath.toLowerCase();
+  if (lowerPath.startsWith('/festivals/')) {
+    const slug = lowerPath.slice('/festivals/'.length);
+    if (getFestivalTopic(slug)) {
+      return 'festival-topic';
+    }
+    return 'calendar-page';
+  }
+  return ROUTE_MAP[lowerPath] || 'calendar-page';
 }
 
 function getPathnameFromTab(tab) {
@@ -68,12 +103,14 @@ function getPathnameFromTab(tab) {
 }
 
 export default function App() {
-  // Custom URL Routing & Tab state: 'calendar-page', 'overview', 'temples', 'references', 'sevas', 'feedback'
+  // Custom URL Routing & Tab state: 'calendar-page', 'overview', 'temples', 'references', 'sevas', 'feedback', 'festival-topic'
   const [activeTab, setActiveTabState] = useState(() => getTabFromPathname(window.location.pathname));
+  const [festivalSlug, setFestivalSlug] = useState(() => getFestivalSlugFromPath(window.location.pathname));
   const [currentPath, setCurrentPath] = useState(() => window.location.pathname);
 
   const setActiveTab = (tab, replace = false) => {
     setActiveTabState(tab);
+    setFestivalSlug(null);
     const targetPath = getPathnameFromTab(tab);
     if (window.location.pathname !== targetPath) {
       if (replace) {
@@ -87,10 +124,20 @@ export default function App() {
 
   const handleNavigateHome = () => {
     setActiveTabState('calendar-page');
+    setFestivalSlug(null);
     if (window.location.pathname !== '/') {
       window.history.pushState({ tab: 'calendar-page' }, '', '/');
     }
     setCurrentPath('/');
+  };
+
+  const handleNavigateToCalendarSearch = (searchQuery) => {
+    setActiveTabState('calendar-page');
+    setFestivalSlug(null);
+    const targetPath = `/calendar?search=${encodeURIComponent(searchQuery || '')}`;
+    window.history.pushState({ tab: 'calendar-page' }, '', targetPath);
+    setCurrentPath(targetPath);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Sync route-specific SEO metadata (<title>, canonical, meta description, OG, Twitter)
@@ -103,7 +150,9 @@ export default function App() {
   useEffect(() => {
     const handlePopState = () => {
       const currentTab = getTabFromPathname(window.location.pathname);
+      const slug = getFestivalSlugFromPath(window.location.pathname);
       setActiveTabState(currentTab);
+      setFestivalSlug(slug);
       setCurrentPath(window.location.pathname);
 
       // Deep linking support when navigating browser history
@@ -124,7 +173,7 @@ export default function App() {
     window.addEventListener('popstate', handlePopState);
 
     const cleanPath = window.location.pathname.replace(/\/+$/, '') || '/';
-    if (!ROUTE_MAP[cleanPath.toLowerCase()]) {
+    if (!isValidRoute(cleanPath)) {
       window.history.replaceState({ tab: 'calendar-page' }, '', '/' + window.location.search + window.location.hash);
       setCurrentPath('/');
     }
@@ -708,6 +757,17 @@ useEffect(() => {
             <CommunityFeedback
               lang={lang}
               onSubmitFeedback={handleAddFeedback}
+            />
+          )}
+
+          {/* FESTIVAL TOPIC PAGE SECTION */}
+          {activeTab === 'festival-topic' && (
+            <FestivalTopicPage
+              slug={festivalSlug || 'garuda-vahanam'}
+              events={safeEventsList}
+              lang={lang}
+              onNavigateToCalendarSearch={handleNavigateToCalendarSearch}
+              onSelectEvent={setSelectedEventModal}
             />
           )}
         </Suspense>

@@ -8,6 +8,8 @@
  * metadata cleanly prior to build-time prerendering.
  */
 
+import { getFestivalTopic } from '../data/festivalTopics';
+
 export const SITE_ORIGIN = 'https://thetirumalaverse.in';
 
 export const ROUTE_SEO_METADATA = {
@@ -128,6 +130,22 @@ export const ROUTE_SEO_METADATA = {
     twitterDescription:
       'Help improve The Tirumala Verse portal. Report bugs, submit feature suggestions, or share content corrections with our team.',
   },
+  '/festivals/garuda-vahanam': {
+    title:
+      'Garuda Vahanam at Tirumala | Dates, Significance & Seva Guide | The Tirumala Verse',
+    description:
+      'Learn about Garuda Vahanam at Tirumala, its significance, and scheduled occurrences. Explore Garuda Vahanam dates and related events in the Tirumala festival calendar.',
+    canonical: `${SITE_ORIGIN}/festivals/garuda-vahanam`,
+    ogTitle:
+      'Garuda Vahanam at Tirumala | Dates, Significance & Seva Guide | The Tirumala Verse',
+    ogDescription:
+      'Learn about Garuda Vahanam at Tirumala, its significance, and scheduled occurrences. Explore Garuda Vahanam dates and related events in the Tirumala festival calendar.',
+    ogUrl: `${SITE_ORIGIN}/festivals/garuda-vahanam`,
+    twitterTitle:
+      'Garuda Vahanam at Tirumala | Dates, Significance & Seva Guide | The Tirumala Verse',
+    twitterDescription:
+      'Learn about Garuda Vahanam at Tirumala, its significance, and scheduled occurrences. Explore Garuda Vahanam dates and related events in the Tirumala festival calendar.',
+  },
 };
 
 /**
@@ -149,7 +167,29 @@ export function getRouteMetadata(pathname) {
     return ROUTE_SEO_METADATA['/calendar'];
   }
 
-  return ROUTE_SEO_METADATA[lowerPath] || ROUTE_SEO_METADATA['/'];
+  if (ROUTE_SEO_METADATA[lowerPath]) {
+    return ROUTE_SEO_METADATA[lowerPath];
+  }
+
+  // Dynamic /festivals/<slug> handling
+  if (lowerPath.startsWith('/festivals/')) {
+    const slug = lowerPath.slice('/festivals/'.length);
+    const topic = getFestivalTopic(slug);
+    if (topic) {
+      return {
+        title: topic.title,
+        description: topic.description,
+        canonical: topic.canonical,
+        ogTitle: topic.title,
+        ogDescription: topic.description,
+        ogUrl: topic.canonical,
+        twitterTitle: topic.title,
+        twitterDescription: topic.description,
+      };
+    }
+  }
+
+  return ROUTE_SEO_METADATA['/'];
 }
 
 function setMetaTag(selector, attrName, value) {
