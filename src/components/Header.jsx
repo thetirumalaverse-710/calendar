@@ -12,6 +12,7 @@ import {
 export default function Header({ 
   activeTab, 
   setActiveTab, 
+  onNavigateHome,
   lang, 
   setLang, 
   themeMode, 
@@ -108,7 +109,7 @@ export default function Header({
               />
             </div>
 
-            <div onClick={() => setActiveTab('calendar-page')} className="cursor-pointer min-w-0 flex-1">
+            <div onClick={onNavigateHome || (() => setActiveTab('calendar-page'))} className="cursor-pointer min-w-0 flex-1">
               <h1 className="font-serif text-sm sm:text-2xl font-extrabold gold-gradient-text tracking-tight leading-tight !block w-full truncate">
                 The Tirumala Verse
               </h1>

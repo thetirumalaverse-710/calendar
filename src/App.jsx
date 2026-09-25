@@ -19,6 +19,7 @@ import AppFooter from './components/layout/AppFooter';
 import ToastContainer from './components/common/ToastContainer';
 import { subscribeToWebPush, unsubscribeFromWebPush, ELIGIBLE_NOTIFICATION_TEMPLES } from './utils/webPush';
 import { supabase } from './utils/supabaseClient';
+import { updateRouteMetadata } from './utils/seoMetadata';
 
 const CalendarView = lazy(() => import('./components/CalendarView'));
 const DailySchedule = lazy(() => import('./components/DailySchedule'));
@@ -46,7 +47,7 @@ const ROUTE_MAP = {
 };
 
 const TAB_TO_PATH = {
-  'calendar-page': '/',
+  'calendar-page': '/calendar',
   'glossary': '/glossary',
   'sevas': '/sevas',
   'tokens': '/tokens',
@@ -69,6 +70,7 @@ function getPathnameFromTab(tab) {
 export default function App() {
   // Custom URL Routing & Tab state: 'calendar-page', 'overview', 'temples', 'references', 'sevas', 'feedback'
   const [activeTab, setActiveTabState] = useState(() => getTabFromPathname(window.location.pathname));
+  const [currentPath, setCurrentPath] = useState(() => window.location.pathname);
 
   const setActiveTab = (tab, replace = false) => {
     setActiveTabState(tab);
@@ -80,7 +82,21 @@ export default function App() {
         window.history.pushState({ tab }, '', targetPath);
       }
     }
+    setCurrentPath(targetPath);
   };
+
+  const handleNavigateHome = () => {
+    setActiveTabState('calendar-page');
+    if (window.location.pathname !== '/') {
+      window.history.pushState({ tab: 'calendar-page' }, '', '/');
+    }
+    setCurrentPath('/');
+  };
+
+  // Sync route-specific SEO metadata (<title>, canonical, meta description, OG, Twitter)
+  useEffect(() => {
+    updateRouteMetadata(window.location.pathname);
+  }, [currentPath, activeTab]);
 
   const eventsListRef = useRef(null);
 
@@ -88,6 +104,7 @@ export default function App() {
     const handlePopState = () => {
       const currentTab = getTabFromPathname(window.location.pathname);
       setActiveTabState(currentTab);
+      setCurrentPath(window.location.pathname);
 
       // Deep linking support when navigating browser history
       try {
@@ -109,6 +126,7 @@ export default function App() {
     const cleanPath = window.location.pathname.replace(/\/+$/, '') || '/';
     if (!ROUTE_MAP[cleanPath.toLowerCase()]) {
       window.history.replaceState({ tab: 'calendar-page' }, '', '/' + window.location.search + window.location.hash);
+      setCurrentPath('/');
     }
 
     return () => {
@@ -564,6 +582,7 @@ useEffect(() => {
       <Header
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        onNavigateHome={handleNavigateHome}
         lang={lang}
         setLang={setLang}
         themeMode={themeMode}
