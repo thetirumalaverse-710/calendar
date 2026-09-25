@@ -14,6 +14,7 @@ import {
 import { getFestivalTopic, matchFestivalEvents } from '../data/festivalTopics';
 import { TEMPLES } from '../data/templeEvents';
 import { getTempleFilterLabel } from '../utils/templeHelpers';
+import useTheme from '../hooks/useTheme';
 
 function formatDateDisplay(dateStr, lang) {
   if (!dateStr) return '';
@@ -35,9 +36,14 @@ export default function FestivalTopicPage({
   slug = 'garuda-vahanam',
   events = [],
   lang = 'en',
+  themeMode: propThemeMode,
   onNavigateToCalendarSearch,
   onSelectEvent
 }) {
+  const { themeMode: hookThemeMode } = useTheme();
+  const themeMode = propThemeMode || hookThemeMode;
+  const isLight = themeMode === 'light';
+
   const topic = useMemo(() => getFestivalTopic(slug), [slug]);
 
   const templeMap = useMemo(() => {
@@ -54,7 +60,7 @@ export default function FestivalTopicPage({
   if (!topic) {
     return (
       <div className="min-h-[50vh] flex flex-col items-center justify-center text-center p-6 space-y-4">
-        <h2 className="text-2xl font-serif font-bold text-white">Festival Topic Not Found</h2>
+        <h2 className={`text-2xl font-serif font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>Festival Topic Not Found</h2>
         <p className="text-sm text-[#94A3B8] max-w-md">
           The requested festival topic could not be found. Please browse our calendar or glossary.
         </p>
@@ -95,7 +101,7 @@ export default function FestivalTopicPage({
             {isTe ? topic.h1Te : topic.h1}
           </h1>
 
-          <p className="font-serif text-base sm:text-xl text-slate-200 font-semibold leading-snug">
+          <p className={`font-serif text-base sm:text-xl font-semibold leading-snug ${isLight ? 'text-slate-800' : 'text-slate-200'}`}>
             {isTe ? topic.subtitleTe : topic.subtitle}
           </p>
 
@@ -126,7 +132,7 @@ export default function FestivalTopicPage({
       <section className="space-y-4">
         <div className="flex items-center gap-2.5">
           <BookOpen className="w-5 h-5 text-[#FFD700]" />
-          <h2 className="font-serif text-xl sm:text-2xl font-bold text-white">
+          <h2 className={`font-serif text-xl sm:text-2xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
             {isTe ? 'దివ్య అలంకారాలు & విశిష్ట ఆభరణాలు' : 'Sacred Adornments & Heritage Regalia'}
           </h2>
         </div>
@@ -141,7 +147,7 @@ export default function FestivalTopicPage({
                 <span className="w-7 h-7 rounded-lg bg-[#FFD700]/10 border border-[#FFD700]/30 text-[#FFD700] font-mono text-xs font-bold flex items-center justify-center">
                   0{idx + 1}
                 </span>
-                <h3 className="font-serif text-base font-bold text-white leading-snug">
+                <h3 className={`font-serif text-base font-bold leading-snug ${isLight ? 'text-slate-900' : 'text-white'}`}>
                   {isTe ? item.titleTe : item.title}
                 </h3>
                 <p className="text-xs text-[#94A3B8] leading-relaxed">
@@ -157,7 +163,7 @@ export default function FestivalTopicPage({
       <section className="glass-card p-6 rounded-2xl border border-[#D4AF37]/30 space-y-4 bg-[#141923]/80">
         <div className="flex items-center gap-2.5">
           <ShieldCheck className="w-5 h-5 text-[#3A86EF]" />
-          <h2 className="font-serif text-xl sm:text-2xl font-bold text-white">
+          <h2 className={`font-serif text-xl sm:text-2xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
             {isTe ? 'శ్రీవైష్ణవ సంప్రదాయం & వేద ప్రాశస్త్యం' : 'Spiritual Significance in Sri Vaishnava Tradition'}
           </h2>
         </div>
@@ -166,12 +172,12 @@ export default function FestivalTopicPage({
           {topic.theology.map((item, idx) => (
             <div
               key={idx}
-              className="p-4 rounded-xl bg-[#0B0E14] border border-white/10 space-y-2"
+              className={`p-4 rounded-xl border space-y-2 ${isLight ? 'bg-amber-50/60 border-amber-600/20' : 'bg-[#0B0E14] border-white/10'}`}
             >
               <h3 className="font-serif text-base font-bold gold-gradient-text">
                 {isTe ? item.titleTe : item.title}
               </h3>
-              <p className="text-xs sm:text-sm text-[#CBD5E1] leading-relaxed">
+              <p className={`text-xs sm:text-sm leading-relaxed ${isLight ? 'text-slate-700 font-medium' : 'text-[#CBD5E1]'}`}>
                 {isTe ? item.descTe : item.desc}
               </p>
             </div>
@@ -179,8 +185,8 @@ export default function FestivalTopicPage({
         </div>
 
         {/* Multiple Temples Note */}
-        <div className="p-4 rounded-xl bg-[#0B0E14]/90 border-l-4 border-l-[#FFD700] border-white/10 text-xs sm:text-sm text-[#94A3B8] leading-relaxed space-y-1">
-          <span className="font-bold text-white block">
+        <div className={`p-4 rounded-xl border-l-4 border-l-[#FFD700] text-xs sm:text-sm leading-relaxed space-y-1 ${isLight ? 'bg-amber-50/80 border-amber-600/30 text-slate-700' : 'bg-[#0B0E14]/90 border-white/10 text-[#94A3B8]'}`}>
+          <span className={`font-bold block ${isLight ? 'text-slate-900' : 'text-white'}`}>
             ℹ️ {isTe ? topic.occasionsInfo.titleTe : topic.occasionsInfo.title}
           </span>
           <p>{isTe ? topic.occasionsInfo.descTe : topic.occasionsInfo.desc}</p>
@@ -189,11 +195,11 @@ export default function FestivalTopicPage({
 
       {/* 4. SCHEDULED OCCURRENCES FROM MASTER CALENDAR */}
       <section className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+        <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3 ${isLight ? 'border-slate-300' : 'border-white/10'}`}>
           <div>
             <div className="flex items-center gap-2">
               <Calendar className="w-5 h-5 text-[#FFD700]" />
-              <h2 className="font-serif text-xl sm:text-2xl font-bold text-white">
+              <h2 className={`font-serif text-xl sm:text-2xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
                 {isTe ? 'గరుడ వాహన దర్శన తేదీలు & సమయాలు' : 'Scheduled Occurrences & Darshan Dates'}
               </h2>
             </div>
@@ -206,7 +212,11 @@ export default function FestivalTopicPage({
 
           <button
             onClick={handleCtaClick}
-            className="self-start sm:self-auto px-4 py-2 rounded-xl bg-[#141923] border border-[#D4AF37]/60 text-[#FFD700] hover:bg-[#D4AF37]/20 text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm"
+            className={`self-start sm:self-auto px-4 py-2 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm ${
+              isLight
+                ? 'bg-amber-500/10 border-amber-600/40 text-amber-800 hover:bg-amber-500/20'
+                : 'bg-[#141923] border-[#D4AF37]/60 text-[#FFD700] hover:bg-[#D4AF37]/20'
+            }`}
           >
             <span>{isTe ? 'పూర్తి క్యాలెండర్‌లో చూడండి' : 'Open in Calendar'}</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -252,28 +262,38 @@ export default function FestivalTopicPage({
                     </div>
 
                     {/* Event Title */}
-                    <h3 className="font-serif text-base sm:text-lg font-bold text-white group-hover:text-[#FFD700] transition-colors leading-snug">
+                    <h3 className={`event-card-title font-serif text-base sm:text-lg font-bold leading-snug transition-colors ${
+                      isLight ? 'text-slate-900 group-hover:text-amber-700' : 'text-white group-hover:text-[#FFD700]'
+                    }`}>
                       {isTe && evt.titleTe ? evt.titleTe : evt.title}
                     </h3>
 
                     {/* Vahanam tag if specific */}
                     {evt.vahanam && (
-                      <p className="text-xs text-[#FFD700] font-semibold flex items-center gap-1.5">
+                      <p className={`text-xs font-semibold flex items-center gap-1.5 ${
+                        isLight ? 'text-amber-800' : 'text-[#FFD700]'
+                      }`}>
                         <Sparkles className="w-3.5 h-3.5 text-[#FF5722]" />
                         <span>{evt.vahanam}</span>
                       </p>
                     )}
 
                     {/* Description preview */}
-                    <p className="text-xs text-[#94A3B8] line-clamp-3 leading-relaxed">
+                    <p className={`text-xs line-clamp-3 leading-relaxed ${
+                      isLight ? 'text-slate-700 font-medium' : 'text-[#94A3B8]'
+                    }`}>
                       {isTe && evt.descriptionTe ? evt.descriptionTe : evt.description}
                     </p>
                   </div>
 
                   {/* Metadata Footer: Date, Time & Temple Location */}
-                  <div className="pt-3 border-t border-white/10 space-y-1.5 text-xs text-[#CBD5E1]">
-                    <div className="flex items-center gap-1.5 text-[#FFD700] font-medium">
-                      <Calendar className="w-3.5 h-3.5 text-[#FFD700] shrink-0" />
+                  <div className={`pt-3 border-t space-y-1.5 text-xs ${
+                    isLight ? 'border-slate-200 text-slate-700' : 'border-white/10 text-[#CBD5E1]'
+                  }`}>
+                    <div className={`flex items-center gap-1.5 font-medium ${
+                      isLight ? 'text-amber-800' : 'text-[#FFD700]'
+                    }`}>
+                      <Calendar className={`w-3.5 h-3.5 shrink-0 ${isLight ? 'text-amber-700' : 'text-[#FFD700]'}`} />
                       <span>
                         {formattedDate}
                         {formattedEndDate ? ` — ${formattedEndDate}` : ''}
@@ -281,13 +301,13 @@ export default function FestivalTopicPage({
                     </div>
 
                     {evt.time && (
-                      <div className="flex items-center gap-1.5 text-[#94A3B8]">
-                        <Clock className="w-3.5 h-3.5 text-[#94A3B8] shrink-0" />
+                      <div className={`flex items-center gap-1.5 ${isLight ? 'text-slate-600' : 'text-[#94A3B8]'}`}>
+                        <Clock className={`w-3.5 h-3.5 shrink-0 ${isLight ? 'text-slate-500' : 'text-[#94A3B8]'}`} />
                         <span>{evt.time}</span>
                       </div>
                     )}
 
-                    <div className="flex items-center gap-1.5 text-[#94A3B8]">
+                    <div className={`flex items-center gap-1.5 ${isLight ? 'text-slate-600' : 'text-[#94A3B8]'}`}>
                       <MapPin className="w-3.5 h-3.5 text-[#FF5722] shrink-0" />
                       <span className="truncate">{templeLabel || evt.location}</span>
                     </div>
@@ -302,7 +322,7 @@ export default function FestivalTopicPage({
       {/* 5. BOTTOM PROMINENT CTA BANNER */}
       <section className="glass-card p-6 sm:p-8 rounded-3xl border-2 border-[#D4AF37]/50 text-center space-y-3 bg-gradient-to-r from-[#141923] via-[#0B0E14] to-[#141923] shadow-2xl">
         <Sparkles className="w-8 h-8 text-[#FFD700] mx-auto animate-pulse" />
-        <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white">
+        <h2 className={`font-serif text-2xl sm:text-3xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
           {isTe ? 'ఇంటరాక్టివ్ క్యాలెండర్‌లో గరుడ సేవను ప్లాన్ చేయండి' : 'Plan Your Garuda Seva Darshan in the Calendar'}
         </h2>
         <p className="text-xs sm:text-sm text-[#94A3B8] max-w-xl mx-auto leading-relaxed">

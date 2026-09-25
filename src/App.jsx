@@ -766,6 +766,7 @@ useEffect(() => {
               slug={festivalSlug || 'garuda-vahanam'}
               events={safeEventsList}
               lang={lang}
+              themeMode={themeMode}
               onNavigateToCalendarSearch={handleNavigateToCalendarSearch}
               onSelectEvent={setSelectedEventModal}
             />
