@@ -216,9 +216,14 @@ export default function FestivalTopicPage({
             </p>
           </div>
 
-          <button
-            onClick={handleCtaClick}
-            className={`self-start sm:self-auto px-4 py-2 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm ${
+          <a
+            href={`/calendar?search=${encodeURIComponent(ctaSearchQuery)}`}
+            onClick={(e) => {
+              if (isModifiedClick(e)) return;
+              e.preventDefault();
+              handleCtaClick();
+            }}
+            className={`self-start sm:self-auto px-4 py-2 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm cursor-pointer ${
               isLight
                 ? 'bg-amber-500/10 border-amber-600/40 text-amber-800 hover:bg-amber-500/20'
                 : 'bg-[#141923] border-[#D4AF37]/60 text-[#FFD700] hover:bg-[#D4AF37]/20'
@@ -226,7 +231,7 @@ export default function FestivalTopicPage({
           >
             <span>{isTe ? 'పూర్తి క్యాలెండర్‌లో చూడండి' : 'Open in Calendar'}</span>
             <ExternalLink className="w-3.5 h-3.5" />
-          </button>
+          </a>
         </div>
 
         {matchedEvents.length === 0 ? (

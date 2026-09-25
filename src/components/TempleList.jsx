@@ -1,6 +1,7 @@
 import React from 'react';
 import { MapPin, Clock, Shirt, ArrowRight, Compass, Sparkles } from 'lucide-react';
 import { TEMPLES } from '../data/templeEvents';
+import { isModifiedClick } from '../utils/navigation';
 
 export default function TempleList({ lang, onSelectTemple }) {
   return (
@@ -84,13 +85,18 @@ export default function TempleList({ lang, onSelectTemple }) {
               <span className="text-[11px] text-[#94A3B8] font-bold">
                 {lang === 'en' ? 'Filter Shrine Events' : 'ఈ ఆలయ ఉత్సవాలు'}
               </span>
-              <button
-                onClick={() => onSelectTemple(temple.id)}
+              <a
+                href="/calendar"
+                onClick={(e) => {
+                  if (isModifiedClick(e)) return;
+                  e.preventDefault();
+                  onSelectTemple(temple.id);
+                }}
                 className="btn-gold text-xs py-1.5 px-3"
               >
                 <span>{lang === 'en' ? 'View Temple Events' : 'ఉత్సవాలు చూడు'}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              </a>
             </div>
 
           </div>

@@ -6,7 +6,8 @@ import { formatEventTiming } from '../utils/indiaTime';
 import useCurrentIST from '../hooks/useCurrentIST';
 import CalendarMonthGrid from './CalendarMonthGrid';
 import CalendarScheduleView from './CalendarScheduleView';
-import { Calendar, Clock, Filter, Tag, Edit, Download, Plus, Trash2, FileText, Search, X as ClearIcon, Share2, List } from 'lucide-react';
+import { Calendar, Clock, Filter, Tag, Edit, Download, Plus, Trash2, FileText, Search, X as ClearIcon, Share2, List, Sparkles } from 'lucide-react';
+import { isModifiedClick } from '../utils/navigation';
 
 import { getTempleFilterLabel } from '../utils/templeHelpers';
 
@@ -19,7 +20,8 @@ export default function CalendarView({
   isAdminLoggedIn,
   onEditEvent,
   onDeleteEvent,
-  onOpenAddEvent
+  onOpenAddEvent,
+  onNavigate
 }) {
   const currentIST = useCurrentIST();
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'schedule' | 'cards'
@@ -119,11 +121,23 @@ export default function CalendarView({
     });
   }, [filteredEvents]);
 
+  const handleFestivalGuideClick = (path, e) => {
+    if (isModifiedClick(e)) return;
+    e.preventDefault();
+    if (onNavigate) {
+      onNavigate(path);
+    } else {
+      window.history.pushState({ path }, '', path);
+      window.dispatchEvent(new PopStateEvent('popstate'));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <div id="calendar-view-container" className="space-y-6 scroll-mt-24">
       
       {/* Route-Specific SEO Introductory Section */}
-      <section className="glass-card p-4 sm:p-5 border border-[#D4AF37]/40 rounded-2xl space-y-2 shadow-lg">
+      <section className="glass-card p-4 sm:p-5 border border-[#D4AF37]/40 rounded-2xl space-y-3 shadow-lg">
         <h1 className="font-serif text-xl sm:text-2xl md:text-3xl font-extrabold gold-gradient-text tracking-tight leading-tight">
           {lang === 'en'
             ? 'Tirumala & Tirupati Temple Festival Calendar 2026–2027'
@@ -134,6 +148,44 @@ export default function CalendarView({
             ? 'Explore the 2026–2027 festival calendar for Tirumala and Tirupati temples, including annual Brahmotsavams, vahana sevas, utsavams, and other important temple occasions. Use the calendar filters to browse events by month, temple, or festival.'
             : 'తిరుమల మరియు తిరుపతి దేవాలయాల 2026–2027 ఉత్సవాల క్యాలెండర్, వార్షిక బ్రహ్మోత్సవాలు, వాహన సేవలు, ఉత్సవాలు మరియు ఇతర ముఖ్యమైన పర్వదినాల వివరాలను అన్వేషించండి. నెల, ఆలయం లేదా ఉత్సవం ఆధారంగా ఈవెంట్లను వీక్షించడానికి క్యాలెండర్ ఫిల్టర్లను ఉపయోగించండి.'}
         </p>
+
+        {/* Compact Festival Guides Link Row */}
+        <div className="pt-2 flex flex-wrap items-center gap-2 border-t border-[#D4AF37]/20">
+          <span className="text-xs font-bold text-[#FFD700] uppercase tracking-wider shrink-0 flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-[#FFD700]" />
+            <span>{lang === 'en' ? 'Festival Guides:' : 'ఉత్సవ మార్గదర్శినులు:'}</span>
+          </span>
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            <a
+              href="/festivals/garuda-vahanam"
+              onClick={(e) => handleFestivalGuideClick('/festivals/garuda-vahanam', e)}
+              className="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#141923] border border-[#D4AF37]/50 text-[#FFD700] hover:bg-[#D4AF37]/20 hover:border-[#FFD700] transition-colors"
+            >
+              {lang === 'en' ? 'Garuda Vahanam' : 'గరుడ వాహనం'}
+            </a>
+            <a
+              href="/festivals/rathotsavam"
+              onClick={(e) => handleFestivalGuideClick('/festivals/rathotsavam', e)}
+              className="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#141923] border border-[#D4AF37]/50 text-[#FFD700] hover:bg-[#D4AF37]/20 hover:border-[#FFD700] transition-colors"
+            >
+              {lang === 'en' ? 'Rathotsavam' : 'రథోత్సవం'}
+            </a>
+            <a
+              href="/festivals/pavithrotsavam"
+              onClick={(e) => handleFestivalGuideClick('/festivals/pavithrotsavam', e)}
+              className="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#141923] border border-[#D4AF37]/50 text-[#FFD700] hover:bg-[#D4AF37]/20 hover:border-[#FFD700] transition-colors"
+            >
+              {lang === 'en' ? 'Pavithrotsavam' : 'పవిత్రోత్సవం'}
+            </a>
+            <a
+              href="/festivals/brahmotsavam"
+              onClick={(e) => handleFestivalGuideClick('/festivals/brahmotsavam', e)}
+              className="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#141923] border border-[#D4AF37]/50 text-[#FFD700] hover:bg-[#D4AF37]/20 hover:border-[#FFD700] transition-colors"
+            >
+              {lang === 'en' ? 'Brahmotsavam' : 'బ్రహ్మోత్సవం'}
+            </a>
+          </div>
+        </div>
       </section>
 
       {/* Search & Filter Control Deck */}

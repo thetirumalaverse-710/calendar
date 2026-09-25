@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { UTSAVA_GLOSSARY_TERMS } from '../data/utsavaGlossary';
 import { BookOpen, ExternalLink } from 'lucide-react';
+import { isModifiedClick } from '../utils/navigation';
 
 export default function EventGlossaryMatches({
   event,
@@ -79,16 +80,19 @@ export default function EventGlossaryMatches({
 
       <div className="flex flex-wrap gap-2">
         {matchingGlossaryTerms.map(term => (
-          <button
+          <a
             key={term.id}
-            onClick={() => {
+            href="/glossary"
+            onClick={(e) => {
+              if (isModifiedClick(e)) return;
+              e.preventDefault();
               onClose();
 
               if (onNavigateToGlossary) {
                 onNavigateToGlossary(term.id);
               }
             }}
-            className="px-3 py-1.5 rounded-lg text-xs font-bold bg-black/80 hover:bg-[#FFD700] text-[#FFD700] hover:text-black border border-[#D4AF37]/50 transition-all flex items-center gap-1.5 shadow-sm group/badge"
+            className="px-3 py-1.5 rounded-lg text-xs font-bold bg-black/80 hover:bg-[#FFD700] text-[#FFD700] hover:text-black border border-[#D4AF37]/50 transition-all flex items-center gap-1.5 shadow-sm group/badge cursor-pointer"
             title={`Click to read complete glossary entry for ${term.term}`}
           >
             <span>
@@ -96,7 +100,7 @@ export default function EventGlossaryMatches({
             </span>
 
             <ExternalLink className="w-3 h-3 group-hover/badge:scale-110" />
-          </button>
+          </a>
         ))}
       </div>
     </div>
