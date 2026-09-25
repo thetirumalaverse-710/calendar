@@ -8,6 +8,7 @@ import {
   Moon,
   BookOpen
 } from 'lucide-react';
+import { isModifiedClick } from '../utils/navigation';
 
 export default function Header({ 
   activeTab, 
@@ -109,14 +110,26 @@ export default function Header({
               />
             </div>
 
-            <div onClick={onNavigateHome || (() => setActiveTab('calendar-page'))} className="cursor-pointer min-w-0 flex-1">
+            <a
+              href="/"
+              onClick={(e) => {
+                if (isModifiedClick(e)) return;
+                e.preventDefault();
+                if (onNavigateHome) {
+                  onNavigateHome();
+                } else {
+                  setActiveTab('calendar-page');
+                }
+              }}
+              className="cursor-pointer min-w-0 flex-1 block"
+            >
               <h1 className="font-serif text-sm sm:text-2xl font-extrabold gold-gradient-text tracking-tight leading-tight !block w-full truncate">
                 The Tirumala Verse
               </h1>
               <p className="hidden sm:block text-xs text-[#94A3B8] tracking-wider font-medium">
                 {lang === 'en' ? 'Your Independent Guide to Tirumala' : 'మీ స్వతంత్ర తిరుమల దివ్య దర్శిని'}
               </p>
-            </div>
+            </a>
           </div>
 
           {/* CONTROL BUTTONS: THEME, ADMIN & LANGUAGE (Ultra-compact on phone screens) */}
@@ -238,9 +251,14 @@ export default function Header({
             onScroll={checkNavScroll}
             className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar py-0.5 max-w-full"
           >
-            <button
+            <a
               ref={el => (tabRefs.current['calendar-page'] = el)}
-              onClick={() => setActiveTab('calendar-page')}
+              href="/calendar"
+              onClick={(e) => {
+                if (isModifiedClick(e)) return;
+                e.preventDefault();
+                setActiveTab('calendar-page');
+              }}
               className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold flex items-center gap-1.5 shrink-0 transition-all shadow-md ${
                 activeTab === 'calendar-page'
                   ? 'bg-[#141923] text-[#FFD700] ring-2 ring-[#FFD700] border border-[#FFD700]'
@@ -248,11 +266,16 @@ export default function Header({
               }`}
             >
               <span>📅 {lang === 'en' ? 'Calendar' : 'క్యాలెండర్'}</span>
-            </button>
+            </a>
 
-            <button
+            <a
               ref={el => (tabRefs.current['glossary'] = el)}
-              onClick={() => setActiveTab('glossary')}
+              href="/glossary"
+              onClick={(e) => {
+                if (isModifiedClick(e)) return;
+                e.preventDefault();
+                setActiveTab('glossary');
+              }}
               className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5 shrink-0 transition-all ${
                 activeTab === 'glossary'
                   ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-[#0B0E14] shadow-md font-extrabold'
@@ -261,11 +284,16 @@ export default function Header({
             >
               <BookOpen className="w-4 h-4 text-[#FFD700]" />
               <span>{lang === 'en' ? 'Glossary / Meanings' : 'నిఘంటువు / పదాల అర్థాలు'}</span>
-            </button>
+            </a>
 
-            <button
+            <a
               ref={el => (tabRefs.current['sevas'] = el)}
-              onClick={() => setActiveTab('sevas')}
+              href="/sevas"
+              onClick={(e) => {
+                if (isModifiedClick(e)) return;
+                e.preventDefault();
+                setActiveTab('sevas');
+              }}
               className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5 shrink-0 transition-all ${
                 activeTab === 'sevas'
                   ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-[#0B0E14] shadow-md'
@@ -274,11 +302,16 @@ export default function Header({
             >
               <ClockIcon className="w-4 h-4" />
               <span>{lang === 'en' ? 'Sevas' : 'సేవలు'}</span>
-            </button>
+            </a>
 
-            <button
+            <a
               ref={el => (tabRefs.current['tokens'] = el)}
-              onClick={() => setActiveTab('tokens')}
+              href="/tokens"
+              onClick={(e) => {
+                if (isModifiedClick(e)) return;
+                e.preventDefault();
+                setActiveTab('tokens');
+              }}
               className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5 shrink-0 transition-all ${
                 activeTab === 'tokens'
                   ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-[#0B0E14] shadow-md'
@@ -289,7 +322,7 @@ export default function Header({
               <span>
                 {lang === 'en' ? 'SSD / DD Tokens' : 'SSD / DD టోకెన్లు'}
               </span>
-            </button>
+            </a>
 
             {/* COMMUNITY FEEDBACK BUTTON / ADMIN INBOX */}
             <button

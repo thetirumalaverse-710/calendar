@@ -15,6 +15,7 @@ import { getFestivalTopic, matchFestivalEvents } from '../data/festivalTopics';
 import { TEMPLES } from '../data/templeEvents';
 import { getTempleFilterLabel } from '../utils/templeHelpers';
 import useTheme from '../hooks/useTheme';
+import { isModifiedClick } from '../utils/navigation';
 
 function formatDateDisplay(dateStr, lang) {
   if (!dateStr) return '';
@@ -111,14 +112,19 @@ export default function FestivalTopicPage({
 
           {/* Primary Call to Action */}
           <div className="pt-3 flex flex-wrap items-center gap-3">
-            <button
-              onClick={handleCtaClick}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#D4AF37] via-[#FFD700] to-[#FFA000] text-black font-extrabold text-sm flex items-center gap-2 shadow-xl hover:brightness-110 active:scale-95 transition-all"
+            <a
+              href={`/calendar?search=${encodeURIComponent(ctaSearchQuery)}`}
+              onClick={(e) => {
+                if (isModifiedClick(e)) return;
+                e.preventDefault();
+                handleCtaClick();
+              }}
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#D4AF37] via-[#FFD700] to-[#FFA000] text-black font-extrabold text-sm flex items-center gap-2 shadow-xl hover:brightness-110 active:scale-95 transition-all cursor-pointer"
             >
               <Calendar className="w-4 h-4 text-black" />
               <span>{isTe ? (topic.calendarCtaTe || `క్యాలెండర్‌లో ${topic.searchQuery} చూడండి`) : (topic.calendarCta || `View ${topic.searchQuery} in Calendar`)}</span>
               <ArrowRight className="w-4 h-4 text-black" />
-            </button>
+            </a>
             <span className="text-xs text-[#94A3B8] font-medium">
               {isTe
                 ? `(మొత్తం ${matchedEvents.length} ఉత్సవాలు క్యాలెండర్‌లో నమోదు చేయబడ్డాయి)`
@@ -331,14 +337,19 @@ export default function FestivalTopicPage({
             : `Explore scheduled timings, download PDF panchangams, and add ${topic.searchQuery} reminders directly to your calendar.`}
         </p>
         <div className="pt-2">
-          <button
-            onClick={handleCtaClick}
-            className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-[#FF5722] via-[#FFD700] to-[#FF5722] text-black font-extrabold text-sm inline-flex items-center gap-2 shadow-xl hover:scale-105 active:scale-95 transition-all"
+          <a
+            href={`/calendar?search=${encodeURIComponent(ctaSearchQuery)}`}
+            onClick={(e) => {
+              if (isModifiedClick(e)) return;
+              e.preventDefault();
+              handleCtaClick();
+            }}
+            className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-[#FF5722] via-[#FFD700] to-[#FF5722] text-black font-extrabold text-sm inline-flex items-center gap-2 shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer"
           >
             <Calendar className="w-4 h-4 text-black" />
             <span>{isTe ? (topic.searchCalendarCtaTe || `క్యాలెండర్‌లో ${topic.searchQuery} శోధించండి`) : (topic.calendarCta || `View ${topic.searchQuery} in Calendar`)}</span>
             <ArrowRight className="w-4 h-4 text-black" />
-          </button>
+          </a>
         </div>
       </section>
     </article>

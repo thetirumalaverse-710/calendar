@@ -140,6 +140,20 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleNavigatePath = (path) => {
+    const cleanPath = path.split('?')[0].split('#')[0].replace(/\/+$/, '') || '/';
+    const lowerPath = cleanPath.toLowerCase();
+    const tab = getTabFromPathname(lowerPath);
+    const slug = getFestivalSlugFromPath(lowerPath);
+    setActiveTabState(tab);
+    setFestivalSlug(slug);
+    if (window.location.pathname !== path) {
+      window.history.pushState({ tab }, '', path);
+    }
+    setCurrentPath(path);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // Sync route-specific SEO metadata (<title>, canonical, meta description, OG, Twitter)
   useEffect(() => {
     updateRouteMetadata(window.location.pathname);
@@ -857,6 +871,7 @@ useEffect(() => {
       {/* Footer with Disclaimer & Feedback Link */}
       <AppFooter
         lang={lang}
+        onNavigate={handleNavigatePath}
         onOpenLogoModal={() => setIsLogoModalOpen(true)}
         onOpenFeedbackTab={() => {
           setActiveTab('feedback');
