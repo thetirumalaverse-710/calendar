@@ -155,6 +155,85 @@ export const FESTIVAL_TOPICS = {
     planDarshanTitle: 'Plan Your Rathotsavam Darshan in the Calendar',
     planDarshanTitleTe: 'ఇంటరాక్టివ్ క్యాలెండర్‌లో రథోత్సవ దర్శనాన్ని ప్లాన్ చేయండి',
     searchCalendarCtaTe: 'క్యాలెండర్‌లో రథోత్సవం శోధించండి'
+  },
+  'pavithrotsavam': {
+    slug: 'pavithrotsavam',
+    title: 'Pavithrotsavam at Tirumala | Dates, Significance & Ritual Guide | The Tirumala Verse',
+    titleTe: 'తిరుమలలో పవిత్రోత్సవాలు | విశిష్టత & క్రతువుల సమాచారం | The Tirumala Verse',
+    h1: 'Pavithrotsavam at Tirumala',
+    h1Te: 'తిరుమలలో శ్రీవారి పవిత్రోత్సవాలు',
+    subtitle: 'The Sacred Annual Expiation & Purification Festival of Lord Venkateswara',
+    subtitleTe: 'ఏడాది పొడవునా జరిగే అర్చనా లోపాలను నివారించే శ్రీవారి వార్షిక దోష పరిహార ప్రక్షాళన ఉత్సవం',
+    canonical: 'https://thetirumalaverse.in/festivals/pavithrotsavam',
+    searchQuery: 'Pavithrotsavam',
+    primaryPhrase: 'pavithrotsavam',
+    searchKeywords: [
+      'pavithrotsavam',
+      'pavithrotsavams',
+      'pavithra',
+      'పవిత్రోత్సవం',
+      'పవిత్రోత్సవాలు',
+      'పవిత్ర',
+      'purification',
+      'ankurarpanam',
+      'poornahuthi'
+    ],
+    description:
+      'Learn about Pavithrotsavam at Tirumala, its annual purification significance, and multi-day ritual schedule. Explore Pavithrotsavam dates and ceremonies across Tirumala and Tirupati temples.',
+    descriptionTe:
+      'తిరుమల శ్రీవారి పవిత్రోత్సవాల విశిష్టత, పవిత్ర సమర్పణ, అంకురార్పణ, పూర్ణాహుతి తేదీలు మరియు సమగ్ర సమాచారాన్ని ఇక్కడ తెలుసుకోండి.',
+    heroBadge: 'Annual Purification Festival',
+    heroBadgeTe: 'వార్షిక పవిత్రోత్సవ ప్రక్షాళన',
+    summary:
+      'Pavithrotsavam (Pavithrotsavams) is a revered 3 to 4 day annual purification festival observed in Sravana Masam at Tirumala and affiliated sacred shrines. It is conducted to expiate and atone for any unwitting errors, omissions, or ritual lapses (Doshas) committed throughout the year by priests, temple administrators, or pilgrims during daily kainkaryams. During this solemn ritual cycle, sacred silk threads (Pavithra malas) are consecrated and placed around the neck of the Moola Virat, Utsava deities, the golden Vimanam, and temple altars to restore immaculate Vedic sanctity.',
+    summaryTe:
+      'తిరుమల శ్రీవారి ఆలయంలో శ్రావణమాసంలో జరిగే పవిత్రోత్సవాలు అత్యంత పవిత్రమైన వార్షిక ప్రక్షాళన క్రతువు. ఆలయంలో ఏడాది పొడవునా జరిగే నిత్య కైంకర్యాలు, అర్చనలు మరియు ఉత్సవాలలో అర్చకులు, సిబ్బంది లేదా భక్తుల వల్ల తెలిసీ తెలియక ఏవైనా లోపాలు, దోషాలు జరిగి ఉంటే వాటి పరిహారార్థం ఈ ఉత్సవాన్ని నిర్వహిస్తారు. విశేష యాగశాలలో ప్రతిష్ఠించిన పవిత్ర పట్టు దారాల మాలలను (పవిత్రాలు) శ్రీవారి మూలవిరాట్, ఉత్సవమూర్తులు, ఆనందనిలయ విమాన వేంకటేశ్వరస్వామి మరియు బలిపీఠాలకు సమర్పించి దోషనివారణ చేస్తారు.',
+    adornments: [
+      {
+        title: 'Consecrated Silk Garlands (Pavithra Malas)',
+        titleTe: 'పవిత్ర పట్టు దారాల మాలలు (పవిత్రాలు)',
+        desc: 'Woven from pure dyed silk threads into intricate multi-tiered garlands representing Vedic meters, these sacred cords are consecrated in the Yagashala before being draped over the deities, altars, and sanctum structures.',
+        descTe: 'స్వచ్ఛమైన పట్టు దారాలతో వివిధ రంగులలో రూపొందించిన పవిత్ర మాలలను యాగశాలలో హోమ క్రతువుల ద్వారా సంప్రోక్షించి, స్వామివారికి మరియు ఆలయ పవిత్ర స్థానాలకు సమర్పిస్తారు.'
+      },
+      {
+        title: 'Yagashala Homa Kundams & Sacred Fires',
+        titleTe: 'యాగశాల హోమాగ్నులు & నవకుండాలు',
+        desc: 'A specially prepared Yagashala inside the temple premises hosts dedicated Vedic sacrificial fires (Homa Kundams) where priests chant Pancharatra Agama mantras and pour oblations of sacred ghee and samidhas.',
+        descTe: 'ఆలయ ప్రాంగణంలో ప్రత్యేకంగా ఏర్పాటు చేసిన యాగశాలలో పాంచరాత్ర ఆగమోక్తంగా నవకుండాలలో హోమాలు నిర్వహిస్తూ, వేదమంత్రోచ్ఛారణల నడుమ హవిస్సులు అర్పిస్తారు.'
+      },
+      {
+        title: 'Ananda Nilaya Vimanam & Shrine Altars Adornment',
+        titleTe: 'ఆనందనిలయ విమానం & ఆలయ బలిపీఠాల అలంకరణ',
+        desc: 'The sanctifying Pavithra cords are not confined to the sanctum idols; they are also draped across the gilded Ananda Nilaya Vimanam, Dwajasthambham, and inner Bali Peetham, purifying the entire temple complex.',
+        descTe: 'పవిత్ర మాలలను కేవలం విగ్రహాలకే కాక స్వర్ణమయ ఆనందనిలయ విమాన గోపురం, ధ్వజస్తంభం మరియు బలిపీఠాలకు కూడా సమర్పించి ఆలయ సమగ్ర ప్రాంగణాన్ని పవిత్రీకరిస్తారు.'
+      }
+    ],
+    theology: [
+      {
+        title: 'Pancharatra Agama Expiation (Prayaschitta)',
+        titleTe: 'పాంచరాత్ర ఆగమ ప్రాయశ్చిత్త విధానం',
+        desc: 'According to Vaikhanasa and Pancharatra Agama scriptures, Pavithrotsavam serves as the supreme annual Prayaschitta (atonement ritual), wiping away physical, ritual, and spiritual defilements to maintain eternal sanctity.',
+        descTe: 'వైఖానస మరియు పాంచరాత్ర ఆగమాల ప్రకారం ఏడాది పొడవునా ఆలయంలో ఏర్పడిన దోషాలను తుడిచిపెట్టి, దివ్య సాన్నిధ్యాన్ని పునరుద్ధరించే పరమోత్కృష్ట ప్రాయశ్చిత్త క్రతువుగా పవిత్రోత్సవాన్ని శాస్త్రాలు పేర్కొంటున్నాయి.'
+      },
+      {
+        title: 'The Four Sacred Ritual Stages (Chatur-Aha Vidhi)',
+        titleTe: 'చతురహ క్రతువు (అంకురార్పణ నుండి పూర్ణాహుతి వరకు)',
+        desc: 'The multi-day festival progresses through four meticulous Vedic stages: Ankurarpanam (seed sowing prelude), Pavithra Prathishta (holy consecration), Pavithra Samarpana (sacred silk offering), and Mahapoornahuthi (culminating fire oblation).',
+        descTe: 'పవిత్రోత్సవాలు నాలుగు ముఖ్య ఘట్టాలుగా సాగుతాయి: అంకురార్పణ (ఉత్సవ ఆరంభం), పవిత్ర ప్రతిష్ఠ (యాగశాలలో మంత్రోచ్ఛారణ), పవిత్ర సమర్పణ (పట్టు మాలల ధారణ), మరియు మహాపూర్ణాహుతి (విజయవంతమైన సమాప్తి).'
+      }
+    ],
+    occasionsInfo: {
+      title: 'Pavithrotsavams at Tirumala & Sacred Shrines',
+      titleTe: 'తిరుమల మరియు ఇతర క్షేత్రాలలో పవిత్రోత్సవాలు',
+      desc: 'The annual Srivari Pavithrotsavams at Tirumala are traditionally celebrated in Sravana Masam (August 22 to 25, 2026), beginning with Ankurarpanam and culminating in Mahapoornahuthi. An equally elaborate multi-day Pavithrotsavam cycle is celebrated at the ancient Sri Kodandarama Swamy Temple in Tirupati (August 07 to 10, 2026), following identical Agama traditions.',
+      descTe: 'శ్రావణమాసంలో తిరుమల శ్రీవారి ఆలయంలో ఆగస్టు 22 నుండి 25 వరకు 4 రోజుల పాటు వార్షిక పవిత్రోత్సవాలు అత్యంత వైభవంగా జరుగుతాయి. అదేవిధంగా తిరుపతిలోని శ్రీ కోదండరామస్వామివారి ఆలయంలో కూడా ఆగస్టు 7 నుండి 10 వరకు 4 రోజుల పవిత్రోత్సవాలు శాస్త్రోక్తంగా నిర్వహించబడతాయి.'
+    },
+    calendarCta: 'View Pavithrotsavam in Calendar',
+    calendarCtaTe: 'క్యాలెండర్‌లో పవిత్రోత్సవాలు చూడండి',
+    occurrencesTitleTe: 'పవిత్రోత్సవ దర్శన తేదీలు & క్రతువులు',
+    planDarshanTitle: 'Plan Your Pavithrotsavam Darshan in the Calendar',
+    planDarshanTitleTe: 'ఇంటరాక్టివ్ క్యాలెండర్‌లో పవిత్రోత్సవ దర్శనాన్ని ప్లాన్ చేయండి',
+    searchCalendarCtaTe: 'క్యాలెండర్‌లో పవిత్రోత్సవాలు శోధించండి'
   }
 };
 
@@ -214,6 +293,33 @@ export function matchFestivalEvents(events, topic) {
         if (isSwarnaRatham) return false;
 
         return true;
+      })
+      .sort((a, b) => {
+        const dateComp = (a.startDate || '').localeCompare(b.startDate || '');
+        if (dateComp !== 0) return dateComp;
+        const timeA = (a.startTime || a.time || '').trim();
+        const timeB = (b.startTime || b.time || '').trim();
+        return timeA.localeCompare(timeB);
+      });
+  }
+
+  // Pavithrotsavam (Annual Purification Festival) specific matching:
+  // Matches actual Pavithrotsavam occurrences primarily based on event title.
+  // Supports "pavithrotsavam", "pavithrotsavams", "pavithra", and Telugu "పవిత్రోత్సవ" / "పవిత్ర".
+  if (topic.slug === 'pavithrotsavam') {
+    return events
+      .filter(evt => {
+        if (!evt) return false;
+        const title = (evt.title || '').toLowerCase();
+        const titleTe = (evt.titleTe || '').toLowerCase();
+
+        return (
+          title.includes('pavithrotsavam') ||
+          title.includes('pavithrotsavams') ||
+          title.includes('pavithra') ||
+          titleTe.includes('పవిత్రోత్సవ') ||
+          titleTe.includes('పవిత్ర')
+        );
       })
       .sort((a, b) => {
         const dateComp = (a.startDate || '').localeCompare(b.startDate || '');

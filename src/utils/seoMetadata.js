@@ -162,6 +162,22 @@ export const ROUTE_SEO_METADATA = {
     twitterDescription:
       'Learn about Rathotsavam at Tirumala, its spiritual significance, and scheduled chariot occurrences. Explore Rathotsavam dates across Tirumala and Tirupati shrines in the festival calendar.',
   },
+  '/festivals/pavithrotsavam': {
+    title:
+      'Pavithrotsavam at Tirumala | Dates, Significance & Ritual Guide | The Tirumala Verse',
+    description:
+      'Learn about Pavithrotsavam at Tirumala, its annual purification significance, and multi-day ritual schedule. Explore Pavithrotsavam dates and ceremonies across Tirumala and Tirupati temples.',
+    canonical: `${SITE_ORIGIN}/festivals/pavithrotsavam`,
+    ogTitle:
+      'Pavithrotsavam at Tirumala | Dates, Significance & Ritual Guide | The Tirumala Verse',
+    ogDescription:
+      'Learn about Pavithrotsavam at Tirumala, its annual purification significance, and multi-day ritual schedule. Explore Pavithrotsavam dates and ceremonies across Tirumala and Tirupati temples.',
+    ogUrl: `${SITE_ORIGIN}/festivals/pavithrotsavam`,
+    twitterTitle:
+      'Pavithrotsavam at Tirumala | Dates, Significance & Ritual Guide | The Tirumala Verse',
+    twitterDescription:
+      'Learn about Pavithrotsavam at Tirumala, its annual purification significance, and multi-day ritual schedule. Explore Pavithrotsavam dates and ceremonies across Tirumala and Tirupati temples.',
+  },
 };
 
 /**
