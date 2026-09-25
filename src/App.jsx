@@ -731,6 +731,8 @@ useEffect(() => {
             <TempleList
               lang={lang}
               onSelectTemple={handleSelectTempleFromHeroOrList}
+              onNavigate={handleNavigatePath}
+              onNavigateToGlossary={handleNavigateToGlossary}
             />
           )}
 

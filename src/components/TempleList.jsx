@@ -3,7 +3,41 @@ import { MapPin, Clock, Shirt, ArrowRight, Compass, Sparkles } from 'lucide-reac
 import { TEMPLES } from '../data/templeEvents';
 import { isModifiedClick } from '../utils/navigation';
 
-export default function TempleList({ lang, onSelectTemple }) {
+const TEMPLE_CONTEXTUAL_LINKS = {
+  'tirumala-main': [
+    {
+      label: 'Daily Sevas Guide',
+      labelTe: 'నిత్య సేవల గైడ్',
+      href: '/sevas',
+      type: 'route',
+    },
+    {
+      label: 'Darshan Tokens Guide',
+      labelTe: 'దర్శనం టోకెన్ల గైడ్',
+      href: '/tokens',
+      type: 'route',
+    },
+  ],
+  'govindaraja': [
+    {
+      label: 'Govindaraja Utsavam Lore',
+      labelTe: 'గోవిందరాజ ఉత్సవ విశేషాలు',
+      href: '/glossary',
+      type: 'glossary',
+      termId: 'andal-neerattam-utsavam',
+    },
+  ],
+  'kodandarama': [
+    {
+      label: 'Pavithrotsavam Guide',
+      labelTe: 'పవిత్రోత్సవం గైడ్',
+      href: '/festivals/pavithrotsavam',
+      type: 'route',
+    },
+  ],
+};
+
+export default function TempleList({ lang, onSelectTemple, onNavigate, onNavigateToGlossary }) {
   return (
     <div className="space-y-6 py-4">
       {/* Title Header */}
@@ -76,6 +110,39 @@ export default function TempleList({ lang, onSelectTemple }) {
                     <span className="truncate">{temple.dressCode}</span>
                   </div>
                 </div>
+
+                {/* Contextual Guides / Quick Links (only rendered if temple has any) */}
+                {TEMPLE_CONTEXTUAL_LINKS[temple.id] && (
+                  <div className="pt-2 border-t border-slate-200 dark:border-white/10 space-y-1.5">
+                    <div className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-[#94A3B8] font-bold">
+                      {lang === 'en' ? 'Quick Guides' : 'త్వరిత గైడ్లు'}
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {TEMPLE_CONTEXTUAL_LINKS[temple.id].map((link, idx) => (
+                        <a
+                          key={`${temple.id}-guide-${idx}`}
+                          href={link.href}
+                          onClick={(e) => {
+                            if (isModifiedClick(e)) return;
+                            e.preventDefault();
+                            if (link.type === 'glossary' && link.termId && onNavigateToGlossary) {
+                              onNavigateToGlossary(link.termId);
+                            } else if (onNavigate) {
+                              onNavigate(link.href);
+                            } else {
+                              window.history.pushState({}, '', link.href);
+                              window.dispatchEvent(new PopStateEvent('popstate'));
+                              window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }
+                          }}
+                          className="inline-flex items-center px-2.5 py-1 rounded-lg text-[11px] sm:text-xs font-semibold bg-amber-500/10 dark:bg-[#D4AF37]/15 hover:bg-amber-500/20 dark:hover:bg-[#D4AF37]/30 text-amber-900 dark:text-[#FFD700] hover:text-amber-950 dark:hover:text-white border border-amber-600/30 dark:border-[#D4AF37]/40 hover:border-amber-600 dark:hover:border-[#FFD700] transition-all shadow-sm cursor-pointer"
+                        >
+                          {lang === 'en' ? link.label : (link.labelTe || link.label)}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
               </div>
             </div>
