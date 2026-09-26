@@ -159,6 +159,24 @@ export default function FestivalTopicPage({
                 <p className="text-xs text-[#94A3B8] leading-relaxed">
                   {isTe ? item.descTe : item.desc}
                 </p>
+                {slug === 'brahmotsavam' && item.title.includes('Vahana Processions') && (
+                  <div className="pt-2">
+                    <a
+                      href="/festivals/garuda-vahanam"
+                      onClick={(e) => {
+                        if (isModifiedClick(e)) return;
+                        e.preventDefault();
+                        window.history.pushState({}, '', '/festivals/garuda-vahanam');
+                        window.dispatchEvent(new PopStateEvent('popstate'));
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                      className="inline-flex items-center gap-1 font-bold text-xs text-[#D4AF37] hover:text-[#FFD700] hover:underline cursor-pointer"
+                    >
+                      <span>{isTe ? 'గరుడ వాహన గైడ్' : 'Garuda Vahanam Guide'}</span>
+                      <span>→</span>
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
           ))}
@@ -186,6 +204,24 @@ export default function FestivalTopicPage({
               <p className={`text-xs sm:text-sm leading-relaxed ${isLight ? 'text-slate-700 font-medium' : 'text-[#CBD5E1]'}`}>
                 {isTe ? item.descTe : item.desc}
               </p>
+              {slug === 'brahmotsavam' && item.title.includes('Salakatla vs Navarathri') && (
+                <div className="pt-2">
+                  <a
+                    href="/festivals/rathotsavam"
+                    onClick={(e) => {
+                      if (isModifiedClick(e)) return;
+                      e.preventDefault();
+                      window.history.pushState({}, '', '/festivals/rathotsavam');
+                      window.dispatchEvent(new PopStateEvent('popstate'));
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="inline-flex items-center gap-1 font-bold text-xs text-[#D4AF37] hover:text-[#FFD700] hover:underline cursor-pointer"
+                  >
+                    <span>{isTe ? 'రథోత్సవ గైడ్' : 'Rathotsavam Guide'}</span>
+                    <span>→</span>
+                  </a>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -196,6 +232,22 @@ export default function FestivalTopicPage({
             ℹ️ {isTe ? topic.occasionsInfo.titleTe : topic.occasionsInfo.title}
           </span>
           <p>{isTe ? topic.occasionsInfo.descTe : topic.occasionsInfo.desc}</p>
+          <div className="pt-2">
+            <a
+              href="/temples"
+              onClick={(e) => {
+                if (isModifiedClick(e)) return;
+                e.preventDefault();
+                window.history.pushState({}, '', '/temples');
+                window.dispatchEvent(new PopStateEvent('popstate'));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="inline-flex items-center gap-1.5 font-bold text-xs text-[#D4AF37] hover:text-[#FFD700] hover:underline cursor-pointer"
+            >
+              <span>{isTe ? 'సప్త దివ్య పుణ్యక్షేత్రాల సమాచారం' : 'View Sacred Shrines Directory'}</span>
+              <span>→</span>
+            </a>
+          </div>
         </div>
       </section>
 

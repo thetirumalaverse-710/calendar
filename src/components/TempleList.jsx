@@ -17,6 +17,12 @@ const TEMPLE_CONTEXTUAL_LINKS = {
       href: '/tokens',
       type: 'route',
     },
+    {
+      label: 'Brahmotsavam Guide',
+      labelTe: 'బ్రహ్మోత్సవాల గైడ్',
+      href: '/festivals/brahmotsavam',
+      type: 'route',
+    },
   ],
   'govindaraja': [
     {

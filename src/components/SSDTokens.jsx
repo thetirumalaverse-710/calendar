@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Ticket, CalendarDays } from "lucide-react";
+import { Ticket, CalendarDays, Clock } from "lucide-react";
+import { isModifiedClick } from "../utils/navigation";
 import SSDTokenActivity from "./tokens/SSDTokenActivity";
 import SSDTokenHistory from "./tokens/SSDTokenHistory";
 import SSDTokenHowItWorks from "./tokens/SSDTokenHowItWorks";
@@ -261,7 +262,7 @@ const isNoIssuance =
               {text.subtitle}
             </p>
 
-            <div className="flex flex-wrap gap-2 mt-4">
+            <div className="flex flex-wrap items-center gap-2 mt-4">
               <span className="px-2.5 py-1 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#D4AF37] text-[10px] font-bold">
                 Offline
               </span>
@@ -269,6 +270,22 @@ const isNoIssuance =
               <span className="px-2.5 py-1 rounded-full bg-[#FF5722]/10 border border-[#FF5722]/30 text-[#FF5722] text-[10px] font-bold">
                 TTD
               </span>
+
+              <a
+                href="/sevas"
+                onClick={(e) => {
+                  if (isModifiedClick(e)) return;
+                  e.preventDefault();
+                  window.history.pushState({}, '', '/sevas');
+                  window.dispatchEvent(new PopStateEvent('popstate'));
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D4AF37]/15 hover:bg-[#D4AF37]/25 text-amber-900 dark:text-[#FFD700] hover:text-amber-950 dark:hover:text-white border border-amber-600/30 dark:border-[#D4AF37]/40 hover:border-amber-600 dark:hover:border-[#FFD700] text-xs font-bold transition-all shadow-sm cursor-pointer ml-auto sm:ml-0"
+              >
+                <Clock className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span>{lang === "te" ? "శ్రీవారి నిత్య సేవల పట్టిక" : "Srivari Daily Sevas Schedule"}</span>
+                <span>→</span>
+              </a>
             </div>
           </div>
         </section>

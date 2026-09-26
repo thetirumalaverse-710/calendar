@@ -635,6 +635,22 @@ const isBrahmotsavamPeriod = Boolean(activeBrahmotsavam);
                     ? 'TTD Special Programme • 14 September 2026 to 23 September 2026'
                     : 'టీటీడీ ప్రత్యేక కార్యక్రమం • 14 సెప్టెంబర్ 2026 నుండి 23 సెప్టెంబర్ 2026 వరకు'}
                 </p>
+                <div className="pt-2">
+                  <a
+                    href="/festivals/brahmotsavam"
+                    onClick={(e) => {
+                      if (isModifiedClick(e)) return;
+                      e.preventDefault();
+                      window.history.pushState({}, '', '/festivals/brahmotsavam');
+                      window.dispatchEvent(new PopStateEvent('popstate'));
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold bg-[#FFD700]/15 hover:bg-[#FFD700]/25 text-amber-900 dark:text-[#FFD700] hover:text-amber-950 dark:hover:text-white border border-amber-600/30 dark:border-[#D4AF37]/50 hover:border-amber-600 dark:hover:border-[#FFD700] transition-all cursor-pointer"
+                  >
+                    <span>{lang === 'en' ? 'Explore Brahmotsavam Guide & Vahanas' : 'బ్రహ్మోత్సవ సమగ్ర గైడ్ & వాహనాలు'}</span>
+                    <span>→</span>
+                  </a>
+                </div>
               </div>
               <span className="px-3 py-1.5 rounded-full bg-[#FFD700]/15 border border-[#D4AF37]/40 text-[#FFD700] text-xs font-extrabold">
                 {selectedBrahmotsavam.dayLabel}

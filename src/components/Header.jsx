@@ -324,6 +324,24 @@ export default function Header({
               </span>
             </a>
 
+            <a
+              ref={el => (tabRefs.current['temples'] = el)}
+              href="/temples"
+              onClick={(e) => {
+                if (isModifiedClick(e)) return;
+                e.preventDefault();
+                setActiveTab('temples');
+              }}
+              className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5 shrink-0 transition-all ${
+                activeTab === 'temples'
+                  ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-[#0B0E14] shadow-md font-extrabold'
+                  : 'text-[#CBD5E1] hover:text-[#FFD700] hover:bg-[#141923]'
+              }`}
+            >
+              <span>🏛️</span>
+              <span>{lang === 'en' ? 'Temples' : 'క్షేత్రాలు'}</span>
+            </a>
+
             {/* COMMUNITY FEEDBACK BUTTON / ADMIN INBOX */}
             <button
               ref={el => (tabRefs.current['feedback'] = el)}
