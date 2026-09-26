@@ -21,7 +21,6 @@ import { subscribeToWebPush, unsubscribeFromWebPush, ELIGIBLE_NOTIFICATION_TEMPL
 import { supabase } from './utils/supabaseClient';
 import { updateRouteMetadata } from './utils/seoMetadata';
 import { updateRouteStructuredData } from './utils/structuredData';
-import { isModifiedClick } from './utils/navigation';
 
 const CalendarView = lazy(() => import('./components/CalendarView'));
 const DailySchedule = lazy(() => import('./components/DailySchedule'));
@@ -61,75 +60,6 @@ const TAB_TO_PATH = {
   'references': '/references',
   'overview': '/',
 };
-
-const PORTAL_CARDS = [
-  {
-    href: '/calendar',
-    icon: '📅',
-    badge: 'Interactive',
-    title: 'Festival Calendar 2026–2027',
-    titleTe: 'ఉత్సవాల క్యాలెండర్ 2026–2027',
-    desc: 'Browse multi-day Brahmotsavams, monthly utsavams, Vahana Sevas, and filter events by month and shrine.',
-    descTe: 'వార్షిక బ్రహ్మోత్సవాలు, వాహన సేవలు మరియు పర్వదినాల క్యాలెండర్ నెల మరియు ఆలయం వారీగా వీక్షించండి.',
-    cta: 'View Calendar',
-    ctaTe: 'క్యాలెండర్ చూడండి',
-  },
-  {
-    href: '/sevas',
-    icon: '⏰',
-    badge: 'Timetable',
-    title: 'Daily & Weekly Sevas',
-    titleTe: 'నిత్య & వారపు సేవలు',
-    desc: 'Srivari temple daily timetable, Nitya Kainkaryams, weekly sevas schedule, and Anna Prasadam timings.',
-    descTe: 'శ్రీవారి ఆలయ దినచర్య, నిత్య కైంకర్యాలు, వారపు ప్రత్యేక సేవలు మరియు అన్నప్రసాదం సమయాలు.',
-    cta: 'View Seva Schedule',
-    ctaTe: 'సేవల పట్టిక చూడండి',
-  },
-  {
-    href: '/tokens',
-    icon: '🎟️',
-    badge: 'Live Status',
-    title: 'SSD & DD Darshan Tokens',
-    titleTe: 'SSD & DD దర్శన టోకెన్లు',
-    desc: 'Counter locations, live status updates, reporting rules, dress code, and issuance guidelines in Tirupati.',
-    descTe: 'తిరుపతిలోని ఉచిత దర్శన టోకెన్ కౌంటర్లు, లైవ్ సమాచారం, రిపోర్టింగ్ నియమాలు మరియు మార్గదర్శకాలు.',
-    cta: 'Check Token Status',
-    ctaTe: 'టోకెన్ వివరాలు చూడండి',
-  },
-  {
-    href: '/temples',
-    icon: '🏛️',
-    badge: '7 Shrines',
-    title: 'The 7 Sacred Shrines',
-    titleTe: 'సప్త దివ్య పుణ్యక్షేత్రాలు',
-    desc: 'Spiritual significance, deity lore, temple timings, dress codes, and locations of Tirumala & Tirupati shrines.',
-    descTe: 'తిరుమల మరియు తిరుపతి పరిసరాలలోని 7 ప్రధాన దివ్య క్షేత్రాల విశిష్టత, సమయాలు మరియు దర్శన వివరాలు.',
-    cta: 'Explore Temples',
-    ctaTe: 'క్షేత్రాలు అన్వేషించండి',
-  },
-  {
-    href: '/glossary',
-    icon: '📖',
-    badge: 'Meanings',
-    title: 'Utsavam & Ritual Glossary',
-    titleTe: 'ఉత్సవ నిఘంటువు',
-    desc: 'Vedic meanings of ritual terms, Vahanams, sacred Naivedyams, and Puranic festival backgrounds.',
-    descTe: 'ఉత్సవ పదాల అర్థాలు, వాహన విశేషాలు, శ్రీవారి నైవేద్యాలు మరియు వైదిక సాంప్రదాయాల సమగ్ర నిఘంటువు.',
-    cta: 'Search Glossary',
-    ctaTe: 'నిఘంటువు శోధించండి',
-  },
-  {
-    href: '/references',
-    icon: '📜',
-    badge: 'Archives',
-    title: 'Historical Literature & References',
-    titleTe: 'చారిత్రక ఆధారాలు & గ్రంథాలు',
-    desc: 'Documentary research, Agama ritual manuals, temple stone inscriptions, and Annamacharya archives.',
-    descTe: 'ఆగమ శాస్త్ర నియమావళి, ప్రాచీన ఆలయ శాసనాలు మరియు తాళ్లపాక అన్నమయ్య సంకీర్తనా భాండాగార ఆధారాలు.',
-    cta: 'View References',
-    ctaTe: 'ఆధారాలు చూడండి',
-  },
-];
 
 function getFestivalSlugFromPath(pathname) {
   if (!pathname) return null;
@@ -783,43 +713,6 @@ useEffect(() => {
                     ? 'Explore authentic festival schedules, daily seva timetables, free SSD & DD token guidance, sacred temple histories, and ritual glossaries curated for devotees.'
                     : 'భక్తుల సౌకర్యార్థం అధికారిక ఉత్సవ పట్టికలు, నిత్య సేవా సమయాలు, ఉచిత దర్శన టోకెన్ల సమాచారం, క్షేత్ర విశేషాలు మరియు సమగ్ర వైదిక నిఘంటువు.'}
                 </p>
-              </div>
-
-              {/* Six Pillar Navigation Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {PORTAL_CARDS.map((card) => (
-                  <a
-                    key={card.href}
-                    href={card.href}
-                    onClick={(e) => {
-                      if (isModifiedClick(e)) return;
-                      e.preventDefault();
-                      handleNavigatePath(card.href);
-                    }}
-                    className="glass-card p-6 rounded-2xl border border-[#D4AF37]/30 hover:border-[#FFD700] hover:bg-[#141923]/90 transition-all duration-300 flex flex-col justify-between group shadow-lg hover:shadow-2xl hover:-translate-y-1 block text-inherit no-underline"
-                  >
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-3xl p-2.5 rounded-xl bg-[#0B0E14] border border-[#D4AF37]/20 group-hover:scale-110 transition-transform">
-                          {card.icon}
-                        </span>
-                        <span className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#FFD700]/10 border border-[#FFD700]/30 text-[#FFD700]">
-                          {card.badge}
-                        </span>
-                      </div>
-                      <h3 className="font-serif text-lg font-bold text-white group-hover:text-[#FFD700] transition-colors">
-                        {lang === 'en' ? card.title : card.titleTe}
-                      </h3>
-                      <p className="text-xs sm:text-sm text-[#94A3B8] leading-relaxed">
-                        {lang === 'en' ? card.desc : card.descTe}
-                      </p>
-                    </div>
-                    <div className="pt-4 mt-2 border-t border-[#D4AF37]/15 flex items-center justify-between text-xs font-bold text-[#FFD700] group-hover:text-white">
-                      <span>{lang === 'en' ? card.cta : card.ctaTe}</span>
-                      <span className="transition-transform group-hover:translate-x-1">→</span>
-                    </div>
-                  </a>
-                ))}
               </div>
             </div>
           )}
