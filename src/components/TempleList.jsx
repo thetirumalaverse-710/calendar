@@ -44,9 +44,9 @@ export default function TempleList({ lang, onSelectTemple, onNavigate, onNavigat
       <div className="glass-card p-6 border-l-4 border-l-[#FFD700] border-[#D4AF37]/30">
         <div className="flex items-center gap-3 mb-2">
           <Compass className="w-6 h-6 text-[#FFD700]" />
-          <h2 className="font-serif text-2xl font-bold gold-gradient-text">
+          <h1 className="font-serif text-2xl font-bold gold-gradient-text">
             {lang === 'en' ? 'The 7 Sacred Shrines of Tirumala & Tirupati' : 'తిరుమల-తిరుపతి సప్త దివ్య పుణ్యక్షేత్రాలు'}
-          </h2>
+          </h1>
         </div>
         <p className="text-sm text-[#94A3B8] max-w-3xl">
           {lang === 'en'

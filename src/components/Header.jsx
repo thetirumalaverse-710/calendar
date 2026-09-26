@@ -123,9 +123,9 @@ export default function Header({
               }}
               className="cursor-pointer min-w-0 flex-1 block"
             >
-              <h1 className="font-serif text-sm sm:text-2xl font-extrabold gold-gradient-text tracking-tight leading-tight !block w-full truncate">
+              <span className="font-serif text-sm sm:text-2xl font-extrabold gold-gradient-text tracking-tight leading-tight !block w-full truncate">
                 The Tirumala Verse
-              </h1>
+              </span>
               <p className="hidden sm:block text-xs text-[#94A3B8] tracking-wider font-medium">
                 {lang === 'en' ? 'Your Independent Guide to Tirumala' : 'మీ స్వతంత్ర తిరుమల దివ్య దర్శిని'}
               </p>

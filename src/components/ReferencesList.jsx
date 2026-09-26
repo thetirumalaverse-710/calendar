@@ -9,9 +9,9 @@ export default function ReferencesList({ lang }) {
       <div className="glass-card p-6 border-l-4 border-l-[#3A86EF] border-[#D4AF37]/30">
         <div className="flex items-center gap-3 mb-2">
           <BookOpen className="w-6 h-6 text-[#3A86EF]" />
-          <h2 className="font-serif text-2xl font-bold gold-gradient-text">
-            {lang === 'en' ? 'Official References & Historical Literature' : 'అధికారిక ఆధారాలు & చారిత్రక గ్రంథాలు'}
-          </h2>
+          <h1 className="font-serif text-2xl font-bold gold-gradient-text">
+            {lang === 'en' ? 'References & Historical Literature' : 'ఆధారాలు & చారిత్రక గ్రంథాలు'}
+          </h1>
         </div>
         <p className="text-sm text-[#94A3B8] max-w-3xl">
           {lang === 'en'

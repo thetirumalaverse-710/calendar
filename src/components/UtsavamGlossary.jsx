@@ -149,9 +149,9 @@ export default function UtsavamGlossary({
             <span>{lang === 'en' ? 'Utsava Shabda Kosh' : 'ఉత్సవ శబ్ద కోశం'}</span>
           </div>
 
-          <h2 className="font-serif text-2xl sm:text-4xl font-extrabold gold-gradient-text leading-tight">
+          <h1 className="font-serif text-2xl sm:text-4xl font-extrabold gold-gradient-text leading-tight">
             {lang === 'en' ? 'Festival & Utsavam Glossary' : 'ఉత్సవాలు, వాహనాలు & భక్తుల దివ్య నిఘంటువు'}
-          </h2>
+          </h1>
 
           <p className="text-xs sm:text-base text-slate-300 dark:text-[#94A3B8] leading-relaxed">
             {lang === 'en'

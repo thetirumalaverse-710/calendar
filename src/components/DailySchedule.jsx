@@ -626,9 +626,9 @@ const isBrahmotsavamPeriod = Boolean(activeBrahmotsavam);
               <div>
                 <div className="flex items-center gap-3 mb-1">
                   <Sparkles className="w-6 h-6 text-[#FFD700]" />
-                  <h2 className="font-serif text-2xl font-bold gold-gradient-text">
+                  <h1 className="font-serif text-2xl font-bold gold-gradient-text">
                     {lang === 'en' ? 'Annual Brahmotsavam 2026' : 'వార్షిక బ్రహ్మోత్సవం 2026'}
-                  </h2>
+                  </h1>
                 </div>
                 <p className={`text-sm ${isLight ? 'text-slate-700' : 'text-[#CBD5E1]'}`}>
                   {lang === 'en'
@@ -767,9 +767,9 @@ const isBrahmotsavamPeriod = Boolean(activeBrahmotsavam);
         <div>
           <div className="flex items-center gap-3 mb-1">
             <Clock className="w-6 h-6 text-[#FFD700]" />
-            <h2 className="font-serif text-2xl font-bold gold-gradient-text">
+            <h1 className="font-serif text-2xl font-bold gold-gradient-text">
               {lang === 'en' ? 'Srivari Temple Daily, Weekly & Periodical Sevas' : 'తిరుమల శ్రీవారి నిత్య, వారపు & కాలిక సేవల పట్టిక'}
-            </h2>
+            </h1>
           </div>
           <p className={`text-sm ${isLight ? 'text-slate-700' : 'text-[#CBD5E1]'}`}>
             {lang === 'en'
