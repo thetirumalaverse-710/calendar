@@ -39,5 +39,26 @@ export const TOKEN_FAQS = [
     questionTe: "టోకెన్ జారీ సమయాలు మరియు రోజువారీ కోటా స్థిరంగా ఉంటాయా?",
     answer: "Token issuance times are not fixed and may vary depending on crowd conditions and operational arrangements. Historical timings shown on this portal are recorded information only and should not be treated as a guaranteed schedule. Token information is refreshed every 10 minutes.",
     answerTe: "టోకెన్ల జారీ సమయాలు స్థిరంగా ఉండవు. భక్తుల రద్దీ మరియు నిర్వహణ పరిస్థితులపై ఆధారపడి సమయాలు మారవచ్చు. ఇక్కడ చూపించే సమయాలు నమోదైన సమాచారం మాత్రమే. ఈ వెబ్‌సైట్‌లో టోకెన్ సమాచారం ప్రతి 10 నిమిషాలకు స్వయంచాలకంగా నవీకరించబడుతుంది."
+  },
+  {
+    id: "dress-code",
+    question: "What is the dress code required when reporting for darshan with an SSD or DD token?",
+    questionTe: "SSD లేదా DD టోకెన్‌తో దర్శనానికి వెళ్ళేటప్పుడు పాటించవలసిన సాంప్రదాయ దుస్తుల నిబంధన ఏమిటి?",
+    answer: "Pilgrims reporting for darshan at Tirumala must follow traditional attire: Men must wear a Dhoti with Towel or Kurta Pyjama; Women must wear a Saree, Half-Saree, or Churidar / Salwar Kameez with Dupatta. Western attire (such as jeans, t-shirts, and shorts) is strictly restricted in sanctum lines. Please note that this dress code applies to temple entry at Tirumala; casual modest attire is acceptable when waiting in the token issuance queue in Tirupati.",
+    answerTe: "తిరుమలలో శ్రీవారి ఆలయ ప్రవేశం మరియు దర్శన క్యూ లైన్లలో భక్తులు తప్పనిసరిగా సాంప్రదాయ దుస్తులను ధరించాలి: పురుషులు ధోతి-ఉత్తరీయం లేదా కుర్తా-పైజామా; మహిళలు చీర, లంగా-ఓణీ లేదా చుడీదార్/సల్వార్ కమీజ్ దుపట్టాతో ధరించాలి. జీన్స్, టీ-షర్టులు, షార్ట్స్ వంటి పాశ్చాత్య దుస్తులు గర్భాలయ దర్శన వరుసలలో అనుమతించబడవు. ఈ నిబంధన తిరుమలలో దర్శన ప్రవేశానికి మాత్రమే వర్తిస్తుంది; తిరుపతిలోని టోకెన్ జారీ కౌంటర్ల వద్ద సాధారణ హుందైన దుస్తులు సరిపోతాయి."
+  },
+  {
+    id: "wednesday-rule",
+    question: "Are SSD and DD tokens issued on Wednesdays?",
+    questionTe: "బుధవారాలలో SSD మరియు DD టోకెన్లు జారీ చేయబడతాయా?",
+    answer: "No tokens are issued on Wednesdays for Thursday darshan.",
+    answerTe: "గురువారం దర్శనం కోసం బుధవారం నాడు టోకెన్లు జారీ చేయబడవు."
+  },
+  {
+    id: "brahmotsavam-pause",
+    question: "Is SSD and DD token issuance paused during annual Brahmotsavams?",
+    questionTe: "వార్షిక బ్రహ్మోత్సవాల సమయంలో SSD మరియు DD టోకెన్ల జారీ నిలిపివేయబడుతుందా?",
+    answer: "Yes. For the 2026 annual Salakatla Brahmotsavams, SSD and DD token issuance is paused from September 14 to September 23, 2026 to manage peak festival pilgrim congestion. Tokens for September 24, 2026 are scheduled to be issued on September 23 at 4:00 PM.",
+    answerTe: "అవును. 2026 వార్షిక సాలకట్ల బ్రహ్మోత్సవాల రద్దీ కారణంగా 2026 సెప్టెంబర్ 14 నుండి 23 వరకు SSD మరియు DD టోకెన్ల జారీ నిలిపివేయబడుతుంది. సెప్టెంబర్ 24, 2026 దర్శనానికి సంబంధించిన టోకెన్లు సెప్టెంబర్ 23 సాయంత్రం 4:00 గంటలకు జారీ చేయబడతాయి."
   }
 ];

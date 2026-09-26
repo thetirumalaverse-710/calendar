@@ -11,7 +11,10 @@ const GLOSSARY_RITUAL_PATTERNS = [
   { regex: /\bSuprabhatam\b/i, id: 'suprabhatam', label: 'Suprabhatam' },
   { regex: /\b(Kalyanotsavam|Kalyanostavam)\b/i, id: 'kalyanotsavam', label: 'Kalyanotsavam' },
   { regex: /\bArchana\b/i, id: 'archana', label: 'Archana' },
-  { regex: /\bAbhishekam\b/i, id: 'abhishekam', label: 'Abhishekam' }
+  { regex: /\bAbhishekam\b/i, id: 'abhishekam', label: 'Abhishekam' },
+  { regex: /\b(Vasanthotsavam|Vasanthostavam)\b/i, id: 'vasanthotsavam', label: 'Vasanthotsavam' },
+  { regex: /\bSnapana\s+Th?irumanjanam\b/i, id: 'snapana-tirumanjanam', label: 'Snapana Tirumanjanam' },
+  { regex: /\bPushpa\s+Yagam\b/i, id: 'pushpa-yagam', label: 'Pushpa Yagam' }
 ];
 
 function renderSevaWithGlossaryLinks(text, onNavigateToGlossary) {
@@ -563,7 +566,7 @@ export const BRAHMOTSAVAM_2026_SCHEDULE = [
   },
 ];
 
-export default function DailySchedule({ lang, themeMode = 'dark', onNavigateToGlossary }) {
+export default function DailySchedule({ lang, themeMode = 'dark', onNavigateToGlossary, onNavigate }) {
   const isLight = themeMode === 'light';
   const getIndiaDate = () =>
   new Intl.DateTimeFormat('en-CA', {
@@ -834,6 +837,18 @@ const isBrahmotsavamPeriod = Boolean(activeBrahmotsavam);
         </div>
       </div>
 
+      {/* Concise Ritual Orientation: Nitya Kainkaryams vs Arjitha Sevas */}
+      <div className={`p-4 rounded-2xl border text-xs sm:text-sm leading-relaxed ${isLight ? 'bg-amber-50/80 border-amber-200 text-slate-800' : 'bg-[#141923] border-[#D4AF37]/30 text-[#CBD5E1]'}`}>
+        <p>
+          <strong className={isLight ? 'text-amber-950 font-bold' : 'text-[#FFD700] font-bold'}>
+            {lang === 'en' ? 'Ritual Overview:' : 'పూజా విధానం:'}
+          </strong>{' '}
+          {lang === 'en'
+            ? 'Nitya Kainkaryams (such as Suprabhatam, Thomala, and Archana) are recurring daily sanctum rituals performed strictly according to temple tradition, with several observances marked as Ekantam (private sanctum worship). Arjitha Sevas (such as Kalyanotsavam, Vasanthotsavam, and Unjal Seva) are scheduled daytime rituals conducted in the Sampangi Prakaram. General pilgrim darshan is facilitated through Sarva Darshanam hours.'
+            : 'నిత్య కైంకర్యాలు (సుప్రభాతం, తోమాల, అర్చన వంటివి) స్వామివారికి ఆలయ సంప్రదాయానుసారం రోజూ జరిగే ఆరాధనలు, వీటిలో కొన్ని ఏకాంతంగా నిర్వహించబడతాయి. ఆర్జిత సేవలు (కల్యాణోత్సవం, వసంతోత్సవం, ఊంజల్ సేవ) సంపంగి ప్రాకారంలో నిర్ణీత సమయాలలో జరిగే పగటిపూట సేవలు. ఈ సేవల నడుమ భక్తుల కోసం సర్వదర్శనం సమయాలు కేటాయించబడతాయి.'}
+        </p>
+      </div>
+
       {/* SECTION 1: DAILY & WEEKLY DAY-BY-DAY TIMETABLE */}
       {viewSection === 'daily' && (
         <div className="space-y-4">
@@ -868,6 +883,35 @@ const isBrahmotsavamPeriod = Boolean(activeBrahmotsavam);
                 className="sm:hidden absolute top-0 right-0 bottom-2 w-8 pointer-events-none z-10 bg-gradient-to-l from-[#0B0E14] [.light-theme_&]:from-white to-transparent transition-opacity duration-300"
               />
             )}
+          </div>
+
+          {/* Contextual Sarva Darshan Tokens Callout */}
+          <div className={`p-3.5 sm:p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs sm:text-sm ${isLight ? 'bg-white border-slate-200 text-slate-700 shadow-sm' : 'bg-[#0B0E14] border-[#D4AF37]/30 text-[#CBD5E1]'}`}>
+            <div className="flex items-center gap-2.5">
+              <Ticket className="w-4 h-4 text-[#FFD700] shrink-0" />
+              <span>
+                {lang === 'en'
+                  ? 'Planning for Sarva Darshan during general darshan hours?'
+                  : 'సర్వదర్శనం సమయంలో శ్రీవారి దర్శనం కోసం ప్రణాళిక వేస్తున్నారా?'}
+              </span>
+            </div>
+            <a
+              href="/tokens"
+              onClick={(e) => {
+                if (isModifiedClick(e)) return;
+                e.preventDefault();
+                if (onNavigate) {
+                  onNavigate('/tokens');
+                } else {
+                  window.history.pushState({ tab: 'tokens' }, '', '/tokens');
+                  window.dispatchEvent(new PopStateEvent('popstate'));
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+              className="font-bold text-[#FF5722] dark:text-[#FFD700] hover:underline inline-flex items-center gap-1 shrink-0 cursor-pointer"
+            >
+              <span>{lang === 'en' ? 'Check SSD & DD Free Darshan Token Information →' : 'ఉచిత SSD & DD టోకెన్ల సమాచారం చూడండి →'}</span>
+            </a>
           </div>
 
           {/* Active Day Timetable Card */}
@@ -980,7 +1024,7 @@ const isBrahmotsavamPeriod = Boolean(activeBrahmotsavam);
                 <div>
                   <span className="badge-gold text-[10px] uppercase font-extrabold">{pSeva.category}</span>
                   <h4 className={`font-serif text-sm sm:text-base font-bold mt-1.5 leading-snug ${isLight ? 'text-slate-900' : 'text-white'}`}>
-                    {pSeva.name}
+                    {renderSevaWithGlossaryLinks(pSeva.name, onNavigateToGlossary)}
                   </h4>
                 </div>
 

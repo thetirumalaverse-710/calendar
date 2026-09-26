@@ -118,7 +118,7 @@ export default function Header({
                 if (onNavigateHome) {
                   onNavigateHome();
                 } else {
-                  setActiveTab('calendar-page');
+                  setActiveTab('home');
                 }
               }}
               className="cursor-pointer min-w-0 flex-1 block"

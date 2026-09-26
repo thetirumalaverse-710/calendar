@@ -24,6 +24,14 @@ const TEMPLE_CONTEXTUAL_LINKS = {
       type: 'route',
     },
   ],
+  'tiruchanur': [
+    {
+      label: 'Brahmotsavam Guide',
+      labelTe: 'బ్రహ్మోత్సవాల గైడ్',
+      href: '/festivals/brahmotsavam',
+      type: 'route',
+    },
+  ],
   'govindaraja': [
     {
       label: 'Govindaraja Utsavam Lore',
@@ -31,6 +39,23 @@ const TEMPLE_CONTEXTUAL_LINKS = {
       href: '/glossary',
       type: 'glossary',
       termId: 'andal-neerattam-utsavam',
+    },
+  ],
+  'srinivasa-mangapuram': [
+    {
+      label: 'Brahmotsavam Guide',
+      labelTe: 'బ్రహ్మోత్సవాల గైడ్',
+      href: '/festivals/brahmotsavam',
+      type: 'route',
+    },
+  ],
+  'narayanavanam': [
+    {
+      label: 'Kalyanotsavam Lore',
+      labelTe: 'కల్యాణోత్సవ విశేషాలు',
+      href: '/glossary',
+      type: 'glossary',
+      termId: 'kalyanotsavam',
     },
   ],
   'kodandarama': [
