@@ -10,6 +10,32 @@ import { TEMPLES } from '../data/templeEvents.js';
 
 export const ROUTE_SCRIPT_ID = 'route-structured-data';
 
+let dynamicTokenFaqs = null;
+
+/**
+ * Updates the in-memory dynamic Token FAQ dataset used for FAQPage schema generation.
+ * @param {Array} faqs
+ */
+export function setDynamicTokenFaqs(faqs) {
+  if (Array.isArray(faqs) && faqs.length > 0) {
+    dynamicTokenFaqs = faqs;
+  }
+}
+
+/**
+ * Updates dynamic FAQ dataset and synchronizes the single route structured-data script if on /tokens.
+ * @param {Array} faqs
+ */
+export function updateTokenFaqStructuredData(faqs) {
+  setDynamicTokenFaqs(faqs);
+  if (typeof window !== 'undefined') {
+    const cleanPath = window.location.pathname.split('?')[0].split('#')[0].replace(/\/+$/, '') || '/';
+    if (cleanPath.toLowerCase() === '/tokens') {
+      updateRouteStructuredData('/tokens');
+    }
+  }
+}
+
 const BREADCRUMB_CONFIG = {
   '/': [
     { name: 'Home', item: `${SITE_ORIGIN}/` }
@@ -143,11 +169,19 @@ export function buildRouteStructuredData(pathname) {
   }
 
   // 3. FAQPage Schema (Strictly for /tokens only, matching visible FAQ content)
-  if (normalizedPath === '/tokens' && Array.isArray(TOKEN_FAQS) && TOKEN_FAQS.length > 0) {
+  const effectiveFaqs = (Array.isArray(dynamicTokenFaqs) && dynamicTokenFaqs.length > 0)
+    ? dynamicTokenFaqs
+    : TOKEN_FAQS;
+
+  const activeFaqsForSchema = effectiveFaqs.filter(
+    (faq) => faq.isActive !== false && faq.is_active !== false
+  );
+
+  if (normalizedPath === '/tokens' && activeFaqsForSchema.length > 0) {
     graph.push({
       '@type': 'FAQPage',
       '@id': `${canonicalUrl}#faq`,
-      mainEntity: TOKEN_FAQS.map((faq) => ({
+      mainEntity: activeFaqsForSchema.map((faq) => ({
         '@type': 'Question',
         name: faq.question,
         acceptedAnswer: {

@@ -8,10 +8,8 @@ import { STORAGE_KEYS } from "./config/storageKeys";
 import { APP_CONFIG } from "./config/appConfig";
 import React, { useState, useEffect, useMemo, useRef, lazy, Suspense } from 'react';
 import Header from './components/Header';
-import HeroBanner from './components/HeroBanner';
 import { loadStoredFeedback, saveStoredFeedback } from './utils/feedbackStorage';
 import AdminTopRibbon from './components/layout/AdminTopRibbon';
-import TodayHappeningTicker from './components/layout/TodayHappeningTicker';
 import TtdLiveStreamModal from './components/layout/TtdLiveStreamModal';
 import LogoLightboxModal from './components/layout/LogoLightboxModal';
 import NotificationPreferencesModal from './components/layout/NotificationPreferencesModal';
@@ -37,7 +35,7 @@ const loadInitialEvents = () =>
 import { getFestivalTopic } from './data/festivalTopics';
 
 const ROUTE_MAP = {
-  '/': 'home',
+  '/': 'calendar-page',
   '/calendar': 'calendar-page',
   '/calendar-page': 'calendar-page',
   '/glossary': 'glossary',
@@ -46,7 +44,7 @@ const ROUTE_MAP = {
   '/feedback': 'feedback',
   '/temples': 'temples',
   '/references': 'references',
-  '/overview': 'home',
+  '/overview': 'calendar-page',
 };
 
 const TAB_TO_PATH = {
@@ -87,7 +85,7 @@ function isValidRoute(pathname) {
 }
 
 function getTabFromPathname(pathname) {
-  if (!pathname) return 'home';
+  if (!pathname) return 'calendar-page';
   const cleanPath = pathname.split('?')[0].split('#')[0].replace(/\/+$/, '') || '/';
   const lowerPath = cleanPath.toLowerCase();
   if (lowerPath.startsWith('/festivals/')) {
@@ -97,7 +95,7 @@ function getTabFromPathname(pathname) {
     }
     return 'calendar-page';
   }
-  return ROUTE_MAP[lowerPath] || 'home';
+  return ROUTE_MAP[lowerPath] || 'calendar-page';
 }
 
 function getPathnameFromTab(tab) {
@@ -125,10 +123,10 @@ export default function App() {
   };
 
   const handleNavigateHome = () => {
-    setActiveTabState('home');
+    setActiveTabState('calendar-page');
     setFestivalSlug(null);
     if (window.location.pathname !== '/') {
-      window.history.pushState({ tab: 'home' }, '', '/');
+      window.history.pushState({ tab: 'calendar-page' }, '', '/');
     }
     setCurrentPath('/');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -192,7 +190,7 @@ export default function App() {
 
     const cleanPath = window.location.pathname.replace(/\/+$/, '') || '/';
     if (!isValidRoute(cleanPath)) {
-      window.history.replaceState({ tab: 'home' }, '', '/' + window.location.search + window.location.hash);
+      window.history.replaceState({ tab: 'calendar-page' }, '', '/' + window.location.search + window.location.hash);
       setCurrentPath('/');
     }
 
@@ -669,22 +667,6 @@ useEffect(() => {
         onOpenLiveStream={() => setIsLiveStreamModalOpen(true)}
       />
 
-      {/* ROLLING TICKER BANNER FOR TODAY'S HAPPENING EVENT */}
-      <TodayHappeningTicker
-        todayEvent={todayEvent}
-        lang={lang}
-        onSelectEvent={setSelectedEventModal}
-      />
-
-      {/* Hero Banner (Shown on Home/Overview tab) */}
-      {(activeTab === 'home' || activeTab === 'overview') && (
-        <HeroBanner
-          lang={lang}
-          events={eventsList}
-          onSelectTemple={handleSelectTempleFromHeroOrList}
-        />
-      )}
-
       {/* Main Content Area */}
       <main className="flex-grow container py-4">
         <Suspense
@@ -696,27 +678,6 @@ useEffect(() => {
             </div>
           }
         >
-          {/* HOMEPAGE PORTAL HUB SECTION */}
-          {(activeTab === 'home' || activeTab === 'overview') && (
-            <div className="space-y-8 pb-8">
-              {/* Homepage Dedicated H1 & Intro Banner */}
-              <div className="text-center max-w-3xl mx-auto space-y-3 pt-2">
-                <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight">
-                  {lang === 'en' ? (
-                    <>The Tirumala Verse: <span className="gold-gradient-text">Independent Guide to Tirumala & Tirupati Temples</span></>
-                  ) : (
-                    <>ది తిరుమల వర్స్: <span className="gold-gradient-text">తిరుమల & తిరుపతి క్షేత్రాల స్వతంత్ర దర్శిని</span></>
-                  )}
-                </h1>
-                <p className="text-sm sm:text-base text-[#94A3B8] leading-relaxed">
-                  {lang === 'en'
-                    ? 'Explore authentic festival schedules, daily seva timetables, free SSD & DD token guidance, sacred temple histories, and ritual glossaries curated for devotees.'
-                    : 'భక్తుల సౌకర్యార్థం అధికారిక ఉత్సవ పట్టికలు, నిత్య సేవా సమయాలు, ఉచిత దర్శన టోకెన్ల సమాచారం, క్షేత్ర విశేషాలు మరియు సమగ్ర వైదిక నిఘంటువు.'}
-                </p>
-              </div>
-            </div>
-          )}
-
           {/* DEDICATED FULL-PAGE CALENDAR SECTION */}
           {activeTab === 'calendar-page' && (
             <div className="space-y-4">

@@ -3,13 +3,18 @@ import { HelpCircle, ChevronDown } from "lucide-react";
 import { TOKEN_FAQS } from "../../data/tokenFaqData";
 
 export default function SSDTokenFAQ({
+  faqs = TOKEN_FAQS,
   isLight,
   cardClass,
   headingClass,
   mutedClass,
   lang = "en",
 }) {
-  const [openId, setOpenId] = useState(TOKEN_FAQS[0]?.id || null);
+  const allFaqs = Array.isArray(faqs) && faqs.length > 0 ? faqs : TOKEN_FAQS;
+  const activeFaqs = allFaqs.filter(
+    (faq) => faq.isActive !== false && faq.is_active !== false
+  );
+  const [openId, setOpenId] = useState(activeFaqs[0]?.id || null);
 
   const toggleFaq = (id) => {
     setOpenId((prev) => (prev === id ? null : id));
@@ -48,10 +53,16 @@ export default function SSDTokenFAQ({
       </div>
 
       <div className="space-y-3">
-        {TOKEN_FAQS.map((faq) => {
+        {activeFaqs.map((faq) => {
           const isOpen = openId === faq.id;
-          const questionText = lang === "te" ? faq.questionTe : faq.question;
-          const answerText = lang === "te" ? faq.answerTe : faq.answer;
+          const questionText =
+            lang === "te"
+              ? faq.question_te || faq.questionTe || faq.question
+              : faq.question;
+          const answerText =
+            lang === "te"
+              ? faq.answer_te || faq.answerTe || faq.answer
+              : faq.answer;
 
           return (
             <div

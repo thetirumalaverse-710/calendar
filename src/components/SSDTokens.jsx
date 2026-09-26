@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Ticket, CalendarDays, Clock } from "lucide-react";
-import { isModifiedClick } from "../utils/navigation";
+import { Ticket, CalendarDays } from "lucide-react";
 import SSDTokenActivity from "./tokens/SSDTokenActivity";
 import SSDTokenHistory from "./tokens/SSDTokenHistory";
 import SSDTokenHowItWorks from "./tokens/SSDTokenHowItWorks";
@@ -18,9 +17,39 @@ import {
   buildTokenActivityEvents,
   getLatestObservation,
 } from "../utils/tokenUtils";
+import { TOKEN_FAQS } from "../data/tokenFaqData";
+import { pullTokenFaqsFromCloud } from "../utils/tokenFaqCloud";
+import { updateTokenFaqStructuredData } from "../utils/structuredData";
 
 export default function SSDDTokens({ lang = "en", themeMode = "dark" }) {
   const isLight = themeMode === "light";
+
+  const [tokenFaqs, setTokenFaqs] = useState(TOKEN_FAQS);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    pullTokenFaqsFromCloud().then((result) => {
+      if (!cancelled && result.success && Array.isArray(result.faqs) && result.faqs.length > 0) {
+        setTokenFaqs(result.faqs);
+        updateTokenFaqStructuredData(result.faqs);
+      }
+    });
+
+    const handleFaqsUpdated = (e) => {
+      if (e.detail && Array.isArray(e.detail) && e.detail.length > 0) {
+        setTokenFaqs(e.detail);
+        updateTokenFaqStructuredData(e.detail);
+      }
+    };
+
+    window.addEventListener("token-faqs-updated", handleFaqsUpdated);
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener("token-faqs-updated", handleFaqsUpdated);
+    };
+  }, []);
 
   const [tokenData, setTokenData] = useState({
     tokenDay: null,
@@ -270,22 +299,6 @@ const isNoIssuance =
               <span className="px-2.5 py-1 rounded-full bg-[#FF5722]/10 border border-[#FF5722]/30 text-[#FF5722] text-[10px] font-bold">
                 TTD
               </span>
-
-              <a
-                href="/sevas"
-                onClick={(e) => {
-                  if (isModifiedClick(e)) return;
-                  e.preventDefault();
-                  window.history.pushState({}, '', '/sevas');
-                  window.dispatchEvent(new PopStateEvent('popstate'));
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D4AF37]/15 hover:bg-[#D4AF37]/25 text-amber-900 dark:text-[#FFD700] hover:text-amber-950 dark:hover:text-white border border-amber-600/30 dark:border-[#D4AF37]/40 hover:border-amber-600 dark:hover:border-[#FFD700] text-xs font-bold transition-all shadow-sm cursor-pointer ml-auto sm:ml-0"
-              >
-                <Clock className="w-3.5 h-3.5 text-[#D4AF37]" />
-                <span>{lang === "te" ? "శ్రీవారి నిత్య సేవల పట్టిక" : "Srivari Daily Sevas Schedule"}</span>
-                <span>→</span>
-              </a>
             </div>
           </div>
         </section>
@@ -405,6 +418,7 @@ const isNoIssuance =
         />
 
         <SSDTokenFAQ
+          faqs={tokenFaqs}
           isLight={isLight}
           cardClass={cardClass}
           headingClass={headingClass}

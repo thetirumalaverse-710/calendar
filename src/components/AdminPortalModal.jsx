@@ -5,8 +5,9 @@ import AdminYoutubeSettings from "./admin/AdminYoutubeSettings";
 import AdminCloudSync from "./admin/AdminCloudSync";
 import AdminEventEditor from "./admin/AdminEventEditor";
 import AdminNotificationManager from "./admin/AdminNotificationManager";
+import AdminTokenFAQManager from "./admin/AdminTokenFAQManager";
 import React, { useState, useEffect } from 'react';
-import { X, Plus, ShieldCheck, Ticket, Lock, LogOut, MessageSquare, FileSpreadsheet, Search, Eye, CheckCircle, Cloud, RefreshCw, Database, Server, Video, Bell } from 'lucide-react';
+import { X, Plus, ShieldCheck, Ticket, Lock, LogOut, MessageSquare, FileSpreadsheet, Search, Eye, CheckCircle, Cloud, RefreshCw, Database, Server, Video, Bell, HelpCircle } from 'lucide-react';
 import {getCloudConfig, saveCloudConfig, pushEventsToCloud, getLastSyncTime, uploadFileToSupabaseStorage } from '../utils/cloudSync';
 import { compressImageFile } from '../utils/eventStatus';
 
@@ -287,6 +288,21 @@ const handleLogin = async (e) => {
 
             <button
               type="button"
+              onClick={() => setActiveAdminTab('token-faqs')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all ${
+                activeAdminTab === 'token-faqs'
+                  ? 'bg-gradient-to-r from-[#FF5722] to-[#FFD700] text-black shadow'
+                  : 'bg-[#141923] text-[#FFD700] border border-[#D4AF37]/40 hover:bg-[#D4AF37]/20'
+              }`}
+            >
+              <HelpCircle className="w-4 h-4" />
+              <span>
+                {lang === 'en' ? 'Token FAQs' : 'టోకెన్ FAQs'}
+              </span>
+            </button>
+
+            <button
+              type="button"
               onClick={() => setActiveAdminTab('youtube-live')}
               className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-all ${
                 activeAdminTab === 'youtube-live'
@@ -445,6 +461,14 @@ const handleLogin = async (e) => {
 {/* SSD / DD TOKEN MANAGEMENT TAB */}
 {isAdminLoggedIn && activeAdminTab === "token-management" && (
   <AdminTokenManager
+    lang={lang}
+    themeMode={themeMode}
+  />
+)}
+
+{/* TOKEN FAQ MANAGEMENT TAB */}
+{isAdminLoggedIn && activeAdminTab === "token-faqs" && (
+  <AdminTokenFAQManager
     lang={lang}
     themeMode={themeMode}
   />
