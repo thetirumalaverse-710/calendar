@@ -6,6 +6,7 @@
 import { getRouteMetadata, SITE_ORIGIN } from './seoMetadata.js';
 import { getFestivalTopic } from '../data/festivalTopics.js';
 import { TOKEN_FAQS } from '../data/tokenFaqData.js';
+import { TEMPLES } from '../data/templeEvents.js';
 
 export const ROUTE_SCRIPT_ID = 'route-structured-data';
 
@@ -154,6 +155,33 @@ export function buildRouteStructuredData(pathname) {
           text: faq.answer,
         },
       })),
+    });
+  }
+
+  // 4. ItemList Schema (Strictly for /temples only, representing the 7 sacred shrines)
+  if (normalizedPath === '/temples' && Array.isArray(TEMPLES)) {
+    graph.push({
+      '@type': 'ItemList',
+      '@id': `${canonicalUrl}#itemlist`,
+      name: 'The 7 Sacred Shrines of Tirumala & Tirupati',
+      numberOfItems: 7,
+      itemListOrder: 'https://schema.org/ItemListOrderAscending',
+      itemListElement: TEMPLES.slice(0, 7).map((temple, idx) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        item: {
+          '@type': 'HinduTemple',
+          name: temple.name,
+          ...(temple.teluguName
+            ? { alternateName: temple.teluguName }
+            : {}),
+          description: temple.description,
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: temple.location
+          }
+        }
+      }))
     });
   }
 
