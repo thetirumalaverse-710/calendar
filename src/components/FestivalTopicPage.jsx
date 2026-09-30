@@ -16,6 +16,7 @@ import { TEMPLES } from '../data/templeEvents';
 import { getTempleFilterLabel } from '../utils/templeHelpers';
 import useTheme from '../hooks/useTheme';
 import { isModifiedClick } from '../utils/navigation';
+import GarudaVahanamPage from './GarudaVahanamPage';
 
 function formatDateDisplay(dateStr, lang) {
   if (!dateStr) return '';
@@ -72,6 +73,19 @@ export default function FestivalTopicPage({
           Go to Calendar
         </button>
       </div>
+    );
+  }
+
+  // Dedicated premium page for Garuda Vahanam — all other slugs use the shared layout below
+  if (slug === 'garuda-vahanam') {
+    return (
+      <GarudaVahanamPage
+        events={events}
+        lang={lang}
+        themeMode={themeMode}
+        onNavigateToCalendarSearch={onNavigateToCalendarSearch}
+        onSelectEvent={onSelectEvent}
+      />
     );
   }
 
