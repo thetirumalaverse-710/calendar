@@ -42,11 +42,71 @@ export const getInitialMonthIndex = () => {
   return index !== -1 ? index : 6;
 };
 
+const BRAHMOTSAVAM_VAHANAS = {
+  1: { en: "Pedda Sesha Vahanam", te: "పెద్ద శేష వాహనం" },
+  2: { en: "Chinna Sesha & Hamsa Vahanam", te: "చిన్న శేష & హంస వాహనం" },
+  3: { en: "Simha & Muthyapu Pandiri Vahanam", te: "సింహ & ముత్యపు పందిరి వాహనం" },
+  4: { en: "Kalpa Vriksha & Sarva Bhoopala Vahanam", te: "కల్ప వృక్ష & సర్వ భూపాల వాహనం" },
+  5: { en: "Mohini Avataram & Garuda Vahanam", te: "మోహినీ అవతారం & గరుడ వాహనం" },
+  6: { en: "Hanumantha & Gaja Vahanam", te: "హనుమంత & గజ వాహనం" },
+  7: { en: "Surya Prabha & Chandra Prabha Vahanam", te: "సూర్య ప్రభ & చంద్ర ప్రభ వాహనం" },
+  8: { en: "Rathotsavam & Aswa Vahanam", te: "రథోత్సవం & అశ్వ వాహనం" },
+  9: { en: "Chakra Snanam", te: "చక్ర స్నానం" }
+};
+
 export const getEventsForDate = (events, dateStr) => {
   if (!dateStr || !Array.isArray(events)) return [];
-  return events.filter(evt => {
+  
+  const filtered = events.filter(evt => {
     if (!evt?.startDate) return false;
     const end = evt.endDate || evt.startDate;
     return evt.startDate <= dateStr && dateStr <= end;
   });
+
+  const uniqueMap = new Map();
+  
+  filtered.forEach(evt => {
+    const key = `${evt.title}_${evt.startDate}`;
+    
+    if (!uniqueMap.has(key)) {
+      const clonedEvt = { ...evt };
+      const end = evt.endDate || evt.startDate;
+      
+      if (evt.startDate !== end) {
+        const parseDateStr = (ds) => {
+            const [y, m, d] = ds.split('-');
+            return Date.UTC(y, m - 1, d);
+        };
+        const startUTC = parseDateStr(evt.startDate);
+        const currentUTC = parseDateStr(dateStr);
+        const dayDiff = Math.floor((currentUTC - startUTC) / (1000 * 60 * 60 * 24)) + 1;
+        
+        if (dayDiff > 0) {
+            let vahanamEn = "";
+            let vahanamTe = "";
+            
+            if (evt.title.toLowerCase().includes('brahmotsavam')) {
+                // Remove the default summary vahanam string so it doesn't repeat every day
+                clonedEvt.vahanam = undefined;
+
+                if (BRAHMOTSAVAM_VAHANAS[dayDiff]) {
+                    vahanamEn = ` - ${BRAHMOTSAVAM_VAHANAS[dayDiff].en}`;
+                    vahanamTe = ` - ${BRAHMOTSAVAM_VAHANAS[dayDiff].te}`;
+                }
+            }
+
+            clonedEvt.title = `${evt.title} (Day ${dayDiff})${vahanamEn}`;
+            if (evt.titleTe) {
+                clonedEvt.titleTe = `${evt.titleTe} (${dayDiff}వ రోజు)${vahanamTe}`;
+            } else {
+                clonedEvt.titleTe = `${evt.title} (Day ${dayDiff})${vahanamTe}`;
+            }
+        }
+      }
+      
+      uniqueMap.set(key, clonedEvt);
+    }
+  });
+  
+  return Array.from(uniqueMap.values());
 };

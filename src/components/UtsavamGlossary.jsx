@@ -139,45 +139,53 @@ export default function UtsavamGlossary({
   return (
     <div className="space-y-6 pb-12 animate-fade-in">
       
-      {/* HEADER HERO BANNER (Top source banner removed as requested) */}
-      <div className="dark-hero-card p-6 sm:p-8 rounded-3xl border-2 border-[#D4AF37]/50 bg-gradient-to-r from-[#141923] via-[#0B0E14] to-[#1F1707] text-white shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#FFD700]/5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
+      {/* HEADER HERO BANNER - Premium Redesign */}
+      <div className="dark-hero-card relative rounded-3xl overflow-hidden border border-[#D4AF37]/30 shadow-xl dark:shadow-2xl">
+        {/* Vibrant Gradient Overlay to override flat black !important class */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#2a1b05] via-[#0B0E14] to-[#141923] opacity-80 pointer-events-none"></div>
         
-        <div className="relative z-10 space-y-3 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FFD700]/10 border border-[#FFD700]/40 text-[#FFD700] text-xs font-bold uppercase tracking-widest">
-            <BookOpen className="w-3.5 h-3.5" />
-            <span>{lang === 'en' ? 'Utsava Shabda Kosh' : 'ఉత్సవ శబ్ద కోశం'}</span>
+        {/* Glowing Orbs for ambiance */}
+        <div className="absolute top-0 right-0 w-80 h-80 bg-[#FFD700]/15 rounded-full blur-[80px] -mr-20 -mt-20 pointer-events-none"></div>
+        <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-[#FF5722]/15 rounded-full blur-[100px] pointer-events-none"></div>
+        
+        <div className="relative z-10 p-6 sm:p-10 space-y-6">
+          <div className="flex flex-col items-start gap-4 max-w-4xl">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100 dark:bg-[#D4AF37]/10 border border-amber-300 dark:border-[#D4AF37]/30 text-amber-800 dark:text-[#FFD700] text-xs font-bold uppercase tracking-widest backdrop-blur-sm">
+              <BookOpen className="w-4 h-4" />
+              <span>{lang === 'en' ? 'Utsava Shabda Kosh' : 'ఉత్సవ శబ్ద కోశం'}</span>
+            </div>
+
+            <h1 className="font-serif text-3xl sm:text-5xl font-extrabold gold-gradient-text leading-tight">
+              {lang === 'en' ? 'Festival & Utsavam Glossary' : 'ఉత్సవాలు, వాహనాలు & భక్తుల దివ్య నిఘంటువు'}
+            </h1>
+
+            <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-medium max-w-3xl">
+              {lang === 'en'
+                ? 'Explore Vedic origins, Puranic history, Alwar pasurams, royal traditions, and sacred meanings of terms, rituals, Vahanas, Naivedyams, and Great Devotees associated with Tirumala Utsavams.'
+                : 'తిరుమల శ్రీవారి బ్రహ్మోత్సవాలు, దివ్య వాహనాలు, పంచబేరాలు, నైవేద్యాలు మరియు మహనీయ భక్తుల వెనుకున్న పవిత్రమైన అంతరార్థాలు, పురాణ ప్రాశస్త్యాలను ఇక్కడ వివరంగా తెలుసుకోండి.'}
+            </p>
           </div>
 
-          <h1 className="font-serif text-2xl sm:text-4xl font-extrabold gold-gradient-text leading-tight">
-            {lang === 'en' ? 'Festival & Utsavam Glossary' : 'ఉత్సవాలు, వాహనాలు & భక్తుల దివ్య నిఘంటువు'}
-          </h1>
-
-          <p className="text-xs sm:text-base text-slate-300 dark:text-[#94A3B8] leading-relaxed">
-            {lang === 'en'
-              ? 'Explore Vedic origins, Puranic history, Alwar pasurams, royal traditions, and sacred meanings of terms, rituals, Vahanas, Naivedyams, and Great Devotees associated with Tirumala Utsavams.'
-              : 'తిరుమల శ్రీవారి బ్రహ్మోత్సవాలు, దివ్య వాహనాలు, పంచబేరాలు, నైవేద్యాలు మరియు మహనీయ భక్తుల వెనుకున్న పవిత్రమైన అంతరార్థాలు, పురాణ ప్రాశస్త్యాలను ఇక్కడ వివరంగా తెలుసుకోండి.'}
-          </p>
-
-          {/* SEARCH BAR */}
-          <div className="pt-2 relative">
-            <div className="relative flex items-center">
-              <Search className="w-5 h-5 absolute left-4 text-[#FFD700]" />
+          {/* SEARCH BAR - Floating & Elegant */}
+          <div className="pt-2 relative max-w-2xl">
+            <div className="relative flex items-center group">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/20 to-transparent rounded-2xl blur-md opacity-0 group-focus-within:opacity-100 transition-opacity duration-500"></div>
+              <Search className="w-5 h-5 absolute left-5 text-[#FFD700] z-10" />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder={
                   lang === 'en'
-                    ? 'Search (e.g. Brahmotsavam, Garuda, Ramanuja, Ankurarpanam, Naivedyam)...'
-                    : 'శోధించండి (ఉదా: బ్రహ్మోత్సవం, గరుడ, రామానుజ, అంకురార్పణ, నైవేద్యం)...'
+                    ? 'Search (e.g. Brahmotsavam, Garuda, Ramanuja, Naivedyam)...'
+                    : 'శోధించండి (ఉదా: బ్రహ్మోత్సవం, గరుడ, రామానుజ, నైవేద్యం)...'
                 }
-                className="w-full pl-12 pr-10 py-3.5 rounded-2xl bg-[#0B0E14]/90 border-2 border-[#D4AF37]/50 text-white placeholder-[#94A3B8] focus:border-[#FFD700] focus:outline-none text-sm sm:text-base shadow-inner transition-all"
+                className="w-full pl-14 pr-12 py-4 rounded-2xl bg-black/40 backdrop-blur-md border border-[#D4AF37]/50 text-white placeholder-slate-400 focus:border-[#FFD700] focus:bg-black/60 focus:outline-none text-sm sm:text-base shadow-inner transition-all relative z-10"
               />
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm('')}
-                  className="absolute right-3.5 w-7 h-7 flex items-center justify-center rounded-full bg-[#141923] hover:bg-black/50 text-[#94A3B8] hover:text-white border border-[#D4AF37]/30 text-xs transition-colors"
+                  className="absolute right-4 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-black/40 hover:bg-slate-200 dark:hover:bg-black/60 text-slate-500 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white border border-slate-200 dark:border-[#D4AF37]/30 text-xs transition-colors"
                 >
                   ✕
                 </button>
@@ -188,38 +196,39 @@ export default function UtsavamGlossary({
       </div>
 
 
-      {/* CATEGORY FILTER CHIPS */}
-      <div className="relative max-w-full">
-        <div
-          ref={categoryNavRef}
-          onScroll={checkCategoryNavScroll}
-          className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1"
-        >
-          {GLOSSARY_CATEGORIES.map(cat => {
-            const isActive = selectedCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold flex items-center gap-2 shrink-0 transition-all shadow-md ${
-                  isActive
-                    ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-black border border-[#FFD700] ring-2 ring-[#FFD700]/40'
-                    : 'bg-[#141923] text-[#94A3B8] hover:text-[#FFD700] border border-[#D4AF37]/30 hover:border-[#D4AF37]/60'
-                }`}
-              >
-                <span>{cat.icon}</span>
-                <span>{lang === 'en' ? cat.labelEn : cat.labelTe}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Subtle Mobile Right-Edge Fade Scroll Indicator */}
-        {showRightFade && (
+      {/* CATEGORY FILTER CHIPS - Sticky Header */}
+      <div className="sticky top-[64px] sm:top-[72px] z-40 -mx-4 px-4 py-3 sm:mx-0 sm:px-0 sm:py-2 bg-gradient-to-b from-[#f8fafc]/95 to-[#f8fafc]/80 dark:from-[#0B0E14]/95 dark:to-[#0B0E14]/80 backdrop-blur-xl border-y border-amber-200/50 dark:border-[#D4AF37]/20 shadow-sm transition-all">
+        <div className="relative max-w-full">
           <div
-            className="sm:hidden absolute top-0 right-0 bottom-1 w-8 pointer-events-none z-10 bg-gradient-to-l from-[#0B0E14] [.light-theme_&]:from-white to-transparent transition-opacity duration-300"
-          />
-        )}
+            ref={categoryNavRef}
+            onScroll={checkCategoryNavScroll}
+            className="flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-1"
+          >
+            {GLOSSARY_CATEGORIES.map(cat => {
+              const isActive = selectedCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`px-4 py-2 rounded-full text-xs sm:text-sm font-bold flex items-center gap-2 shrink-0 transition-all duration-300 ${
+                    isActive
+                      ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-black shadow-lg shadow-[#D4AF37]/20 scale-105'
+                      : 'bg-white dark:bg-[#141923] text-slate-600 dark:text-[#94A3B8] hover:text-amber-800 dark:hover:text-[#FFD700] border border-slate-200 dark:border-[#D4AF37]/30 hover:border-amber-400 dark:hover:border-[#D4AF37]/60 hover:shadow-md'
+                  }`}
+                >
+                  <span>{cat.icon}</span>
+                  <span>{lang === 'en' ? cat.labelEn : cat.labelTe}</span>
+                </button>
+              );
+            })}
+          </div>
+          {/* Subtle Mobile Right-Edge Fade Scroll Indicator */}
+          {showRightFade && (
+            <div
+              className="sm:hidden absolute top-0 right-0 bottom-1 w-8 pointer-events-none z-10 bg-gradient-to-l from-white dark:from-[#0B0E14] to-transparent transition-opacity duration-300"
+            />
+          )}
+        </div>
       </div>
 
       {/* RESULTS COUNT SUMMARY & SORTING INDICATOR */}
@@ -230,7 +239,7 @@ export default function UtsavamGlossary({
             : `మొత్తం ${filteredTerms.length} పదాలు కనిపించాయి (అకారాది క్రమం అ-ఱ)`}
         </span>
         {searchTerm && (
-          <span className="text-[#FFD700] italic">
+          <span className="text-amber-700 dark:text-[#FFD700] italic">
             {lang === 'en' ? `Filtered by "${searchTerm}"` : `"${searchTerm}" శోధన ఫలితాలు`}
           </span>
         )}
@@ -259,78 +268,68 @@ export default function UtsavamGlossary({
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="columns-1 md:columns-2 gap-5 sm:gap-6 space-y-5 sm:space-y-6 pb-4">
           {filteredTerms.map((item) => {
             const isExpanded = expandedTermId === item.id;
             const validImages = Array.isArray(item.images)
-  ? item.images.filter(img => {
-      if (typeof img === 'string') {
-        return img.trim() !== '';
-      }
+              ? item.images.filter(img => {
+                  if (typeof img === 'string') return img.trim() !== '';
+                  return img && typeof img.url === 'string' && img.url.trim() !== '';
+                })
+              : [];
 
-      return (
-        img &&
-        typeof img.url === 'string' &&
-        img.url.trim() !== ''
-      );
-    })
-  : [];
-
-const hasAdminImages = validImages.length > 0;
+            const hasAdminImages = validImages.length > 0;
 
             return (
               <div
                 key={item.id}
                 ref={el => termRefs.current[item.id] = el}
                 onClick={() => toggleExpand(item.id)}
-                className={`glass-card glossary-card-hover glossary-term-card rounded-2xl p-5 border transition-all duration-300 flex flex-col justify-between group cursor-pointer ${
+                className={`glass-card glossary-card-hover glossary-term-card break-inside-avoid relative overflow-hidden rounded-3xl p-5 sm:p-6 transition-all duration-500 flex flex-col justify-between group cursor-pointer border ${
                   isExpanded
-                    ? 'border-[#FFD700] dark:border-[#FFD700] bg-white dark:bg-[#141923]/95 shadow-2xl ring-2 ring-amber-500/30 dark:ring-[#FFD700]/50'
-                    : 'border-amber-600/30 dark:border-[#D4AF37]/40 bg-white dark:bg-[#0B0E14]/90 shadow-md'
+                    ? 'border-[#D4AF37] bg-white dark:bg-[#141923]/95 shadow-[0_8px_30px_rgb(212,175,55,0.15)] ring-1 ring-[#FFD700]/30'
+                    : 'border-slate-200 dark:border-[#D4AF37]/20 bg-[#0B0E14]/60 hover:bg-[#141923]/90 hover:shadow-xl hover:shadow-[#D4AF37]/5 hover:border-[#D4AF37]/50'
                 }`}
               >
-                <div className="space-y-3">
-                  
+                {/* Subtle Hover Gradient Glow inside Card */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/0 via-transparent to-[#D4AF37]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+
+                <div className="relative z-10 space-y-4">
                   {/* Top Bar: Title & Category & Admin Edit Button */}
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-serif text-lg sm:text-xl font-bold text-slate-900 dark:text-white group-hover:text-amber-700 dark:group-hover:text-[#FFD700] transition-colors tracking-wide">
-                          {lang === 'en' ? item.term : item.termTe}
-                        </h3>
-                      </div>
-
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-xs text-amber-700 dark:text-[#FFD700] font-sans font-semibold">
-                          {item.termTe}
-                        </span>
-                      </div>
+                      <h3 className="font-serif text-xl sm:text-2xl font-bold text-white group-hover:text-[#FFD700] transition-colors tracking-tight">
+                        {lang === 'en' ? item.term : item.termTe}
+                      </h3>
+                      <span className="block mt-1 text-xs sm:text-sm text-[#FFD700]/80 font-sans font-medium">
+                        {lang === 'en' ? item.termTe : item.term}
+                      </span>
                     </div>
 
-                    <div className="flex items-center gap-1.5 shrink-0" onClick={e => e.stopPropagation()}>
+                    <div className="flex flex-col items-end gap-2 shrink-0" onClick={e => e.stopPropagation()}>
+                      <span className="text-[10px] sm:text-xs px-2.5 py-1 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#FFD700] font-bold uppercase tracking-wider shadow-sm">
+                        {(item.category || "general").replace("_", " ")}
+                      </span>
+                      
                       {isAdminLoggedIn && onOpenAdminEditTerm && (
                         <button
                           onClick={() => onOpenAdminEditTerm(item)}
-                          className="px-2 py-1 rounded bg-[#FF5722]/20 hover:bg-[#FF5722]/40 border border-[#FF5722]/50 text-[#FF5722] text-[10px] font-extrabold flex items-center gap-1 transition-all"
+                          className="px-2 py-1 rounded-md bg-[#FF5722]/10 hover:bg-[#FF5722]/20 border border-[#FF5722]/30 text-[#FF5722] text-[10px] font-extrabold flex items-center gap-1 transition-all"
                           title="Edit term text & add custom images"
                         >
                           <Edit3 className="w-3 h-3" />
                           <span>Edit</span>
                         </button>
                       )}
-
-                      <span className="text-[10px] px-2 py-1 rounded-lg bg-amber-500/10 dark:bg-[#D4AF37]/20 border border-amber-600/30 dark:border-[#D4AF37]/40 text-amber-800 dark:text-[#FFD700] font-extrabold uppercase">
-                        {(item.category || "general").replace("_", " ")}
-                      </span>
                     </div>
                   </div>
 
-                  {/* Short Description (High Contrast text for Light/Dark mode) */}
-                  <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
+                  {/* Short Description */}
+                  <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-medium">
                     {lang === 'en' ? item.shortDesc : item.shortDescTe}
                   </p>
 
-                  {/* Dedicated Festival Guide Link (Phase 5A) */}
+                  {/* Festival Guide Link */}
                   {FESTIVAL_GUIDE_MAP[item.id] && (
                     <div className="pt-1" onClick={(e) => e.stopPropagation()}>
                       <a
@@ -347,24 +346,23 @@ const hasAdminImages = validImages.length > 0;
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                           }
                         }}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#D4AF37]/15 hover:bg-[#D4AF37]/30 text-amber-900 dark:text-[#FFD700] border border-[#D4AF37]/50 transition-all hover:scale-[1.02] shadow-sm cursor-pointer group/guide"
-                        title={`Read complete ${FESTIVAL_GUIDE_MAP[item.id].title} guide`}
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-amber-50 to-amber-100/50 dark:from-[#D4AF37]/10 dark:to-[#D4AF37]/5 text-amber-900 dark:text-[#FFD700] border border-amber-200 dark:border-[#D4AF37]/30 transition-all hover:-translate-y-0.5 shadow-sm hover:shadow-md cursor-pointer group/guide"
                       >
-                        <Compass className="w-3.5 h-3.5 text-[#FF5722] group-hover/guide:rotate-12 transition-transform" />
+                        <Compass className="w-4 h-4 text-[#FF5722] group-hover/guide:rotate-[20deg] transition-transform duration-300" />
                         <span>
                           {lang === 'en'
                             ? `${FESTIVAL_GUIDE_MAP[item.id].name} Guide`
                             : `${FESTIVAL_GUIDE_MAP[item.id].nameTe} సమగ్ర గైడ్`}
                         </span>
-                        <ArrowRight className="w-3 h-3 text-[#D4AF37] group-hover/guide:translate-x-0.5 transition-transform" />
+                        <ArrowRight className="w-3.5 h-3.5 opacity-70 group-hover/guide:translate-x-1 group-hover/guide:opacity-100 transition-all duration-300" />
                       </a>
                     </div>
                   )}
 
-                  {/* ADMIN CUSTOM IMAGE GALLERY (Displayed ONLY if Admin added images) */}
+                  {/* Admin Custom Image Gallery */}
                   {hasAdminImages && (
-                    <div className="pt-2" onClick={e => e.stopPropagation()}>
-                      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+                    <div className="pt-3" onClick={e => e.stopPropagation()}>
+                      <div className="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-1">
                         {validImages.map((img, imgIdx) => (
                           <div
                             key={imgIdx}
@@ -372,17 +370,16 @@ const hasAdminImages = validImages.length > 0;
                               setActiveGalleryTerm(item);
                               setGalleryImgIndex(imgIdx);
                             }}
-                            className="relative h-20 w-28 rounded-xl overflow-hidden border border-[#D4AF37]/50 cursor-pointer group/img shrink-0"
-                            title={(typeof img === 'string' ? '' : img.caption) || item.term}
+                            className="relative h-24 w-32 rounded-2xl overflow-hidden border border-slate-200 dark:border-[#D4AF37]/30 shadow-sm hover:shadow-lg cursor-pointer group/img shrink-0"
                           >
                             <img
                               src={typeof img === 'string' ? img : img.url}
                               alt={(typeof img === 'string' ? '' : img.caption) || item.term}
-                              className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-300"
+                              className="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-500"
                             />
-                            <div className="absolute inset-0 bg-black/30 group-hover/img:bg-transparent transition-colors"></div>
+                            <div className="absolute inset-0 bg-black/20 group-hover/img:bg-transparent transition-colors duration-500"></div>
                             {typeof img !== 'string' && img.caption && (
-                              <div className="absolute bottom-0 inset-x-0 bg-black/80 px-1 py-0.5 text-[9px] text-[#FFD700] truncate text-center">
+                              <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 to-transparent pt-4 pb-1.5 px-2 text-[10px] text-white truncate text-center font-medium">
                                 {img.caption}
                               </div>
                             )}
@@ -392,28 +389,29 @@ const hasAdminImages = validImages.length > 0;
                     </div>
                   )}
 
-                  {/* Detailed Meaning (Expandable Multi-Paragraph) */}
-                  {isExpanded && (
-                    <div className="pt-3 border-t border-amber-600/20 dark:border-[#D4AF37]/30 space-y-3 animate-fade-in">
-                      <div className="space-y-1">
-                        <span className="text-[11px] font-extrabold text-amber-800 dark:text-[#FFD700] uppercase tracking-wider flex items-center gap-1">
-                          <Info className="w-3.5 h-3.5" />
+                  {/* Detailed Meaning Expansion */}
+                  <div className={`grid transition-all duration-500 ease-in-out ${isExpanded ? 'grid-rows-[1fr] opacity-100 mt-4' : 'grid-rows-[0fr] opacity-0 mt-0'}`}>
+                    <div className="overflow-hidden">
+                      <div className="pt-4 border-t border-slate-100 dark:border-white/10 space-y-3">
+                        <span className="text-[11px] sm:text-xs font-bold text-[#FFD700] uppercase tracking-widest flex items-center gap-1.5">
+                          <Info className="w-4 h-4" />
                           {lang === 'en' ? 'Detailed History & Meaning' : 'వివరమైన నేపథ్యం & పురాణ అంతరార్థం'}
                         </span>
-                        <div className="detailed-meaning-box text-xs sm:text-sm text-slate-800 dark:text-slate-100 leading-relaxed bg-amber-50/80 dark:bg-[#141923] p-3.5 rounded-xl border border-amber-600/30 dark:border-[#D4AF37]/30 whitespace-pre-line space-y-2 font-medium">
+                        <div className="detailed-meaning-box text-sm sm:text-base text-slate-200 leading-loose bg-[#0B0E14]/50 p-4 sm:p-5 rounded-2xl border border-white/5 whitespace-pre-line font-medium shadow-inner">
                           {lang === 'en' ? item.detailedMeaning : item.detailedMeaningTe}
+                        </div>
+                        <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-semibold text-slate-400 mt-2 ml-1">
+                          📜 {lang === 'en' ? 'Source: TTD Sapthagiri Magazine (Sept 2020)' : 'ఆధారం: టిటిడి సప్తగిరి పత్రిక (సెప్టెంబరు 2020)'}
                         </div>
                       </div>
                     </div>
-                  )}
+                  </div>
 
-                  {/* Individual Term Source Attribution */}
-                  <div className="pt-2 border-t border-slate-200 dark:border-white/5 flex items-center justify-between text-[11px] font-semibold text-amber-800 dark:text-[#FFD700]">
-                    <span className="flex items-center gap-1">
-                      📜 {lang === 'en' ? 'Source: TTD Sapthagiri Magazine (Sept 2020)' : 'ఆధారం: టిటిడి సప్తగిరి పత్రిక (సెప్టెంబరు 2020)'}
-                    </span>
-                    <button className="text-amber-700 dark:text-[#FFD700] group-hover:translate-x-1 transition-transform flex items-center gap-1 font-bold">
-                      <span>{isExpanded ? (lang === 'en' ? 'Less ▲' : 'తక్కువ ▲') : (lang === 'en' ? 'Read More ▼' : 'మరిన్ని వివరాలు ▼')}</span>
+                  {/* Read More / Less Toggle Button */}
+                  <div className="pt-2 flex justify-end">
+                    <button className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 dark:bg-[#D4AF37]/10 dark:hover:bg-[#D4AF37]/20 text-amber-700 dark:text-[#FFD700] text-xs font-bold transition-all duration-300">
+                      <span>{isExpanded ? (lang === 'en' ? 'Show Less' : 'తక్కువ') : (lang === 'en' ? 'Read More' : 'మరిన్ని వివరాలు')}</span>
+                      <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${isExpanded ? 'rotate-180' : 'rotate-0'}`} />
                     </button>
                   </div>
 

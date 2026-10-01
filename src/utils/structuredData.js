@@ -59,10 +59,6 @@ const BREADCRUMB_CONFIG = {
   '/temples': [
     { name: 'Home', item: `${SITE_ORIGIN}/` },
     { name: 'Sacred Shrines', item: `${SITE_ORIGIN}/temples` }
-  ],
-  '/references': [
-    { name: 'Home', item: `${SITE_ORIGIN}/` },
-    { name: 'Historical References', item: `${SITE_ORIGIN}/references` }
   ]
 };
 

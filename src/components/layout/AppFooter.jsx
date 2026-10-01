@@ -148,10 +148,10 @@ export default function AppFooter({ lang, onNavigate, onOpenLogoModal, onOpenFee
             </ul>
           </div>
 
-          {/* Shrines & References */}
+          {/* Sacred Shrines */}
           <div className="space-y-2">
             <h3 className="font-serif font-bold text-xs uppercase tracking-wider text-[#FFD700] light-theme:text-amber-800">
-              {lang === 'en' ? 'Shrines & References' : 'పుణ్యక్షేత్రాలు & ఆధారాలు'}
+              {lang === 'en' ? 'Sacred Shrines' : 'పుణ్యక్షేత్రాలు'}
             </h3>
             <ul className="space-y-1.5 font-medium">
               <li>
@@ -161,15 +161,6 @@ export default function AppFooter({ lang, onNavigate, onOpenLogoModal, onOpenFee
                   className="text-[#94A3B8] light-theme:text-slate-700 hover:text-[#FFD700] light-theme:hover:text-amber-800 transition-colors inline-block py-0.5"
                 >
                   {lang === 'en' ? '7 Sacred Shrines' : 'సప్త పుణ్యక్షేత్రాలు'}
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/references"
-                  onClick={(e) => handleLinkClick('/references', e)}
-                  className="text-[#94A3B8] light-theme:text-slate-700 hover:text-[#FFD700] light-theme:hover:text-amber-800 transition-colors inline-block py-0.5"
-                >
-                  {lang === 'en' ? 'Historical References' : 'చారిత్రక ఆధారాలు & గ్రంథాలు'}
                 </a>
               </li>
             </ul>

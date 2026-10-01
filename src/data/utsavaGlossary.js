@@ -9,6 +9,7 @@ export const GLOSSARY_CATEGORIES = [
   { id: 'vahanas', labelEn: 'Sacred Vahanas', labelTe: 'దివ్య వాహనాలు', icon: '🦅' },
   { id: 'timing_symbols', labelEn: 'Sacred Timing & Symbols', labelTe: 'తిథులు & ముద్రలు', icon: '🌙' },
   { id: 'significant_people', labelEn: 'Significant Devotees & Acharyas', labelTe: 'మహనీయులు & పరమ భక్తులు', icon: '🕉️' },
+  { id: 'ornaments', labelEn: 'Sacred Ornaments', labelTe: 'దివ్య ఆభరణాలు', icon: '💎' },
 ];
 
 export const UTSAVA_GLOSSARY_TERMS = [
@@ -1540,5 +1541,35 @@ Author: Sri A.S. Ramanujan Iyengar
 రచయిత: శ్రీ ఎ.ఎస్. రామానుజన్ అయ్యంగార్
 (ఆధారం: సప్తగిరి ఆంగ్ల మాసపత్రిక, అగష్టు 2026)`,
     relatedEventKeywords: ['Godadevi Parinayotsavam', 'గోదాదేవి పరిణయోత్సవం', 'Kanuma']
+  },
+  {
+    id: 'moola-virat-ornaments',
+    term: 'Moola Virat Sacred Ornaments',
+    termTe: 'మూలవిరాట్ దివ్య ఆభరణాలు',
+    category: 'ornaments',
+    shortDesc: 'The priceless antique jewels and sacred ornaments adorning Lord Venkateswara daily.',
+    shortDescTe: 'శ్రీవారికి నిత్యమూ సేవాలంకారంలో అలంకరించే పవిత్ర మరియు అమూల్యమైన దివ్య రత్నాభరణాలు.',
+    detailedMeaning: `Lord Venkateswara is adorned daily with priceless antique jewels during Seva Alankaram. These sacred ornaments enhance His divine cosmic form and are revered by millions of devotees.
+
+The prominent ornaments include:
+- **Suvarna Padma Peetham & Suvarna Paadaalu**: Golden Lotus Pedestal and Golden Feet
+- **Chirugajjela Noopuraalu & Paagadaalu**: Anklets with small tinkling bells
+- **Kanchi Gunam & Naga Phana Udara Bandham**: Golden Waistband and Serpent Hood Waist Belt
+- **Chiru Gantala Molathradu**: Waist thread with small bells
+- **Chinna & Pedda Kanthaabharanam**: Small and Large Necklaces
+- **Bangaru Puligoru Haaram & Idu Petala Gopu Haaram**: Golden Tiger Claw Necklace and Five-layered Necklace
+- **Suvarna & Sadharana Yagnopaveetam**: Golden and Regular Sacred Threads
+- **Tulasi Patra Haaram**: Sacred Tulsi Leaf Necklace
+- **Chaturbhuja Lakshmi Haaram**: Four-armed Goddess Lakshmi Necklace
+- **Ashtottara Shatanaama & Sahasranaama Haaram**: Necklaces inscribed with 108 and 1000 holy names
+- **Surya Katari**: The Sun Sword / Dagger of protection
+- **Vaikuntha Hastam & Kati Hastam**: The hand pointing to Vaikuntha (Varada Mudra) and the hand resting on the waist
+- **Kadiyaalu, Nagabharanaalu & Bhuja Keerthulu**: Bracelets, Serpent Ornaments, and Armlets/Epaulets
+- **Karna Patram, Shankha Chakralu & Kireetam**: Ear Ornaments, Divine Conch & Discus, and the Majestic Crown`,
+    detailedMeaningTe: `తిరుమల శ్రీవారికి నిత్యమూ సేవాలంకారంలో అలంకరించే నగలు అత్యంత పవిత్రమైనవి మరియు అమూల్యమైనవి. స్వామివారి చిత్రంలో కూడా ఈ నగలు దర్శనమిస్తాయి.
+
+స్వామివారికి అలంకరించే ప్రధాన ఆభరణాలు:
+సువర్ణపద్మపీఠం, సువర్ణపాదాలు, చిరుగజ్జెలనూపురాలు, పాగడాలు, కాంచీగుణం, నాగఫణ ఉదరబంధం, చిరుగంటల మొలత్రాడు, చిన్నకంఠాభరణం, పెద్దకంఠాభరణం, బంగారు పులిగోరుహారం, ఐదుపేటలగోపుహారం, సువర్ణయజ్ఞోపవీతం, సాధారణయజ్ఞోపవీతం, తులసీపత్రహారం, చతుర్భుజలక్ష్మీహారం, అష్టోత్తరశతనామహారం, సహస్రనామహారం, సూర్య కటారి, వైకుంఠహస్తం, కటిహస్తం, కడియాలు, నాగాభరణాలు, భుజకీర్తులు, కర్ణపత్రం, శంఖచక్రాలు, కిరీటం.`,
+    relatedEventKeywords: ['Ornaments', 'ఆభరణాలు', 'Moola Virat', 'Alankaram']
   }
 ];

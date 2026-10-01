@@ -28,7 +28,6 @@ const SSDTokens = lazy(() => import('./components/SSDTokens'));
 const AdminPortalModal = lazy(() => import('./components/AdminPortalModal'));
 const EventDetailModal = lazy(() => import('./components/EventDetailModal'));
 const TempleList = lazy(() => import('./components/TempleList'));
-const ReferencesList = lazy(() => import('./components/ReferencesList'));
 const FestivalTopicPage = lazy(() => import('./components/FestivalTopicPage'));
 const loadInitialEvents = () =>
   import('./data/initialEvents').then(module => module.INITIAL_EVENTS);
@@ -43,7 +42,6 @@ const ROUTE_MAP = {
   '/tokens': 'tokens',
   '/feedback': 'feedback',
   '/temples': 'temples',
-  '/references': 'references',
   '/overview': 'calendar-page',
 };
 
@@ -55,7 +53,6 @@ const TAB_TO_PATH = {
   'tokens': '/tokens',
   'feedback': '/feedback',
   'temples': '/temples',
-  'references': '/references',
   'overview': '/',
 };
 
@@ -700,15 +697,6 @@ useEffect(() => {
             <TempleList
               lang={lang}
               onSelectTemple={handleSelectTempleFromHeroOrList}
-              onNavigate={handleNavigatePath}
-              onNavigateToGlossary={handleNavigateToGlossary}
-            />
-          )}
-
-          {/* REFERENCES & HISTORICAL LITERATURE SECTION */}
-          {activeTab === 'references' && (
-            <ReferencesList
-              lang={lang}
               onNavigate={handleNavigatePath}
               onNavigateToGlossary={handleNavigateToGlossary}
             />

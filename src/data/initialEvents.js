@@ -7,6 +7,7 @@
  * - `isMajor`: Internal website display-priority flag; NOT an official TTD designation.
  */
 import { SEPTEMBER_2026_EVENTS } from './templeEvents.js';
+import { PANCHANGAM_EVENTS_2026_2027 } from './panchangamEvents2026_2027.js';
 
 const BASE_INITIAL_EVENTS = [
   // JANUARY 2026
@@ -178,7 +179,8 @@ const BASE_INITIAL_EVENTS = [
     crowdLevel: 'Peak',
     crowdBadge: 'Peak Spring Festival',
     vahanam: 'Snapana Tirumanjanam on Golden & Silver Chariots',
-    description: '3-day celestial spring festival where Lord Malayappa Swamy & Consorts are bathed in holy fragrances under Vasantha Mandapam.'
+    description: 'Celebrated for 3 days from Chaitra Suddha Trayodasi to Pournami after the daily Tomala Seva. The deities are seated in the Vasantha Mandapam filled with fragrant aromas. On the final Pournami day, Lord Malayappa Swamy and His consorts bless devotees on the Swarna Ratham (Golden Chariot). Pulling this chariot is considered highly meritorious.',
+    descriptionTe: 'చైత్ర శుద్ధ త్రయోదశి నుండి పౌర్ణమి వరకు (3 రోజులు) తోమాలసేవ అనంతరం ఈ వసంత పండుగ అత్యంత వైభవంగా జరుగుతుంది. స్వామి, అమ్మవార్లను ఉంచే మంటపంలో సుగంధ ద్రవ్యాలతో సువాసనలు వెదజల్లేలా చేస్తారు. పౌర్ణమి రోజున దేవేరులతో కూడిన శ్రీ మలయప్పస్వామి వారు సువర్ణరథంపై (స్వర్ణరథం) మాడవీధులలో ఊరేగుతారు. ఈ రథాన్ని లాగడం అత్యంత పుణ్యప్రదంగా భావిస్తారు.'
   },
 
   // MAY 2026
@@ -1450,6 +1452,7 @@ const BASE_INITIAL_EVENTS = [
 const baseIds = new Set(BASE_INITIAL_EVENTS.map(e => e.id));
 export const INITIAL_EVENTS = [
   ...BASE_INITIAL_EVENTS,
-  ...SEPTEMBER_2026_EVENTS.filter(e => !baseIds.has(e.id))
+  ...SEPTEMBER_2026_EVENTS.filter(e => !baseIds.has(e.id)),
+  ...PANCHANGAM_EVENTS_2026_2027.filter(e => !baseIds.has(e.id))
 ];
 

@@ -91,19 +91,6 @@ export const ROUTE_SEO_METADATA = {
     twitterDescription:
       'Discover the 7 sacred temples of Tirumala and Tirupati, their spiritual significance in the divine legend of Lord Venkateswara and Goddess Padmavathi, and festival schedules.',
   },
-  '/references': {
-    title: 'References & Historical Literature | The Tirumala Verse',
-    description:
-      'Access historical manuscripts, temple manuals, Annamacharya sankirtana records, and epigraphical research on Tirumala and Tirupati temples.',
-    canonical: `${SITE_ORIGIN}/references`,
-    ogTitle: 'References & Historical Literature | The Tirumala Verse',
-    ogDescription:
-      'Access historical manuscripts, temple manuals, Annamacharya sankirtana records, and epigraphical research on Tirumala and Tirupati temples.',
-    ogUrl: `${SITE_ORIGIN}/references`,
-    twitterTitle: 'References & Historical Literature | The Tirumala Verse',
-    twitterDescription:
-      'Access historical manuscripts, temple manuals, Annamacharya sankirtana records, and epigraphical research on Tirumala and Tirupati temples.',
-  },
   '/overview': {
     title: 'Experience Sacred Tirumala Utsavams & Festivals | The Tirumala Verse',
     description:
