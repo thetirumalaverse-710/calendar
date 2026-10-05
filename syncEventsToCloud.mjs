@@ -7,7 +7,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { INITIAL_EVENTS } from "./src/data/initialEvents.js";
 
-export const ELIGIBLE_TEMPLES = ["tirumala-main", "tiruchanur"];
+export const ELIGIBLE_TEMPLES = ["tirumala-main"];
 
 /**
  * Deterministically validates the canonical events dataset against Phase 3 specifications.

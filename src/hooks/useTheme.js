@@ -15,12 +15,9 @@ export default function useTheme() {
     );
 
   useEffect(() => {
-
-    document.body.classList.toggle(
-      "light-theme",
-      themeMode === "light"
-    );
-
+    const isLight = themeMode === "light";
+    document.body.classList.toggle("light-theme", isLight);
+    document.documentElement.classList.toggle("light-theme", isLight);
   }, [themeMode]);
 
   const toggleTheme = () => {

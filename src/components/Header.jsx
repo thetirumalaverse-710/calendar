@@ -164,27 +164,6 @@ export default function Header({
               </div>
             )}
 
-            {/* NOTIFICATIONS TOGGLE BUTTON */}
-            <button
-              onClick={onToggleNotifications}
-              aria-label={
-                notificationsEnabled
-                  ? (lang === 'en' ? 'Manage notification preferences' : 'నోటిఫికేషన్ ప్రాధాన్యతలను నిర్వహించండి')
-                  : (lang === 'en' ? 'Enable event notifications' : 'ఈవెంట్ నోటిఫికేషన్లను ప్రారంభించండి')
-              }
-              className={`w-[30px] h-[30px] sm:w-auto sm:h-auto p-1 sm:px-2 sm:py-1 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition-colors border ${
-                notificationsEnabled
-                  ? 'bg-amber-500/20 border-[#FFD700] text-[#FFD700]'
-                  : 'bg-[#141923] border-[#D4AF37]/40 text-[#94A3B8] hover:text-[#FFD700]'
-              }`}
-              title={notificationsEnabled ? (lang === 'en' ? 'Manage Event Notification Preferences' : 'నోటిఫికేషన్ ప్రాధాన్యతలు') : (lang === 'en' ? 'Enable Event Notifications' : 'ఈవెంట్ నోటిఫికేషన్లు')}
-            >
-              <span>{notificationsEnabled ? '🔔' : '🔕'}</span>
-              <span className="hidden sm:inline text-[11px]">
-                {notificationsEnabled ? 'Alerts On' : 'Alerts'}
-              </span>
-            </button>
-
             {/* Dark / Light Mode Toggle */}
             <button
               onClick={() => setThemeMode(themeMode === 'dark' ? 'light' : 'dark')}

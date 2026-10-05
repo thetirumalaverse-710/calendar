@@ -12,7 +12,6 @@ import { loadStoredFeedback, saveStoredFeedback } from './utils/feedbackStorage'
 import AdminTopRibbon from './components/layout/AdminTopRibbon';
 import TtdLiveStreamModal from './components/layout/TtdLiveStreamModal';
 import LogoLightboxModal from './components/layout/LogoLightboxModal';
-import NotificationPreferencesModal from './components/layout/NotificationPreferencesModal';
 import AppFooter from './components/layout/AppFooter';
 import ToastContainer from './components/common/ToastContainer';
 import { subscribeToWebPush, unsubscribeFromWebPush, ELIGIBLE_NOTIFICATION_TEMPLES } from './utils/webPush';
@@ -301,35 +300,83 @@ export default function App() {
     return [...ELIGIBLE_NOTIFICATION_TEMPLES];
   });
 
-  const [isNotifModalOpen, setIsNotifModalOpen] = useState(false);
+  // Automatic native address-bar notification request for visitors
+  useEffect(() => {
+    let timeoutId;
+    async function requestAddressBarNotifications() {
+      if (typeof window === 'undefined' || !('Notification' in window)) return;
 
-  const handleToggleNotifications = () => {
-    setIsNotifModalOpen(true);
-  };
+      if (Notification.permission === 'default') {
+        const sessionPrompted = sessionStorage.getItem('tirumala_notif_prompted');
+        if (sessionPrompted) return;
+        sessionStorage.setItem('tirumala_notif_prompted', 'true');
 
-  const handleSaveNotificationPreferences = async (selectedTemples) => {
-    const sub = await subscribeToWebPush(supabase, selectedTemples);
-    if (sub) {
-      setNotificationsEnabled(true);
-      setSubscribedTemples(selectedTemples);
-      try {
-        localStorage.setItem('tirumala_notifications_enabled', 'true');
-        localStorage.setItem('tirumala_notification_temples', JSON.stringify(selectedTemples));
-      } catch (e) {
-        console.error(e);
+        try {
+          const permission = await Notification.requestPermission();
+          if (permission === 'granted') {
+            const sub = await subscribeToWebPush(supabase, ['tirumala-main'], lang);
+            if (sub) {
+              setNotificationsEnabled(true);
+              setSubscribedTemples(['tirumala-main']);
+              try {
+                localStorage.setItem('tirumala_notifications_enabled', 'true');
+                localStorage.setItem('tirumala_notification_temples', JSON.stringify(['tirumala-main']));
+              } catch (e) {}
+            }
+          }
+        } catch (err) {
+          console.warn('Native notification request error:', err);
+        }
+      } else if (Notification.permission === 'granted') {
+        const locallyEnabled = localStorage.getItem('tirumala_notifications_enabled') === 'true';
+        if (!locallyEnabled) {
+          subscribeToWebPush(supabase, ['tirumala-main'], lang, true).then(sub => {
+            if (sub) {
+              setNotificationsEnabled(true);
+              try {
+                localStorage.setItem('tirumala_notifications_enabled', 'true');
+                localStorage.setItem('tirumala_notification_temples', JSON.stringify(['tirumala-main']));
+              } catch (e) {}
+            }
+          });
+        }
       }
     }
-  };
 
-  const handleDisableNotifications = async () => {
-    await unsubscribeFromWebPush(supabase);
-    setNotificationsEnabled(false);
-    try {
-      localStorage.setItem('tirumala_notifications_enabled', 'false');
-    } catch (e) {
-      console.error(e);
-    }
-  };
+    // Trigger shortly after initial render so site is visible
+    timeoutId = setTimeout(requestAddressBarNotifications, 1200);
+
+    // Also attach first-interaction listener if browser requires user gesture
+    const handleFirstInteraction = async () => {
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('touchstart', handleFirstInteraction);
+      if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'default') {
+        try {
+          const permission = await Notification.requestPermission();
+          if (permission === 'granted') {
+            const sub = await subscribeToWebPush(supabase, ['tirumala-main'], lang);
+            if (sub) {
+              setNotificationsEnabled(true);
+              setSubscribedTemples(['tirumala-main']);
+              try {
+                localStorage.setItem('tirumala_notifications_enabled', 'true');
+                localStorage.setItem('tirumala_notification_temples', JSON.stringify(['tirumala-main']));
+              } catch (e) {}
+            }
+          }
+        } catch (e) {}
+      }
+    };
+
+    window.addEventListener('click', handleFirstInteraction, { once: true });
+    window.addEventListener('touchstart', handleFirstInteraction, { once: true });
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('touchstart', handleFirstInteraction);
+    };
+  }, [lang]);
 
   // TTD YouTube Live Stream State (Default to Official SVBC/TTD Live Link)
   const DEFAULT_TTD_LIVE_URL = 'https://www.youtube.com/live/Z6nHz5CU10I?si=s15-FIsreA6ltSQl';
@@ -527,6 +574,7 @@ export default function App() {
     if (!Array.isArray(safeEventsList)) return null;
     return safeEventsList.find(e => {
       if (!e || typeof e !== 'object' || !e.startDate) return false;
+      if (e.templeId && e.templeId !== 'tirumala-main') return false;
       const end = e.endDate || e.startDate;
       return e.startDate <= todayStr && todayStr <= end;
     });
@@ -665,8 +713,6 @@ useEffect(() => {
           }
         }}
         onOpenLogoModal={() => setIsLogoModalOpen(true)}
-        notificationsEnabled={notificationsEnabled}
-        onToggleNotifications={handleToggleNotifications}
         ttdLiveUrl={ttdLiveUrl}
         onOpenLiveStream={() => setIsLiveStreamModalOpen(true)}
       />
@@ -818,18 +864,6 @@ useEffect(() => {
       <LogoLightboxModal
         isOpen={isLogoModalOpen}
         onClose={() => setIsLogoModalOpen(false)}
-      />
-
-      {/* EVENT NOTIFICATION PREFERENCES MODAL */}
-      <NotificationPreferencesModal
-        isOpen={isNotifModalOpen}
-        onClose={() => setIsNotifModalOpen(false)}
-        lang={lang}
-        themeMode={themeMode}
-        notificationsEnabled={notificationsEnabled}
-        currentTemples={subscribedTemples}
-        onSave={handleSaveNotificationPreferences}
-        onDisable={handleDisableNotifications}
       />
 
       {/* Footer with Disclaimer & Feedback Link */}

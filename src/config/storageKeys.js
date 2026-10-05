@@ -1,5 +1,5 @@
 export const STORAGE_KEYS = Object.freeze({
-  THEME: "tirumala_theme_mode",
+  THEME: "tirumala_theme_mode_v2",
   LANGUAGE: "tirumala_language",
 
   CUSTOM_EVENTS: "tirumala_custom_events_v5",

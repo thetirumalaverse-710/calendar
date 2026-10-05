@@ -9,5 +9,5 @@ export const APP_CONFIG = Object.freeze({
 
   DEFAULT_LANGUAGE: "en",
 
-  DEFAULT_THEME: "dark",
+  DEFAULT_THEME: "light",
 });

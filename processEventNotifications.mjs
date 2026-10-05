@@ -7,7 +7,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { dispatchWebPushNotification } from "./pushDispatcher.mjs";
 
-export const ELIGIBLE_TEMPLES = ["tirumala-main", "tiruchanur"];
+export const ELIGIBLE_TEMPLES = ["tirumala-main"];
 
 /**
  * Get current date & time breakdown in Asia/Kolkata (IST) timezone.

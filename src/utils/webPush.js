@@ -2,7 +2,7 @@ import { toast } from "./toast";
 
 const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY?.trim();
 
-export const ELIGIBLE_NOTIFICATION_TEMPLES = ["tirumala-main", "tiruchanur"];
+export const ELIGIBLE_NOTIFICATION_TEMPLES = ["tirumala-main"];
 
 export function validateNotificationTemples(templeIds) {
   if (!Array.isArray(templeIds)) return [...ELIGIBLE_NOTIFICATION_TEMPLES];
@@ -50,10 +50,11 @@ export async function getExistingPushSubscription() {
 
 export async function subscribeToWebPush(
   supabaseClient,
-  selectedTemples = ELIGIBLE_NOTIFICATION_TEMPLES
+  selectedTemples = ELIGIBLE_NOTIFICATION_TEMPLES,
+  lang = "en",
+  silent = false
 ) {
   if (!(await isPushSupported())) {
-    toast.warning("Browser push notifications are not supported on this device.");
     return null;
   }
 
@@ -67,7 +68,6 @@ export async function subscribeToWebPush(
   try {
     const permission = await Notification.requestPermission();
     if (permission !== "granted") {
-      toast.warning("Notification permission was denied.");
       return null;
     }
 
@@ -111,11 +111,31 @@ export async function subscribeToWebPush(
       throw rpcError;
     }
 
-    toast.success("Event notification preferences saved!");
+    if (!silent) {
+      const message = lang === "te"
+        ? "నోటిఫికేషన్లు ప్రారంభించబడ్డాయి: మీరు శ్రీవారి ఆలయం నుండి ముఖ్యమైన ప్రకటనలు మరియు ఉత్సవ నోటిఫికేషన్లను అందుకుంటారు."
+        : "Notifications enabled: You will receive important announcements and event notifications from the Srivari Temple.";
+      toast.success(message, 8000);
+
+      try {
+        if ("serviceWorker" in navigator) {
+          const reg = await navigator.serviceWorker.ready;
+          await reg.showNotification("🌸 Tirumala Temple Notifications Enabled", {
+            body: "You will receive important announcements and event notifications from the Srivari Temple.",
+            icon: "/logo-64.png",
+            badge: "/logo-64.png",
+            data: { url: "https://thetirumalaverse.in/" },
+            tag: "welcome-srivari-notification"
+          });
+        }
+      } catch (notifErr) {
+        console.warn("Could not display welcome notification:", notifErr);
+      }
+    }
+
     return subscription;
   } catch (error) {
     console.error("Failed to subscribe to Web Push:", error);
-    toast.error("Could not register push subscription.");
     return null;
   }
 }
