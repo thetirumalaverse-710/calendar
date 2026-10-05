@@ -6,7 +6,6 @@
 import { getRouteMetadata, SITE_ORIGIN } from './seoMetadata.js';
 import { getFestivalTopic } from '../data/festivalTopics.js';
 import { TOKEN_FAQS } from '../data/tokenFaqData.js';
-import { TEMPLES } from '../data/templeEvents.js';
 
 export const ROUTE_SCRIPT_ID = 'route-structured-data';
 
@@ -56,9 +55,13 @@ const BREADCRUMB_CONFIG = {
     { name: 'Home', item: `${SITE_ORIGIN}/` },
     { name: 'Darshan Tokens', item: `${SITE_ORIGIN}/tokens` }
   ],
-  '/temples': [
+  '/pilgrim-guide': [
     { name: 'Home', item: `${SITE_ORIGIN}/` },
-    { name: 'Sacred Shrines', item: `${SITE_ORIGIN}/temples` }
+    { name: 'Pilgrim Guide & FAQs', item: `${SITE_ORIGIN}/pilgrim-guide` }
+  ],
+  '/guides': [
+    { name: 'Home', item: `${SITE_ORIGIN}/` },
+    { name: 'Heritage Guides', item: `${SITE_ORIGIN}/guides` }
   ]
 };
 
@@ -85,19 +88,24 @@ export function getBreadcrumbItems(pathname, metadata = null) {
 
   const normalizedPath = lowerPath === '/calendar-page' ? '/calendar' : lowerPath;
 
+  if (normalizedPath === '/festivals' || normalizedPath === '/heritage') {
+    return BREADCRUMB_CONFIG['/guides'];
+  }
+
   if (BREADCRUMB_CONFIG[normalizedPath]) {
     return BREADCRUMB_CONFIG[normalizedPath];
   }
 
-  if (normalizedPath.startsWith('/festivals/')) {
-    const slug = normalizedPath.slice('/festivals/'.length);
+  if (normalizedPath.startsWith('/festivals/') || normalizedPath.startsWith('/guides/')) {
+    const prefix = normalizedPath.startsWith('/festivals/') ? '/festivals/' : '/guides/';
+    const slug = normalizedPath.slice(prefix.length);
     const topic = getFestivalTopic(slug);
     if (topic) {
       const festivalName = FESTIVAL_NAMES[slug] || topic.searchQuery || topic.h1;
       const canonicalUrl = (metadata && metadata.canonical) || topic.canonical || `${SITE_ORIGIN}/festivals/${slug}`;
       return [
         { name: 'Home', item: `${SITE_ORIGIN}/` },
-        { name: 'Festival Guides', item: `${SITE_ORIGIN}/calendar` },
+        { name: 'Heritage Guides', item: `${SITE_ORIGIN}/guides` },
         { name: festivalName, item: canonicalUrl }
       ];
     }
@@ -185,33 +193,6 @@ export function buildRouteStructuredData(pathname) {
           text: faq.answer,
         },
       })),
-    });
-  }
-
-  // 4. ItemList Schema (Strictly for /temples only, representing the 7 sacred shrines)
-  if (normalizedPath === '/temples' && Array.isArray(TEMPLES)) {
-    graph.push({
-      '@type': 'ItemList',
-      '@id': `${canonicalUrl}#itemlist`,
-      name: 'The 7 Sacred Shrines of Tirumala & Tirupati',
-      numberOfItems: 7,
-      itemListOrder: 'https://schema.org/ItemListOrderAscending',
-      itemListElement: TEMPLES.slice(0, 7).map((temple, idx) => ({
-        '@type': 'ListItem',
-        position: idx + 1,
-        item: {
-          '@type': 'HinduTemple',
-          name: temple.name,
-          ...(temple.teluguName
-            ? { alternateName: temple.teluguName }
-            : {}),
-          description: temple.description,
-          address: {
-            '@type': 'PostalAddress',
-            addressLocality: temple.location
-          }
-        }
-      }))
     });
   }
 

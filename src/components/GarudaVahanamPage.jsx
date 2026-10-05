@@ -327,6 +327,7 @@ export default function GarudaVahanamPage({
   themeMode: propThemeMode,
   onNavigateToCalendarSearch,
   onSelectEvent,
+  onNavigatePath,
 }) {
   const { themeMode: hookThemeMode } = useTheme();
   const themeMode = propThemeMode || hookThemeMode;
@@ -432,6 +433,37 @@ export default function GarudaVahanamPage({
 
   return (
     <article className="space-y-0 max-w-5xl mx-auto tv-fade-up">
+
+      {/* Top Breadcrumb Navigation */}
+      <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-[#94A3B8] pb-4 px-1 flex-wrap">
+        <a
+          href="/"
+          onClick={(e) => {
+            if (isModifiedClick(e)) return;
+            e.preventDefault();
+            if (onNavigatePath) onNavigatePath('/');
+          }}
+          className="hover:text-[#FFD700] transition-colors"
+        >
+          {isTe ? 'హోమ్' : 'Home'}
+        </a>
+        <span className="text-[#64748B]">/</span>
+        <a
+          href="/guides"
+          onClick={(e) => {
+            if (isModifiedClick(e)) return;
+            e.preventDefault();
+            if (onNavigatePath) onNavigatePath('/guides');
+          }}
+          className="hover:text-[#FFD700] transition-colors font-medium"
+        >
+          {isTe ? 'విశేష గైడ్లు (Heritage Guides)' : 'Heritage Guides'}
+        </a>
+        <span className="text-[#64748B]">/</span>
+        <span className={`font-semibold ${isLight ? 'text-slate-800' : 'text-[#FFD700]'}`}>
+          {isTe ? topic.h1Te : topic.h1}
+        </span>
+      </nav>
 
       {/* ══════════════════════════════════════════════
           1. HERO
@@ -827,22 +859,6 @@ export default function GarudaVahanamPage({
           <p className={`text-sm leading-relaxed ml-7 ${t.textMuted}`}>
             {isTe ? topic.occasionsInfo.descTe : topic.occasionsInfo.desc}
           </p>
-          <div className="ml-7 mt-4">
-            <a
-              href="/temples"
-              onClick={e => {
-                if (isModifiedClick(e)) return;
-                e.preventDefault();
-                window.history.pushState({}, '', '/temples');
-                window.dispatchEvent(new PopStateEvent('popstate'));
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className={`inline-flex items-center gap-1.5 text-xs font-bold ${t.goldAccent} hover:underline cursor-pointer transition-colors`}
-            >
-              <span>{isTe ? 'సప్త దివ్య పుణ్యక్షేత్రాల సమాచారం' : 'View Sacred Shrines Directory'}</span>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </a>
-          </div>
         </div>
       </section>
 

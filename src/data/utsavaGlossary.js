@@ -1,3 +1,4 @@
+import { SAPTHAGIRI_GLOSSARY_ADDITIONS } from './sapthagiriGlossaryAdditions.js';
 // Tirumala Festival & Utsavam Glossary / Lexicon ("Utsava Shabda Kosh")
 // Un-combined, detailed entries rewritten from TTD Sapthagiri Magazine (September 2020) and Telugu manuscripts
 // All terms are individual, sorted in ascending alphabetical order, with spiritual merit section removed.
@@ -10,9 +11,12 @@ export const GLOSSARY_CATEGORIES = [
   { id: 'timing_symbols', labelEn: 'Sacred Timing & Symbols', labelTe: 'తిథులు & ముద్రలు', icon: '🌙' },
   { id: 'significant_people', labelEn: 'Significant Devotees & Acharyas', labelTe: 'మహనీయులు & పరమ భక్తులు', icon: '🕉️' },
   { id: 'ornaments', labelEn: 'Sacred Ornaments', labelTe: 'దివ్య ఆభరణాలు', icon: '💎' },
+  { id: 'sacred_architecture', labelEn: 'Sacred Architecture & Portals', labelTe: 'ఆలయ వాస్తు & దివ్య ద్వారాలు', icon: '🏛️' },
+  { id: 'sacred_tirthas', labelEn: 'Sacred Tirthas & Holy Waters', labelTe: 'పుణ్య తీర్థాలు & పుష్కరిణులు', icon: '🌊' },
+  { id: 'geological_landmarks', labelEn: 'Rock Formations & Natural Wonders', labelTe: 'శిలా తోరణం & రాతి నిర్మాణాలు', icon: '🪨' },
 ];
 
-export const UTSAVA_GLOSSARY_TERMS = [
+const BASE_UTSAVA_GLOSSARY_TERMS = [
   {
     id: 'abhishekam',
     term: 'Abhishekam',
@@ -1573,3 +1577,5 @@ The prominent ornaments include:
     relatedEventKeywords: ['Ornaments', 'ఆభరణాలు', 'Moola Virat', 'Alankaram']
   }
 ];
+
+export const UTSAVA_GLOSSARY_TERMS = [...BASE_UTSAVA_GLOSSARY_TERMS, ...SAPTHAGIRI_GLOSSARY_ADDITIONS];

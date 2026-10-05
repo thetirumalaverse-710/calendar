@@ -29,6 +29,90 @@ const FESTIVAL_GUIDE_MAP = {
     nameTe: 'బ్రహ్మోత్సవాలు',
     title: 'Brahmotsavam',
   },
+  'vaikhanasa-archakas': {
+    href: '/festivals/kainkaryaparas',
+    name: 'Temple Kainkaryaparas Guide',
+    nameTe: 'కైంకర్యపరుల సమగ్ర గైడ్',
+    title: 'Temple Kainkaryaparas',
+  },
+  'jeeyangar-system': {
+    href: '/festivals/kainkaryaparas',
+    name: 'Jeeyangar Institution Guide',
+    nameTe: 'జీయంగార్ల వ్యవస్థ సమగ్ర గైడ్',
+    title: 'Jeeyangar Institution',
+  },
+  'acharya-purushas': {
+    href: '/festivals/kainkaryaparas',
+    name: 'Acharya Purushas Guide',
+    nameTe: 'ఆచార్య పురుషుల సమగ్ర గైడ్',
+    title: 'Acharya Purushas',
+  },
+  'sannidhi-golla': {
+    href: '/festivals/sannidhi-golla',
+    name: 'Sannidhi Golla Guide',
+    nameTe: 'సన్నిధి గొల్ల సమగ్ర గైడ్',
+    title: 'Sannidhi Golla',
+  },
+  'sikhamani-garland': {
+    href: '/festivals/pushpa-kainkaryam',
+    name: 'Pushpa Kainkaryam Guide',
+    nameTe: 'పుష్ప కైంకర్య సమగ్ర గైడ్',
+    title: 'Pushpa Kainkaryam',
+  },
+  'pula-ara': {
+    href: '/festivals/pushpa-kainkaryam',
+    name: 'Pushpa Kainkaryam Guide',
+    nameTe: 'పుష్ప కైంకర్య సమగ్ర గైడ్',
+    title: 'Pushpa Kainkaryam',
+  },
+  'sapthagiri-eleven-names': {
+    href: '/festivals/sapthagiri-geography',
+    name: 'Sapthagiri Geography Guide',
+    nameTe: 'సప్తగిరి భౌగోళిక సమగ్ర గైడ్',
+    title: 'Sapthagiri Geography',
+  },
+  'swami-pushkarini-tirthas': {
+    href: '/festivals/sapthagiri-geography',
+    name: 'Pushkarini Tirthas Guide',
+    nameTe: 'పుష్కరిణి తీర్థాల గైడ్',
+    title: 'Pushkarini Tirthas',
+  },
+  'silathoranam': {
+    href: '/festivals/sapthagiri-geography',
+    name: 'Silathoranam & Geography Guide',
+    nameTe: 'శిలాతోరణం & సప్తగిరి గైడ్',
+    title: 'Silathoranam',
+  },
+  'sankeertana-bhandagaram': {
+    href: '/festivals/sankeertana-bhandagaram',
+    name: 'Sankeertana Bhandagaram Guide',
+    nameTe: 'సంకీర్తన భాండాగారం సమగ్ర గైడ్',
+    title: 'Sankeertana Bhandagaram',
+  },
+  'veturi-prabhakara-sastry': {
+    href: '/festivals/sankeertana-bhandagaram',
+    name: 'Annamacharya Copper Plates Guide',
+    nameTe: 'అన్నమయ్య రాగిరేకుల గైడ్',
+    title: 'Annamacharya Discovery',
+  },
+  'sadhu-subrahmanya-sastri': {
+    href: '/festivals/epigraphical-centenary',
+    name: 'Epigraphical Report Centenary Guide',
+    nameTe: 'శాసన పరిశోధన శతాబ్ది గైడ్',
+    title: 'Epigraphical Centenary',
+  },
+  'rathi-ratham': {
+    href: '/festivals/rathotsavam',
+    name: 'Rathotsavam & Chariot Guide',
+    nameTe: 'రథోత్సవ సమగ్ర గైడ్',
+    title: 'Rathotsavam',
+  },
+  'kaltheru': {
+    href: '/festivals/rathotsavam',
+    name: 'Rathotsavam & Rock Chariot Guide',
+    nameTe: 'రథోత్సవ సమగ్ర గైడ్',
+    title: 'Rathotsavam',
+  },
 };
 
 export default function UtsavamGlossary({ 
@@ -400,9 +484,24 @@ export default function UtsavamGlossary({
                         <div className="detailed-meaning-box text-sm sm:text-base text-slate-200 leading-loose bg-[#0B0E14]/50 p-4 sm:p-5 rounded-2xl border border-white/5 whitespace-pre-line font-medium shadow-inner">
                           {lang === 'en' ? item.detailedMeaning : item.detailedMeaningTe}
                         </div>
-                        <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-semibold text-slate-400 mt-2 ml-1">
-                          📜 {lang === 'en' ? 'Source: TTD Sapthagiri Magazine (Sept 2020)' : 'ఆధారం: టిటిడి సప్తగిరి పత్రిక (సెప్టెంబరు 2020)'}
-                        </div>
+                        {item.sourceAttribution ? (
+                          <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-[10px] sm:text-[11px] text-slate-300 space-y-0.5 mt-2">
+                            <div className="font-bold text-[#FFD700] flex items-center gap-1">
+                              <span>📜</span>
+                              <span>{lang === 'en' ? 'Source Citation & Research Attribution:' : 'పరిశోధనా మూలం & పత్రికాధారం:'}</span>
+                            </div>
+                            <div className="text-slate-300 pl-4 font-medium">
+                              <span className="text-amber-200">"{item.sourceAttribution.articleTitle}"</span>
+                              {item.sourceAttribution.author && <span> — {item.sourceAttribution.author}</span>}
+                              {item.sourceAttribution.translator && <span> ({item.sourceAttribution.translator})</span>}
+                              <span>, {item.sourceAttribution.publication} ({item.sourceAttribution.issueDate})</span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-semibold text-slate-400 mt-2 ml-1">
+                            📜 {lang === 'en' ? 'Source: TTD Sapthagiri Magazine (Sept 2020)' : 'ఆధారం: టిటిడి సప్తగిరి పత్రిక (సెప్టెంబరు 2020)'}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

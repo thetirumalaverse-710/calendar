@@ -78,19 +78,6 @@ export const ROUTE_SEO_METADATA = {
     twitterDescription:
       'Information and live status for Slotted Sarva Darshan (SSD) and Divya Darshan (DD) free offline darshan tokens issued across Tirupati counters.',
   },
-  '/temples': {
-    title: 'The 7 Sacred Shrines of Tirumala & Tirupati | The Tirumala Verse',
-    description:
-      'Discover the 7 sacred temples of Tirumala and Tirupati, their spiritual significance in the divine legend of Lord Venkateswara and Goddess Padmavathi, and festival schedules.',
-    canonical: `${SITE_ORIGIN}/temples`,
-    ogTitle: 'The 7 Sacred Shrines of Tirumala & Tirupati | The Tirumala Verse',
-    ogDescription:
-      'Discover the 7 sacred temples of Tirumala and Tirupati, their spiritual significance in the divine legend of Lord Venkateswara and Goddess Padmavathi, and festival schedules.',
-    ogUrl: `${SITE_ORIGIN}/temples`,
-    twitterTitle: 'The 7 Sacred Shrines of Tirumala & Tirupati | The Tirumala Verse',
-    twitterDescription:
-      'Discover the 7 sacred temples of Tirumala and Tirupati, their spiritual significance in the divine legend of Lord Venkateswara and Goddess Padmavathi, and festival schedules.',
-  },
   '/overview': {
     title: 'Experience Sacred Tirumala Utsavams & Festivals | The Tirumala Verse',
     description:
@@ -103,6 +90,32 @@ export const ROUTE_SEO_METADATA = {
     twitterTitle: 'Experience Sacred Tirumala Utsavams & Festivals | The Tirumala Verse',
     twitterDescription:
       'Explore Tirumala & Tirupati temple festivals, interactive calendar events, and daily Nitya Seva timings based on published TTD schedules.',
+  },
+  '/pilgrim-guide': {
+    title: 'Tirumala Pilgrim Guide, TTD Abbreviations & FAQs | The Tirumala Verse',
+    description:
+      'Comprehensive pilgrim guide for Tirumala: Decoded TTD abbreviations (VQC, CRO, PJN), automated UPI Laddu KIOSK steps, wedding invitation postal blessings, sanctum etiquette, and verified FAQs.',
+    canonical: `${SITE_ORIGIN}/pilgrim-guide`,
+    ogTitle: 'Tirumala Pilgrim Guide, TTD Abbreviations & FAQs | The Tirumala Verse',
+    ogDescription:
+      'Essential guidance for visiting Tirumala: decode accommodation acronyms, use the automated laddu KIOSK, learn sacred sanctum etiquette, and search pilgrim FAQs.',
+    ogUrl: `${SITE_ORIGIN}/pilgrim-guide`,
+    twitterTitle: 'Tirumala Pilgrim Guide, TTD Abbreviations & FAQs | The Tirumala Verse',
+    twitterDescription:
+      'Essential guidance for visiting Tirumala: decode accommodation acronyms, use the automated laddu KIOSK, learn sacred sanctum etiquette, and search pilgrim FAQs.',
+  },
+  '/faqs': {
+    title: 'Tirumala Pilgrim & Ritual FAQs | The Tirumala Verse',
+    description:
+      'Frequently asked questions on Tirumala traditions, why pilgrims do not wear flowers, the Sannidhi Golla, laddu KIOSKs, wedding card blessings, and sanctum doorways.',
+    canonical: `${SITE_ORIGIN}/pilgrim-guide`,
+    ogTitle: 'Tirumala Pilgrim & Ritual FAQs | The Tirumala Verse',
+    ogDescription:
+      'Frequently asked questions on Tirumala traditions, why pilgrims do not wear flowers, the Sannidhi Golla, laddu KIOSKs, wedding card blessings, and sanctum doorways.',
+    ogUrl: `${SITE_ORIGIN}/pilgrim-guide`,
+    twitterTitle: 'Tirumala Pilgrim & Ritual FAQs | The Tirumala Verse',
+    twitterDescription:
+      'Frequently asked questions on Tirumala traditions, why pilgrims do not wear flowers, the Sannidhi Golla, laddu KIOSKs, wedding card blessings, and sanctum doorways.',
   },
   '/feedback': {
     title: 'Community Feedback & Suggestions | The Tirumala Verse',
@@ -181,6 +194,19 @@ export const ROUTE_SEO_METADATA = {
     twitterDescription:
       'Explore Brahmotsavam at Tirumala, its origins by Lord Brahma, 9-day vahana procession schedule, and divine significance. Discover Brahmotsavam dates across Tirumala and Tirupati shrines.',
   },
+  '/guides': {
+    title: 'Tirumala Heritage Guides & Sacred Traditions | The Tirumala Verse',
+    description:
+      'Comprehensive standalone research guides on Tirumala traditions: Kainkaryaparas hereditary services, Sannidhi Golla, Divya Prabandham chanting, sacred geography, copper plate archives, and epigraphy.',
+    canonical: `${SITE_ORIGIN}/guides`,
+    ogTitle: 'Tirumala Heritage Guides & Sacred Traditions | The Tirumala Verse',
+    ogDescription:
+      'Discover in-depth research guides on Tirumala temple traditions, hereditary kainkaryams, liturgical chants, and historic epigraphy.',
+    ogUrl: `${SITE_ORIGIN}/guides`,
+    twitterTitle: 'Tirumala Heritage Guides & Sacred Traditions | The Tirumala Verse',
+    twitterDescription:
+      'Discover in-depth research guides on Tirumala temple traditions, hereditary kainkaryams, liturgical chants, and historic epigraphy.',
+  },
 };
 
 /**
@@ -202,13 +228,18 @@ export function getRouteMetadata(pathname) {
     return ROUTE_SEO_METADATA['/calendar'];
   }
 
+  if (lowerPath === '/festivals' || lowerPath === '/heritage') {
+    return ROUTE_SEO_METADATA['/guides'];
+  }
+
   if (ROUTE_SEO_METADATA[lowerPath]) {
     return ROUTE_SEO_METADATA[lowerPath];
   }
 
-  // Dynamic /festivals/<slug> handling
-  if (lowerPath.startsWith('/festivals/')) {
-    const slug = lowerPath.slice('/festivals/'.length);
+  // Dynamic /festivals/<slug> and /guides/<slug> handling
+  if (lowerPath.startsWith('/festivals/') || lowerPath.startsWith('/guides/')) {
+    const prefix = lowerPath.startsWith('/festivals/') ? '/festivals/' : '/guides/';
+    const slug = lowerPath.slice(prefix.length);
     const topic = getFestivalTopic(slug);
     if (topic) {
       return {

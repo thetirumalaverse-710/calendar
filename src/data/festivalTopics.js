@@ -1,3 +1,4 @@
+import { SAPTHAGIRI_TOPIC_ADDITIONS } from './sapthagiriTopicAdditions.js';
 /**
  * Festival Topics Registry for SEO Topic Pages.
  * 
@@ -5,7 +6,7 @@
  * and event-matching keywords without hardcoding event dates.
  */
 
-export const FESTIVAL_TOPICS = {
+const BASE_FESTIVAL_TOPICS = {
   'garuda-vahanam': {
     slug: 'garuda-vahanam',
     title: 'Garuda Vahanam at Tirumala | Dates, Significance & Seva Guide | The Tirumala Verse',
@@ -318,6 +319,12 @@ export const FESTIVAL_TOPICS = {
     searchCalendarCtaTe: 'క్యాలెండర్‌లో బ్రహ్మోత్సవాలు శోధించండి'
   }
 };
+
+export const FESTIVAL_TOPICS = {
+  ...BASE_FESTIVAL_TOPICS,
+  ...SAPTHAGIRI_TOPIC_ADDITIONS
+};
+
 
 /**
  * Retrieve festival topic definition by slug.

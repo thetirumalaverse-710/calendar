@@ -11,7 +11,7 @@ import {
   ExternalLink,
   Layers
 } from 'lucide-react';
-import { getFestivalTopic, matchFestivalEvents } from '../data/festivalTopics';
+import { getFestivalTopic, matchFestivalEvents, FESTIVAL_TOPICS } from '../data/festivalTopics';
 import { TEMPLES } from '../data/templeEvents';
 import { getTempleFilterLabel } from '../utils/templeHelpers';
 import useTheme from '../hooks/useTheme';
@@ -40,13 +40,20 @@ export default function FestivalTopicPage({
   lang = 'en',
   themeMode: propThemeMode,
   onNavigateToCalendarSearch,
-  onSelectEvent
+  onSelectEvent,
+  onNavigatePath
 }) {
   const { themeMode: hookThemeMode } = useTheme();
   const themeMode = propThemeMode || hookThemeMode;
   const isLight = themeMode === 'light';
 
   const topic = useMemo(() => getFestivalTopic(slug), [slug]);
+
+  const otherGuides = useMemo(() => {
+    return Object.values(FESTIVAL_TOPICS)
+      .filter(t => t && t.slug !== slug)
+      .slice(0, 3);
+  }, [slug]);
 
   const templeMap = useMemo(() => {
     const map = new Map();
@@ -85,6 +92,7 @@ export default function FestivalTopicPage({
         themeMode={themeMode}
         onNavigateToCalendarSearch={onNavigateToCalendarSearch}
         onSelectEvent={onSelectEvent}
+        onNavigatePath={onNavigatePath}
       />
     );
   }
@@ -100,6 +108,36 @@ export default function FestivalTopicPage({
 
   return (
     <article className="space-y-8 py-4 max-w-5xl mx-auto">
+      {/* Top Breadcrumb Navigation */}
+      <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-[#94A3B8] pb-1 px-1 flex-wrap">
+        <a
+          href="/"
+          onClick={(e) => {
+            if (isModifiedClick(e)) return;
+            e.preventDefault();
+            if (onNavigatePath) onNavigatePath('/');
+          }}
+          className="hover:text-[#FFD700] transition-colors"
+        >
+          {isTe ? 'హోమ్' : 'Home'}
+        </a>
+        <span className="text-[#64748B]">/</span>
+        <a
+          href="/guides"
+          onClick={(e) => {
+            if (isModifiedClick(e)) return;
+            e.preventDefault();
+            if (onNavigatePath) onNavigatePath('/guides');
+          }}
+          className="hover:text-[#FFD700] transition-colors font-medium"
+        >
+          {isTe ? 'విశేష గైడ్లు (Heritage Guides)' : 'Heritage Guides'}
+        </a>
+        <span className="text-[#64748B]">/</span>
+        <span className={`font-semibold ${isLight ? 'text-slate-800' : 'text-[#FFD700]'}`}>
+          {isTe ? topic.h1Te : topic.h1}
+        </span>
+      </nav>
       {/* 1. HERO HEADER SECTION */}
       <section className="glass-card p-6 sm:p-8 rounded-3xl border-2 border-[#D4AF37]/40 space-y-5 bg-gradient-to-br from-[#141923] via-[#0B0E14] to-[#0B0E14] shadow-2xl relative overflow-hidden">
         {/* Glow backdrop accents */}
@@ -246,23 +284,28 @@ export default function FestivalTopicPage({
             ℹ️ {isTe ? topic.occasionsInfo.titleTe : topic.occasionsInfo.title}
           </span>
           <p>{isTe ? topic.occasionsInfo.descTe : topic.occasionsInfo.desc}</p>
-          <div className="pt-2">
-            <a
-              href="/temples"
-              onClick={(e) => {
-                if (isModifiedClick(e)) return;
-                e.preventDefault();
-                window.history.pushState({}, '', '/temples');
-                window.dispatchEvent(new PopStateEvent('popstate'));
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className="inline-flex items-center gap-1.5 font-bold text-xs text-[#D4AF37] hover:text-[#FFD700] hover:underline cursor-pointer"
-            >
-              <span>{isTe ? 'సప్త దివ్య పుణ్యక్షేత్రాల సమాచారం' : 'View Sacred Shrines Directory'}</span>
-              <span>→</span>
-            </a>
-          </div>
         </div>
+
+        {/* Source Citation & Research Attribution */}
+        {topic.sourceAttribution && (
+          <div className={`p-4 rounded-xl border space-y-1.5 ${isLight ? 'bg-amber-100/70 border-amber-600/30 text-slate-800' : 'bg-[#0B0E14] border-[#D4AF37]/30 text-slate-300'}`}>
+            <div className="flex items-center gap-2 font-serif font-bold text-xs sm:text-sm text-[#FFD700]">
+              <span>📜</span>
+              <span>{isTe ? 'పరిశోధనా మూలం & పత్రికాధారం (Source Citation):' : 'Source Citation & Research Attribution:'}</span>
+            </div>
+            <p className="text-xs sm:text-sm font-medium leading-relaxed">
+              <span className="font-semibold">"{topic.sourceAttribution.articleTitle}"</span>
+              {topic.sourceAttribution.author && <span> — {topic.sourceAttribution.author}</span>}
+              {topic.sourceAttribution.translator && <span> ({topic.sourceAttribution.translator})</span>}
+              <span>, {topic.sourceAttribution.publication} ({topic.sourceAttribution.issueDate})</span>
+            </p>
+            {topic.sourceAttribution.note && (
+              <p className="text-[11px] text-[#94A3B8] italic pt-0.5">
+                ℹ️ {topic.sourceAttribution.note}
+              </p>
+            )}
+          </div>
+        )}
       </section>
 
       {/* 4. SCHEDULED OCCURRENCES FROM MASTER CALENDAR */}
@@ -395,6 +438,64 @@ export default function FestivalTopicPage({
           </div>
         )}
       </section>
+
+      {/* 4.5 EXPLORE MORE HERITAGE GUIDES */}
+      {otherGuides && otherGuides.length > 0 && (
+        <section className="space-y-4 pt-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <BookOpen className="w-5 h-5 text-[#FFD700]" />
+              <h2 className={`font-serif text-xl sm:text-2xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                {isTe ? 'మరిన్ని విశేష గైడ్లను అన్వేషించండి' : 'Explore More Heritage Guides'}
+              </h2>
+            </div>
+            <a
+              href="/guides"
+              onClick={(e) => {
+                if (isModifiedClick(e)) return;
+                e.preventDefault();
+                if (onNavigatePath) onNavigatePath('/guides');
+              }}
+              className="text-xs font-bold text-[#FFD700] hover:underline flex items-center gap-1"
+            >
+              <span>{isTe ? 'అన్నీ చూడండి (12)' : 'View All (12)'}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </a>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {otherGuides.map(item => (
+              <div
+                key={item.slug}
+                onClick={() => onNavigatePath && onNavigatePath('/festivals/' + item.slug)}
+                className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between group ${
+                  isLight
+                    ? 'bg-amber-50/50 hover:bg-amber-100/50 border-amber-200/80 shadow-sm'
+                    : 'bg-[#141923]/60 hover:bg-[#141923] border-[#D4AF37]/20 hover:border-[#D4AF37]/50 shadow-md'
+                }`}
+              >
+                <div className="space-y-2">
+                  <span className="inline-block text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#FFD700]/15 text-[#FFD700] border border-[#FFD700]/30">
+                    {isTe ? item.heroBadgeTe : item.heroBadge}
+                  </span>
+                  <h3 className={`font-serif text-sm font-bold group-hover:text-[#FFD700] transition-colors leading-snug ${
+                    isLight ? 'text-slate-900' : 'text-white'
+                  }`}>
+                    {isTe ? item.h1Te : item.h1}
+                  </h3>
+                  <p className="text-xs text-[#94A3B8] line-clamp-2 leading-relaxed">
+                    {isTe ? item.subtitleTe : item.subtitle}
+                  </p>
+                </div>
+                <div className="pt-3 flex items-center text-xs font-bold text-[#FFD700] gap-1 group-hover:translate-x-1 transition-transform">
+                  <span>{isTe ? 'పూర్తి గైడ్ చదవండి' : 'Read Guide'}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* 5. BOTTOM PROMINENT CTA BANNER */}
       <section className="glass-card p-6 sm:p-8 rounded-3xl border-2 border-[#D4AF37]/50 text-center space-y-3 bg-gradient-to-r from-[#141923] via-[#0B0E14] to-[#141923] shadow-2xl">
