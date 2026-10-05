@@ -47,7 +47,7 @@ export default function AppFooter({ lang, onNavigate, onOpenLogoModal, onOpenFee
 
       {/* INTERNAL NAVIGATION SECTION */}
       <div className="container pt-6 mt-6 border-t border-white/10 light-theme:border-slate-200">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-xs text-left">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 text-xs text-left max-w-2xl">
 
           {/* Core Pages */}
           <div className="space-y-2">
@@ -143,33 +143,6 @@ export default function AppFooter({ lang, onNavigate, onOpenLogoModal, onOpenFee
                   className="text-[#94A3B8] light-theme:text-slate-700 hover:text-[#FFD700] light-theme:hover:text-amber-800 transition-colors inline-block py-0.5"
                 >
                   {lang === 'en' ? 'Brahmotsavam Guide' : 'బ్రహ్మోత్సవాల మార్గదర్శిని'}
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Pilgrim & Heritage Guides */}
-          <div className="space-y-2">
-            <h3 className="font-serif font-bold text-xs uppercase tracking-wider text-[#FFD700] light-theme:text-amber-800">
-              {lang === 'en' ? 'Pilgrim Resources' : 'యాత్రికుల మార్గదర్శకాలు'}
-            </h3>
-            <ul className="space-y-1.5 font-medium">
-              <li>
-                <a
-                  href="/pilgrim-guide"
-                  onClick={(e) => handleLinkClick('/pilgrim-guide', e)}
-                  className="text-[#94A3B8] light-theme:text-slate-700 hover:text-[#FFD700] light-theme:hover:text-amber-800 transition-colors inline-block py-0.5"
-                >
-                  {lang === 'en' ? 'Pilgrim Guide & FAQs' : 'యాత్రికుల మార్గదర్శిని & ప్రశ్నలు'}
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/guides"
-                  onClick={(e) => handleLinkClick('/guides', e)}
-                  className="text-[#94A3B8] light-theme:text-slate-700 hover:text-[#FFD700] light-theme:hover:text-amber-800 transition-colors inline-block py-0.5"
-                >
-                  {lang === 'en' ? 'Heritage Guides Directory' : 'విశేష ఉత్సవ గైడ్లు'}
                 </a>
               </li>
             </ul>

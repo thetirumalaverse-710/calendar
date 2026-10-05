@@ -27,11 +27,11 @@ const UtsavamGlossary = lazy(() => import('./components/UtsavamGlossary'));
 const SSDTokens = lazy(() => import('./components/SSDTokens'));
 const AdminPortalModal = lazy(() => import('./components/AdminPortalModal'));
 const EventDetailModal = lazy(() => import('./components/EventDetailModal'));
-// TempleList is reserved for local development until finished
-// const TempleList = lazy(() => import('./components/TempleList'));
 const FestivalTopicPage = lazy(() => import('./components/FestivalTopicPage'));
-const PilgrimGuide = lazy(() => import('./components/PilgrimGuide'));
-const HeritageGuidesDirectory = lazy(() => import('./components/HeritageGuidesDirectory'));
+// Local development components (kept on disk for ongoing work):
+// const TempleList = lazy(() => import('./components/TempleList'));
+// const PilgrimGuide = lazy(() => import('./components/PilgrimGuide'));
+// const HeritageGuidesDirectory = lazy(() => import('./components/HeritageGuidesDirectory'));
 const loadInitialEvents = () =>
   import('./data/initialEvents').then(module => module.INITIAL_EVENTS);
 import { getFestivalTopic } from './data/festivalTopics';
@@ -44,14 +44,14 @@ const ROUTE_MAP = {
   '/sevas': 'sevas',
   '/tokens': 'tokens',
   '/feedback': 'feedback',
-  '/temples': 'calendar-page',
   '/overview': 'calendar-page',
-  '/pilgrim-guide': 'pilgrim-guide',
-  '/pilgrim': 'pilgrim-guide',
-  '/faqs': 'pilgrim-guide',
-  '/guides': 'heritage-guides',
-  '/festivals': 'heritage-guides',
-  '/heritage': 'heritage-guides',
+  '/temples': 'calendar-page',
+  '/pilgrim-guide': 'calendar-page',
+  '/pilgrim': 'calendar-page',
+  '/faqs': 'calendar-page',
+  '/guides': 'calendar-page',
+  '/festivals': 'calendar-page',
+  '/heritage': 'calendar-page',
 };
 
 const TAB_TO_PATH = {
@@ -62,8 +62,6 @@ const TAB_TO_PATH = {
   'tokens': '/tokens',
   'feedback': '/feedback',
   'overview': '/',
-  'pilgrim-guide': '/pilgrim-guide',
-  'heritage-guides': '/guides',
 };
 
 function getFestivalSlugFromPath(pathname) {
@@ -72,12 +70,6 @@ function getFestivalSlugFromPath(pathname) {
   const lowerPath = cleanPath.toLowerCase();
   if (lowerPath.startsWith('/festivals/')) {
     const slug = lowerPath.slice('/festivals/'.length);
-    if (getFestivalTopic(slug)) {
-      return slug;
-    }
-  }
-  if (lowerPath.startsWith('/guides/')) {
-    const slug = lowerPath.slice('/guides/'.length);
     if (getFestivalTopic(slug)) {
       return slug;
     }
@@ -94,10 +86,6 @@ function isValidRoute(pathname) {
     const slug = lowerPath.slice('/festivals/'.length);
     return Boolean(getFestivalTopic(slug));
   }
-  if (lowerPath.startsWith('/guides/')) {
-    const slug = lowerPath.slice('/guides/'.length);
-    return Boolean(getFestivalTopic(slug));
-  }
   return false;
 }
 
@@ -105,22 +93,11 @@ function getTabFromPathname(pathname) {
   if (!pathname) return 'calendar-page';
   const cleanPath = pathname.split('?')[0].split('#')[0].replace(/\/+$/, '') || '/';
   const lowerPath = cleanPath.toLowerCase();
-  if (lowerPath === '/guides' || lowerPath === '/festivals' || lowerPath === '/heritage') {
-    return 'heritage-guides';
-  }
   if (lowerPath.startsWith('/festivals/')) {
     const slug = lowerPath.slice('/festivals/'.length);
     if (getFestivalTopic(slug)) {
       return 'festival-topic';
     }
-    return 'heritage-guides';
-  }
-  if (lowerPath.startsWith('/guides/')) {
-    const slug = lowerPath.slice('/guides/'.length);
-    if (getFestivalTopic(slug)) {
-      return 'festival-topic';
-    }
-    return 'heritage-guides';
   }
   return ROUTE_MAP[lowerPath] || 'calendar-page';
 }
@@ -757,22 +734,6 @@ useEffect(() => {
             <CommunityFeedback
               lang={lang}
               onSubmitFeedback={handleAddFeedback}
-            />
-          )}
-
-          {/* HERITAGE GUIDES DIRECTORY SECTION */}
-          {activeTab === 'heritage-guides' && (
-            <HeritageGuidesDirectory
-              lang={lang}
-              onSelectTopic={(slug) => handleNavigatePath('/festivals/' + slug)}
-            />
-          )}
-
-          {/* PILGRIM DIRECTORY, AMENITIES & FAQS SECTION */}
-          {activeTab === 'pilgrim-guide' && (
-            <PilgrimGuide
-              lang={lang}
-              onSelectTopic={(slug) => handleNavigatePath('/festivals/' + slug)}
             />
           )}
 

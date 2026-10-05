@@ -325,42 +325,6 @@ export default function Header({
             </a>
 
 
-            <a
-              ref={el => (tabRefs.current['pilgrim-guide'] = el)}
-              href="/pilgrim-guide"
-              onClick={(e) => {
-                if (isModifiedClick(e)) return;
-                e.preventDefault();
-                setActiveTab('pilgrim-guide');
-              }}
-              className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5 shrink-0 transition-all ${
-                activeTab === 'pilgrim-guide'
-                  ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-[#0B0E14] shadow-md font-extrabold'
-                  : 'text-[#CBD5E1] hover:text-[#FFD700] hover:bg-[#141923]'
-              }`}
-            >
-              <span>🧭</span>
-              <span>{lang === 'en' ? 'Pilgrim Guide & FAQs' : 'యాత్రికుల మార్గదర్శిని & ప్రశ్నలు'}</span>
-            </a>
-
-            <a
-              ref={el => (tabRefs.current['heritage-guides'] = el)}
-              href="/guides"
-              onClick={(e) => {
-                if (isModifiedClick(e)) return;
-                e.preventDefault();
-                setActiveTab('heritage-guides');
-              }}
-              className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold flex items-center gap-1.5 shrink-0 transition-all ${
-                activeTab === 'heritage-guides' || activeTab === 'festival-topic'
-                  ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-[#0B0E14] shadow-md font-extrabold'
-                  : 'text-[#CBD5E1] hover:text-[#FFD700] hover:bg-[#141923]'
-              }`}
-            >
-              <span>📚</span>
-              <span>{lang === 'en' ? 'Heritage Guides' : 'విశేష గైడ్లు'}</span>
-            </a>
-
             {/* COMMUNITY FEEDBACK BUTTON / ADMIN INBOX */}
             <button
               ref={el => (tabRefs.current['feedback'] = el)}

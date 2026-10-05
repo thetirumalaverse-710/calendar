@@ -54,14 +54,6 @@ const BREADCRUMB_CONFIG = {
   '/tokens': [
     { name: 'Home', item: `${SITE_ORIGIN}/` },
     { name: 'Darshan Tokens', item: `${SITE_ORIGIN}/tokens` }
-  ],
-  '/pilgrim-guide': [
-    { name: 'Home', item: `${SITE_ORIGIN}/` },
-    { name: 'Pilgrim Guide & FAQs', item: `${SITE_ORIGIN}/pilgrim-guide` }
-  ],
-  '/guides': [
-    { name: 'Home', item: `${SITE_ORIGIN}/` },
-    { name: 'Heritage Guides', item: `${SITE_ORIGIN}/guides` }
   ]
 };
 
@@ -88,24 +80,19 @@ export function getBreadcrumbItems(pathname, metadata = null) {
 
   const normalizedPath = lowerPath === '/calendar-page' ? '/calendar' : lowerPath;
 
-  if (normalizedPath === '/festivals' || normalizedPath === '/heritage') {
-    return BREADCRUMB_CONFIG['/guides'];
-  }
-
   if (BREADCRUMB_CONFIG[normalizedPath]) {
     return BREADCRUMB_CONFIG[normalizedPath];
   }
 
-  if (normalizedPath.startsWith('/festivals/') || normalizedPath.startsWith('/guides/')) {
-    const prefix = normalizedPath.startsWith('/festivals/') ? '/festivals/' : '/guides/';
-    const slug = normalizedPath.slice(prefix.length);
+  if (normalizedPath.startsWith('/festivals/')) {
+    const slug = normalizedPath.slice('/festivals/'.length);
     const topic = getFestivalTopic(slug);
     if (topic) {
       const festivalName = FESTIVAL_NAMES[slug] || topic.searchQuery || topic.h1;
       const canonicalUrl = (metadata && metadata.canonical) || topic.canonical || `${SITE_ORIGIN}/festivals/${slug}`;
       return [
         { name: 'Home', item: `${SITE_ORIGIN}/` },
-        { name: 'Heritage Guides', item: `${SITE_ORIGIN}/guides` },
+        { name: 'Festival Guides', item: `${SITE_ORIGIN}/calendar` },
         { name: festivalName, item: canonicalUrl }
       ];
     }
