@@ -700,6 +700,8 @@ useEffect(() => {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onNavigateHome={handleNavigateHome}
+        onNavigatePath={handleNavigatePath}
+        festivalSlug={festivalSlug}
         lang={lang}
         setLang={setLang}
         themeMode={themeMode}
@@ -741,6 +743,7 @@ useEffect(() => {
                 onEditEvent={handleOpenEditModalForEvent}
                 onDeleteEvent={handleDeleteEvent}
                 onOpenAddEvent={handleOpenAddEventModal}
+                onNavigate={handleNavigatePath}
               />
             </div>
           )}

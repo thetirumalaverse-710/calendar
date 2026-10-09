@@ -5,9 +5,9 @@ const REQUIREMENTS = [
   "Carry the original Aadhaar card.",
   "Each person must physically stand in the queue to obtain a token.",
   "The token specifies the assigned reporting date and time for darshan.",
-  "The reporting point for both SSD and DD token holders is ATGH Circle.",
-  "DD token holders must go through Srivari Mettu only.",
-  "DD token holders must scan their token at the 1200th step on the day of darshan.",
+  "DD tokens are officially printed as 'SSD Srivari Mettu' on token slips.",
+  "DD token holders must walk to Srivari Mettu on the day of darshanam only.",
+  "DD token holders must scan their token at the 1200th step checkpoint on the day of darshan.",
 ];
 
 export default function SSDTokenRequirements({

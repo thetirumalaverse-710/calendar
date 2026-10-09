@@ -14,30 +14,30 @@ export const SITE_ORIGIN = 'https://thetirumalaverse.in';
 
 export const ROUTE_SEO_METADATA = {
   '/': {
-    title: 'The Tirumala Verse | Your Independent Guide to Tirumala',
+    title: 'The Tirumala Verse | Tirumala Festival Calendar 2026-2027, SSD & DD Tokens & Sevas Guide',
     description:
-      'The Tirumala Verse - Your independent guide to Tirumala. 2026-27 Panchangam events, Brahmotsavams, Vahana Sevas, and daily rituals across Tirumala & Tirupati temples.',
+      'The Tirumala Verse - Your independent guide to Tirumala & Tirupati. 2026-2027 TTD festival calendar, Brahmotsavam dates, Garuda Vahanam, live SSD vs DD tokens status, and daily sevas schedule across Tirumala temples.',
     canonical: `${SITE_ORIGIN}/`,
-    ogTitle: 'The Tirumala Verse | Your Independent Guide to Tirumala',
+    ogTitle: 'The Tirumala Verse | Tirumala Festival Calendar 2026-2027, SSD & DD Tokens & Sevas Guide',
     ogDescription:
-      'Explore Tirumala and Tirupati festivals, utsavams, sevas, vahanas, and temple events in one independent community calendar.',
+      'The Tirumala Verse - Your independent guide to Tirumala & Tirupati. 2026-2027 TTD festival calendar, Brahmotsavam dates, Garuda Vahanam, live SSD vs DD tokens status, and daily sevas schedule.',
     ogUrl: `${SITE_ORIGIN}/`,
-    twitterTitle: 'The Tirumala Verse | Your Independent Guide to Tirumala',
+    twitterTitle: 'The Tirumala Verse | Tirumala Festival Calendar 2026-2027, SSD & DD Tokens & Sevas Guide',
     twitterDescription:
-      'Explore Tirumala and Tirupati festivals, utsavams, sevas, vahanas, and temple events in one independent community calendar.',
+      'The Tirumala Verse - Your independent guide to Tirumala & Tirupati. 2026-2027 TTD festival calendar, Brahmotsavam dates, Garuda Vahanam, live SSD vs DD tokens status, and daily sevas schedule.',
   },
   '/calendar': {
-    title: 'Temple Utsavams & Festival Calendar 2026-27 | The Tirumala Verse',
+    title: 'The Tirumala Verse | Tirumala & TTD Festival Calendar 2026-2027: Brahmotsavams & Utsavams',
     description:
-      'Explore upcoming Tirumala and Tirupati temple festivals, monthly utsavams, Brahmotsavams, and vahana sevas with interactive calendar filters and search.',
+      'Explore upcoming Tirumala and Tirupati temple festivals, official 2026-2027 monthly utsavams, Brahmotsavams dates, and vahana sevas with interactive calendar filters and search.',
     canonical: `${SITE_ORIGIN}/calendar`,
-    ogTitle: 'Temple Utsavams & Festival Calendar 2026-27 | The Tirumala Verse',
+    ogTitle: 'The Tirumala Verse | Tirumala & TTD Festival Calendar 2026-2027: Brahmotsavams & Utsavams',
     ogDescription:
-      'Explore upcoming Tirumala and Tirupati temple festivals, monthly utsavams, Brahmotsavams, and vahana sevas with interactive calendar filters and search.',
+      'Explore upcoming Tirumala and Tirupati temple festivals, official 2026-2027 monthly utsavams, Brahmotsavams dates, and vahana sevas with interactive calendar filters and search.',
     ogUrl: `${SITE_ORIGIN}/calendar`,
-    twitterTitle: 'Temple Utsavams & Festival Calendar 2026-27 | The Tirumala Verse',
+    twitterTitle: 'The Tirumala Verse | Tirumala & TTD Festival Calendar 2026-2027: Brahmotsavams & Utsavams',
     twitterDescription:
-      'Explore upcoming Tirumala and Tirupati temple festivals, monthly utsavams, Brahmotsavams, and vahana sevas with interactive calendar filters and search.',
+      'Explore upcoming Tirumala and Tirupati temple festivals, official 2026-2027 monthly utsavams, Brahmotsavams dates, and vahana sevas with interactive calendar filters and search.',
   },
   '/glossary': {
     title: 'Festival & Utsavam Glossary | The Tirumala Verse',
@@ -66,17 +66,17 @@ export const ROUTE_SEO_METADATA = {
       'Information on Lord Venkateswara temple schedules in Tirumala, including day-wise Kainkaryams, Weekly Seva details, and Periodical Festivals.',
   },
   '/tokens': {
-    title: 'SSD & DD Free Darshan Tokens Guide | The Tirumala Verse',
+    title: 'The Tirumala Verse | SSD vs DD Tokens in Tirumala: Meaning, Difference & Live Status',
     description:
-      'Information and live status for Slotted Sarva Darshan (SSD) and Divya Darshan (DD) free offline darshan tokens issued across Tirupati counters.',
+      'Comprehensive guide to SSD (Slotted Sarva Darshan) and DD (Divya Darshan) tokens in Tirumala Tirupati. Understand key differences, counter locations, rules, and daily quota availability.',
     canonical: `${SITE_ORIGIN}/tokens`,
-    ogTitle: 'SSD & DD Free Darshan Tokens Guide | The Tirumala Verse',
+    ogTitle: 'The Tirumala Verse | SSD vs DD Tokens in Tirumala: Meaning, Difference & Live Status',
     ogDescription:
-      'Information and live status for Slotted Sarva Darshan (SSD) and Divya Darshan (DD) free offline darshan tokens issued across Tirupati counters.',
+      'Comprehensive guide to SSD (Slotted Sarva Darshan) and DD (Divya Darshan) tokens in Tirumala Tirupati. Understand key differences, counter locations, rules, and daily quota availability.',
     ogUrl: `${SITE_ORIGIN}/tokens`,
-    twitterTitle: 'SSD & DD Free Darshan Tokens Guide | The Tirumala Verse',
+    twitterTitle: 'The Tirumala Verse | SSD vs DD Tokens in Tirumala: Meaning, Difference & Live Status',
     twitterDescription:
-      'Information and live status for Slotted Sarva Darshan (SSD) and Divya Darshan (DD) free offline darshan tokens issued across Tirupati counters.',
+      'Comprehensive guide to SSD (Slotted Sarva Darshan) and DD (Divya Darshan) tokens in Tirumala Tirupati. Understand key differences, counter locations, rules, and daily quota availability.',
   },
   '/overview': {
     title: 'Experience Sacred Tirumala Utsavams & Festivals | The Tirumala Verse',
@@ -154,19 +154,19 @@ export const ROUTE_SEO_METADATA = {
   },
   '/festivals/brahmotsavam': {
     title:
-      'Brahmotsavam at Tirumala | Dates, Significance & Festival Guide | The Tirumala Verse',
+      'Tirumala Navarathri Brahmotsavam 2026 Schedule, 18 Vahana Sevas & Dates | The Tirumala Verse',
     description:
-      'Explore Brahmotsavam at Tirumala, its origins by Lord Brahma, 9-day vahana procession schedule, and divine significance. Discover Brahmotsavam dates across Tirumala and Tirupati shrines.',
+      'Complete guide to Tirumala Srivari Navarathri Brahmotsavams 2026 (Oct 11–21) & 2027 dates. Official 9-day morning & evening timetable, 18 Vahana Sevas, 17 Harathi points, Swarna Ratham, and temple history.',
     canonical: `${SITE_ORIGIN}/festivals/brahmotsavam`,
     ogTitle:
-      'Brahmotsavam at Tirumala | Dates, Significance & Festival Guide | The Tirumala Verse',
+      'Tirumala Navarathri Brahmotsavam 2026 Schedule, 18 Vahana Sevas & Dates | The Tirumala Verse',
     ogDescription:
-      'Explore Brahmotsavam at Tirumala, its origins by Lord Brahma, 9-day vahana procession schedule, and divine significance. Discover Brahmotsavam dates across Tirumala and Tirupati shrines.',
+      'Complete guide to Tirumala Srivari Navarathri Brahmotsavams 2026 (Oct 11–21) & 2027 dates. Official 9-day morning & evening timetable, 18 Vahana Sevas, 17 Harathi points, Swarna Ratham, and temple history.',
     ogUrl: `${SITE_ORIGIN}/festivals/brahmotsavam`,
     twitterTitle:
-      'Brahmotsavam at Tirumala | Dates, Significance & Festival Guide | The Tirumala Verse',
+      'Tirumala Navarathri Brahmotsavam 2026 Schedule, 18 Vahana Sevas & Dates | The Tirumala Verse',
     twitterDescription:
-      'Explore Brahmotsavam at Tirumala, its origins by Lord Brahma, 9-day vahana procession schedule, and divine significance. Discover Brahmotsavam dates across Tirumala and Tirupati shrines.',
+      'Complete guide to Tirumala Srivari Navarathri Brahmotsavams 2026 (Oct 11–21) & 2027 dates. Official 9-day morning & evening timetable, 18 Vahana Sevas, 17 Harathi points, Swarna Ratham, and temple history.',
   },
 };
 

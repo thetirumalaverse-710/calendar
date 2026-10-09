@@ -6,7 +6,8 @@ import {
   Lock,
   Sun,
   Moon,
-  BookOpen
+  BookOpen,
+  Sparkles
 } from 'lucide-react';
 import { isModifiedClick } from '../utils/navigation';
 
@@ -24,7 +25,9 @@ export default function Header({
   notificationsEnabled,
   onToggleNotifications,
   ttdLiveUrl,
-  onOpenLiveStream
+  onOpenLiveStream,
+  onNavigatePath,
+  festivalSlug
 }) {
   const [isOnline, setIsOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -245,6 +248,29 @@ export default function Header({
               }`}
             >
               <span>📅 {lang === 'en' ? 'Calendar' : 'క్యాలెండర్'}</span>
+            </a>
+
+            {/* NAVARATHRI BRAHMOTSAVAM 2026 HIGHLIGHT TAB */}
+            <a
+              ref={el => (tabRefs.current['brahmotsavam'] = el)}
+              href="/festivals/brahmotsavam"
+              onClick={(e) => {
+                if (isModifiedClick(e)) return;
+                e.preventDefault();
+                if (onNavigatePath) {
+                  onNavigatePath('/festivals/brahmotsavam');
+                } else {
+                  setActiveTab('festival-topic');
+                }
+              }}
+              className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-extrabold flex items-center gap-1.5 shrink-0 transition-all shadow-md ${
+                activeTab === 'festival-topic' && (festivalSlug === 'brahmotsavam' || !festivalSlug)
+                  ? 'bg-gradient-to-r from-[#FF5722] to-[#FFD700] text-black shadow-lg font-black ring-2 ring-[#FFD700]'
+                  : 'bg-[#FF5722]/15 text-[#FFD700] border border-[#FF5722]/50 hover:bg-[#FF5722]/30'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-[#FFD700]" />
+              <span>{lang === 'en' ? 'Srivari Nav. Brahmotsavams 2026' : 'శ్రీవారి నవ. బ్రహ్మోత్సవాలు 2026'}</span>
             </a>
 
             <a

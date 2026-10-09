@@ -252,14 +252,23 @@ const BASE_FESTIVAL_TOPICS = {
     searchKeywords: [
       'brahmotsavam',
       'brahmotsavams',
-      'salakatla',
+      'srivari brahmotsavam',
+      'brahmotsavam tirumala 2027 dates',
+      'brahmotsavam 2027 tirumala',
       'navarathri brahmotsavam',
+      'navarathri brahmotsavams 2026',
+      'salakatla',
+      'salakatla brahmotsavam',
       'బ్రహ్మోత్సవాలు',
       'బ్రహ్మోత్సవం',
+      'శ్రీవారి బ్రహ్మోత్సవాలు',
       'సాలకట్ల',
       'నవరాత్రి బ్రహ్మోత్సవాలు',
       'dwajarohanam',
-      'chakrasnanam'
+      'chakrasnanam',
+      'garuda vahanam tirumala',
+      'swarna ratham',
+      'vahanam'
     ],
     description:
       'Explore Brahmotsavam at Tirumala, its origins by Lord Brahma, 9-day vahana procession schedule, and divine significance. Discover Brahmotsavam dates across Tirumala and Tirupati shrines.',

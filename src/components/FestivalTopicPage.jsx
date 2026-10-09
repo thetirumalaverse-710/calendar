@@ -17,6 +17,7 @@ import { getTempleFilterLabel } from '../utils/templeHelpers';
 import useTheme from '../hooks/useTheme';
 import { isModifiedClick } from '../utils/navigation';
 import GarudaVahanamPage from './GarudaVahanamPage';
+import BrahmotsavamPage from './BrahmotsavamPage';
 
 function formatDateDisplay(dateStr, lang) {
   if (!dateStr) return '';
@@ -83,10 +84,24 @@ export default function FestivalTopicPage({
     );
   }
 
-  // Dedicated premium page for Garuda Vahanam — all other slugs use the shared layout below
+  // Dedicated premium page for Garuda Vahanam
   if (slug === 'garuda-vahanam') {
     return (
       <GarudaVahanamPage
+        events={events}
+        lang={lang}
+        themeMode={themeMode}
+        onNavigateToCalendarSearch={onNavigateToCalendarSearch}
+        onSelectEvent={onSelectEvent}
+        onNavigatePath={onNavigatePath}
+      />
+    );
+  }
+
+  // Dedicated premium page for Srivari Brahmotsavams (Navarathri Brahmotsavam 2026)
+  if (slug === 'brahmotsavam') {
+    return (
+      <BrahmotsavamPage
         events={events}
         lang={lang}
         themeMode={themeMode}

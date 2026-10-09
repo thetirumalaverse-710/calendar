@@ -8,6 +8,7 @@ import SSDTokenLiveStatus from "./tokens/SSDTokenLiveStatus";
 import SSDTokenLocations from "./tokens/SSDTokenLocations";
 import SSDTokenRequirements from "./tokens/SSDTokenRequirements";
 import SSDTokenFAQ from "./tokens/SSDTokenFAQ";
+import SSDVsDDComparison from "./tokens/SSDVsDDComparison";
 import {
   getRecentTokenHistory,
   getTodayTokenData,
@@ -153,13 +154,13 @@ const isNoIssuance =
   const text = {
     title:
       lang === "te"
-        ? "SSD & DD టోకెన్లు"
-        : "SSD & DD Tokens",
+        ? "తిరుమల SSD & DD టోకెన్లు - వ్యత్యాసం, నియమాలు & లైవ్ స్టేటస్"
+        : "Tirumala SSD & DD Tokens - Difference, Rules & Live Status",
 
     subtitle:
       lang === "te"
-        ? "తిరుపతిలో జారీ చేసే ఉచిత దర్శన టోకెన్లు"
-        : "Free offline darshan tokens issued in Tirupati",
+        ? "స్లాటెడ్ సర్వ దర్శనం (SSD) మరియు కాలినడక దివ్య దర్శనం (DD) ఉచిత ఆఫ్‌లైన్ టోకెన్ల సమగ్ర మార్గదర్శిని, కౌంటర్లు & రోజువారీ కోటా."
+        : "Complete guide to Slotted Sarva Darshan (SSD) and Footpath Divya Darshan (DD) free offline tokens in Tirupati, key differences, counter locations & live quota.",
 
     liveStatus:
       lang === "te"
@@ -400,6 +401,14 @@ const isNoIssuance =
           headingClass={headingClass}
           mutedClass={mutedClass}
           text={text}
+        />
+
+        <SSDVsDDComparison
+          isLight={isLight}
+          cardClass={cardClass}
+          headingClass={headingClass}
+          mutedClass={mutedClass}
+          lang={lang}
         />
 
         <SSDTokenHowItWorks

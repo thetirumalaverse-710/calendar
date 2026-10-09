@@ -7,10 +7,24 @@
 export const TOKEN_FAQS = [
   {
     id: "ssd-vs-dd",
-    question: "What is the difference between Slotted Sarva Darshan (SSD) and Divya Darshan (DD) tokens?",
-    questionTe: "స్లాటెడ్ సర్వ దర్శనం (SSD) మరియు దివ్య దర్శనం (DD) టోకెన్ల మధ్య తేడా ఏమిటి?",
-    answer: "Both are free offline darshan tokens issued by TTD in Tirupati. Slotted Sarva Darshan (SSD) tokens assign pilgrims a specific reporting date and time for Sarva Darshan at Tirumala. Divya Darshan (DD) tokens are free offline tokens specifically associated with the pedestrian pilgrimage route via Srivari Mettu.",
-    answerTe: "ఈ రెండూ తిరుపతిలో టీటీడీ ఉచితంగా జారీ చేసే ఆఫ్‌లైన్ దర్శన టోకెన్లు. స్లాటెడ్ సర్వ దర్శనం (SSD) టోకెన్లు భక్తులకు తిరుమలలో సర్వదర్శనం కోసం నిర్దిష్ట తేదీ మరియు రిపోర్టింగ్ సమయాన్ని కేటాయిస్తాయి. దివ్య దర్శనం (DD) టోకెన్లు శ్రీవారి మెట్టు కాలినడక మార్గం ద్వారా వెళ్ళే భక్తులకు కేటాయించిన ఉచిత టోకెన్లు."
+    question: "What is the difference between SSD tokens and DD tokens in Tirumala?",
+    questionTe: "తిరుమలలో SSD మరియు DD (దివ్య దర్శనం) టోకెన్ల మధ్య తేడా ఏమిటి?",
+    answer: "Slotted Sarva Darshan (SSD) tokens are free offline tokens issued in Tirupati (Vishnu Nivasam, Srinivasam, Bhudevi) for general pilgrims traveling to Tirumala by bus, car, or walking. Divya Darshan (DD) tokens are issued exclusively to pedestrian pilgrims climbing up via the Srivari Mettu footpath. While SSD pilgrims can travel by vehicle, DD pilgrims must hike on foot and scan their token barcode at the 1200th step checkpoint.",
+    answerTe: "స్లాటెడ్ సర్వ దర్శనం (SSD) టోకెన్లు తిరుపతిలో (విష్ణు నివాసం, శ్రీనివాసం, భూదేవి) బస్సు లేదా ఇతర వాహనాలలో తిరుమలకు వెళ్ళే సాధారణ భక్తులకు ఇస్తారు. దివ్య దర్శనం (DD) టోకెన్లు ప్రత్యేకంగా శ్రీవారి మెట్టు కాలినడక మార్గంలో నడిచే భక్తులకు మాత్రమే ఇస్తారు. SSD భక్తులు వాహనాలలో వెళ్లవచ్చు, కానీ DD భక్తులు తప్పనిసరిగా కాలినడకన వెళ్లి 1200వ మెట్టు వద్ద టోకెన్ స్కాన్ చేయించుకోవాలి."
+  },
+  {
+    id: "dd-token-meaning",
+    question: "What does DD token mean in Tirumala Tirupati?",
+    questionTe: "తిరుమల తిరుపతిలో DD టోకెన్ అంటే ఏమిటి?",
+    answer: "DD stands for Divya Darshan. On the physical token slips issued by TTD, it is officially printed as 'SSD Srivari Mettu'. It is a free offline time-slotted darshan token issued exclusively to devotees who trek up on foot via Srivari Mettu. Pilgrims must walk to Srivari Mettu on the day of darshanam only (not on the token collection day) and scan the barcode at the 1200th step checkpoint.",
+    answerTe: "DD అంటే దివ్య దర్శనం (Divya Darshan). భక్తులకు ఇచ్చే భౌతిక టోకెన్ స్లిప్‌లపై దీనిని అధికారికంగా 'SSD Srivari Mettu' అని ముద్రిస్తారు. శ్రీవారి మెట్టు మార్గం ద్వారా నడిచి వెళ్లే భక్తులకు మాత్రమే ఈ ఉచిత ఆఫ్‌లైన్ టోకెన్ కేటాయించబడుతుంది. భక్తులు టోకెన్ తీసుకున్న రోజు కాకుండా కేవలం తమ దర్శనం రోజున మాత్రమే శ్రీవారి మెట్టు ద్వారా నడవాలి మరియు 1200వ మెట్టు వద్ద టోకెన్ స్కాన్ చేయించుకోవాలి."
+  },
+  {
+    id: "dd-without-walking",
+    question: "Can I use a Divya Darshan (DD) token without walking up the footpath?",
+    questionTe: "కాలినడకన నడవకుండా DD టోకెన్‌తో తిరుమలలో దర్శనానికి వెళ్లవచ్చా?",
+    answer: "No. DD token holders must hike the Srivari Mettu footpath and scan their token at the 1200th step checkpoint. If you travel by bus or private vehicle without scanning at the 1200th step, your token is invalid and entry at the ATGH darshan counter in Tirumala will be rejected.",
+    answerTe: "లేదు. DD టోకెన్ పొందిన భక్తులు తప్పనిసరిగా శ్రీవారి మెట్టు కాలినడక మార్గంలో నడిచి 1200వ మెట్టు వద్ద టోకెన్ బయోమెట్రిక్ స్కాన్ చేయించుకోవాలి. బస్సు లేదా కారులో వెళితే ఆ టోకెన్ చెల్లదు మరియు తిరుమలలో దర్శనానికి అనుమతించరు."
   },
   {
     id: "counter-locations",
@@ -30,8 +44,8 @@ export const TOKEN_FAQS = [
     id: "reporting-rules",
     question: "Where do token holders report in Tirumala, and what are the rules for DD holders?",
     questionTe: "టోకెన్ పొందిన భక్తులు తిరుమలలో ఎక్కడ రిపోర్ట్ చేయాలి, DD భక్తులకు నియమాలు ఏమిటి?",
-    answer: "The reporting point for both SSD and DD token holders is ATGH Circle according to the assigned date and time. DD token holders must travel through Srivari Mettu only and must scan their token at the 1200th step on the day of darshan before reporting.",
-    answerTe: "SSD మరియు DD టోకెన్ పొందిన భక్తులిద్దరూ తమ టోకెన్‌పై కేటాయించిన తేదీ మరియు సమయానికి తిరుమలలోని ATGH సర్కిల్ వద్ద రిపోర్ట్ చేయాలి. DD టోకెన్ దారులు తప్పనిసరిగా శ్రీవారి మెట్టు మార్గం ద్వారా మాత్రమే ప్రయాణించాలి మరియు దర్శనం రోజున 1200వ మెట్టు వద్ద టోకెన్ స్కాన్ చేసుకోవాలి."
+    answer: "The reporting point for both SSD and DD token holders is ATGH Circle according to the assigned date and time slot. DD token holders (printed as 'SSD Srivari Mettu' on token slips) must walk through Srivari Mettu on the day of darshanam only and must scan their token at the 1200th step before reporting.",
+    answerTe: "SSD మరియు DD టోకెన్ పొందిన భక్తులిద్దరూ తమ టోకెన్‌పై కేటాయించిన తేదీ మరియు సమయానికి తిరుమలలోని ATGH సర్కిల్ వద్ద రిపోర్ట్ చేయాలి. DD టోకెన్ దారులు (స్లిప్‌పై 'SSD Srivari Mettu') తప్పనిసరిగా దర్శనం రోజున మాత్రమే శ్రీవారి మెట్టు మార్గం ద్వారా ప్రయాణించాలి మరియు 1200వ మెట్టు వద్ద టోకెన్ స్కాన్ చేసుకోవాలి."
   },
   {
     id: "timing-availability",

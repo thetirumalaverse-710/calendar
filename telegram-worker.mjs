@@ -224,7 +224,33 @@ async function pollTelegram(channel) {
     `\n[${new Date().toISOString()}] Checking Telegram...`
   );
 
- const lastProcessedMessageId = loadCheckpoint();
+  const todayIndiaDate = getIndiaDate(new Date());
+
+  /*
+   * CHECK IF TODAY'S TOKENS ARE ALREADY COMPLETED FOR THE DAY
+   * If both SSD & DD tokens are completed, skip polling until midnight (00:00 IST).
+   */
+  const { data: todayTokenDay } = await supabase
+    .from("token_days")
+    .select("id, issuance_status, ssd_status, dd_status")
+    .eq("issuance_date", todayIndiaDate)
+    .maybeSingle();
+
+  if (
+    todayTokenDay &&
+    (todayTokenDay.issuance_status === "completed" ||
+      (todayTokenDay.ssd_status === "completed" && todayTokenDay.dd_status === "completed"))
+  ) {
+    console.log(
+      `\n[COMPLETED FOR TODAY] (${todayIndiaDate}): Both SSD & DD tokens are finished.`
+    );
+    console.log(
+      `Polling paused for the rest of today until midnight (00:00 IST).\n`
+    );
+    return;
+  }
+
+  const lastProcessedMessageId = loadCheckpoint();
 
 console.log(
   `Last processed Telegram message ID: ${lastProcessedMessageId}`

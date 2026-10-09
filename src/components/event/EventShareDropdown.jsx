@@ -147,14 +147,14 @@ export default function EventShareDropdown({
             </span>
           </button>
 
-          {/* COPY LINK & TEXT */}
+          {/* COPY LINK */}
           <button
             onClick={() => onShareClick('copy')}
-            className="w-full text-left px-3 py-2 rounded-lg hover:bg-white/10 text-xs font-bold text-[#FFD700] flex items-center gap-2.5 border-t border-white/10 pt-2 transition-colors"
+            className="w-full text-left px-3 py-2 rounded-lg hover:bg-white/10 text-xs font-bold text-[#FFD700] flex items-center gap-2.5 border-t border-white/10 pt-2 transition-colors cursor-pointer"
           >
             {copiedLink ? <Check className="w-4 h-4 text-green-400 shrink-0" /> : <Copy className="w-4 h-4 text-[#B45309] shrink-0" />}
             <span className="text-green-700 font-bold">
-              {copiedLink ? 'Copied!' : 'Copy Link & Text'}
+              {copiedLink ? (lang === 'te' ? 'కాపీ చేయబడింది!' : 'Copied!') : (lang === 'te' ? 'లింక్ కాపీ చేయండి' : 'Copy Link')}
             </span>
           </button>
 

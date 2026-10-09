@@ -318,8 +318,8 @@ export function shareToPlatform(platform, event, lang = 'en') {
 }
     case 'copy': {
       if (navigator.clipboard) {
-        navigator.clipboard.writeText(`${shareText}`);
-        toast.success(lang === 'te' ? 'లింక్ విజయవంతంగా కాపీ చేయబడింది!' : 'Link & event details copied to clipboard!');
+        navigator.clipboard.writeText(eventUrl);
+        toast.success(lang === 'te' ? 'ఈవెంట్ లింక్ కాపీ చేయబడింది!' : 'Event link copied to clipboard!');
       } else {
         toast.info(lang === 'te' ? 'కాపీ చేయబడింది: ' + eventUrl : 'Copied link: ' + eventUrl);
       }

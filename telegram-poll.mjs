@@ -497,29 +497,24 @@ async function processMessage(message) {
    */
   const dayStatusUpdate = {};
 
-  if (
-    parsed.ssd_status ===
-    "completed"
-  ) {
-    dayStatusUpdate.ssd_status =
-      "completed";
+  if (parsed.ssd_status === "completed") {
+    dayStatusUpdate.ssd_status = "completed";
   }
 
-  if (
-    parsed.dd_status ===
-    "completed"
-  ) {
-    dayStatusUpdate.dd_status =
-      "completed";
+  if (parsed.dd_status === "completed") {
+    dayStatusUpdate.dd_status = "completed";
   }
 
-  if (
-    Object.keys(dayStatusUpdate)
-      .length > 0
-  ) {
-    const {
-      error: statusUpdateError,
-    } = await supabase
+  // If both SSD and DD are completed (or existing + new makes both completed), set issuance_status = 'completed'
+  const isSsdDone = dayStatusUpdate.ssd_status === "completed" || tokenDay.ssd_status === "completed";
+  const isDdDone = dayStatusUpdate.dd_status === "completed" || tokenDay.dd_status === "completed";
+
+  if (isSsdDone && isDdDone) {
+    dayStatusUpdate.issuance_status = "completed";
+  }
+
+  if (Object.keys(dayStatusUpdate).length > 0) {
+    const { error: statusUpdateError } = await supabase
       .from("token_days")
       .update(dayStatusUpdate)
       .eq("id", tokenDay.id);
@@ -528,10 +523,7 @@ async function processMessage(message) {
       throw statusUpdateError;
     }
 
-    console.log(
-      "Token day status updated:",
-      dayStatusUpdate
-    );
+    console.log("Token day status updated:", dayStatusUpdate);
   }
 
   return "inserted";
@@ -541,6 +533,39 @@ async function runPoll(channel) {
   console.log(
     `\n[${new Date().toISOString()}] Starting Telegram poll...`
   );
+
+  const nowIST = new Date();
+  const todayIndiaDate = getIndiaDate(nowIST);
+
+  /*
+   * CHECK IF TODAY'S TOKENS ARE ALREADY COMPLETED FOR THE DAY
+   * If both SSD & DD tokens are completed, skip polling for the rest of today.
+   */
+  const { data: todayTokenDay } = await supabase
+    .from("token_days")
+    .select("id, issuance_status, ssd_status, dd_status")
+    .eq("issuance_date", todayIndiaDate)
+    .maybeSingle();
+
+  if (
+    todayTokenDay &&
+    (todayTokenDay.issuance_status === "completed" ||
+      (todayTokenDay.ssd_status === "completed" && todayTokenDay.dd_status === "completed"))
+  ) {
+    console.log(
+      `\n========================================`
+    );
+    console.log(
+      `Today's (${todayIndiaDate}) SSD and DD token issuance is already COMPLETED.`
+    );
+    console.log(
+      `Polling skipped for the rest of the day until midnight (00:00 IST).`
+    );
+    console.log(
+      `========================================\n`
+    );
+    return;
+  }
 
   const lastImportedMessageId =
     await getLastImportedTelegramMessageId();
@@ -574,65 +599,57 @@ async function runPoll(channel) {
   );
 
   /*
-   * Only process messages belonging to today's
-   * India date.
+   * Process messages from the last 48 hours (today & yesterday IST)
+   * to guarantee no token messages are missed even if GitHub Actions
+   * cron execution is delayed by several hours.
    */
-  const todayIndiaDate =
-    getIndiaDate(new Date());
+  const nowIST = new Date();
+  const todayIndiaDate = getIndiaDate(nowIST);
 
-  const todayMessages =
-    messages.filter((message) => {
-      if (!message.date) {
-        return false;
-      }
+  const yesterdayIST = new Date(nowIST.getTime() - 24 * 60 * 60 * 1000);
+  const yesterdayIndiaDate = getIndiaDate(yesterdayIST);
 
-      const messageIndiaDate =
-        getIndiaDate(
-          new Date(
-            message.date * 1000
-          )
-        );
+  const recentMessages = messages.filter((message) => {
+    if (!message.date) return false;
+    const messageIndiaDate = getIndiaDate(new Date(message.date * 1000));
+    return (
+      messageIndiaDate === todayIndiaDate ||
+      messageIndiaDate === yesterdayIndiaDate
+    );
+  });
 
-      return (
-        messageIndiaDate ===
-        todayIndiaDate
-      );
-    });
-
-console.log(
-    `Today's Telegram messages: ${todayMessages.length}`
+  console.log(
+    `Recent 48h Telegram messages: ${recentMessages.length}`
   );
 
-console.log("\n========================================");
-console.log("TODAY'S TELEGRAM MESSAGE DIAGNOSTIC");
-console.log("========================================");
+  console.log("\n========================================");
+  console.log("RECENT TELEGRAM MESSAGE DIAGNOSTIC");
+  console.log("========================================");
 
-for (const message of todayMessages) {
-  console.log("\n----------------------------------------");
-  console.log("Message ID:", message.id);
+  for (const message of recentMessages) {
+    console.log("\n----------------------------------------");
+    console.log("Message ID:", message.id);
 
-  if (message.date) {
-    console.log(
-      "India time:",
-      new Intl.DateTimeFormat("en-IN", {
-        timeZone: "Asia/Kolkata",
-        dateStyle: "medium",
-        timeStyle: "medium",
-      }).format(new Date(message.date * 1000))
-    );
+    if (message.date) {
+      console.log(
+        "India time:",
+        new Intl.DateTimeFormat("en-IN", {
+          timeZone: "Asia/Kolkata",
+          dateStyle: "medium",
+          timeStyle: "medium",
+        }).format(new Date(message.date * 1000))
+      );
+    }
+
+    console.log("Text:");
+    console.log(message.message || "[NO TEXT]");
   }
 
-  console.log("Text:");
-  console.log(message.message || "[NO TEXT]");
-}
+  console.log("\n========================================");
 
-console.log("\n========================================");
+  const recognizedMessages = [];
 
-const recognizedMessages = [];
-
-  for (
-    const message of todayMessages
-  ) {
+  for (const message of recentMessages) {
     const text =
       message.message || "";
 
