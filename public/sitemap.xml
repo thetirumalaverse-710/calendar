@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Core Application Pages -->
   <url>
     <loc>https://thetirumalaverse.in/</loc>
   </url>
@@ -7,14 +8,19 @@
     <loc>https://thetirumalaverse.in/calendar</loc>
   </url>
   <url>
-    <loc>https://thetirumalaverse.in/glossary</loc>
+    <loc>https://thetirumalaverse.in/tokens</loc>
   </url>
   <url>
     <loc>https://thetirumalaverse.in/sevas</loc>
   </url>
   <url>
-    <loc>https://thetirumalaverse.in/tokens</loc>
+    <loc>https://thetirumalaverse.in/glossary</loc>
   </url>
+  <url>
+    <loc>https://thetirumalaverse.in/guides</loc>
+  </url>
+
+  <!-- Heritage Topic Guides -->
   <url>
     <loc>https://thetirumalaverse.in/festivals/garuda-vahanam</loc>
   </url>
@@ -26,5 +32,29 @@
   </url>
   <url>
     <loc>https://thetirumalaverse.in/festivals/brahmotsavam</loc>
+  </url>
+  <url>
+    <loc>https://thetirumalaverse.in/festivals/kainkaryaparas</loc>
+  </url>
+  <url>
+    <loc>https://thetirumalaverse.in/festivals/sannidhi-golla</loc>
+  </url>
+  <url>
+    <loc>https://thetirumalaverse.in/festivals/divya-prabandham-liturgy</loc>
+  </url>
+  <url>
+    <loc>https://thetirumalaverse.in/festivals/pushpa-kainkaryam</loc>
+  </url>
+  <url>
+    <loc>https://thetirumalaverse.in/festivals/sapthagiri-geography</loc>
+  </url>
+  <url>
+    <loc>https://thetirumalaverse.in/festivals/sankeertana-bhandagaram</loc>
+  </url>
+  <url>
+    <loc>https://thetirumalaverse.in/festivals/govindaraja-legend</loc>
+  </url>
+  <url>
+    <loc>https://thetirumalaverse.in/festivals/epigraphical-centenary</loc>
   </url>
 </urlset>
