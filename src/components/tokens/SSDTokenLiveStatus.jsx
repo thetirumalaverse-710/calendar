@@ -172,7 +172,7 @@ export default function SSDTokenLiveStatus({
 
         <div className="flex flex-col sm:items-end gap-1">
           <div className={`text-[10px] font-bold ${mutedClass}`}>
-            {text.source}: {liveSource || text.notAvailable}
+            {text.source}: <span className="text-[#D4AF37] font-extrabold">{liveSource ? `${liveSource} (Laxmi Telugu Tech Channel)` : "Laxmi Telugu Tech Channel"}</span>
           </div>
 
           {issuanceStartedAt && (

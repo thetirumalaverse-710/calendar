@@ -211,13 +211,13 @@ const isNoIssuance =
 
     awaiting:
       lang === "te"
-        ? "టోకెన్ సమాచారం స్వయంచాలకంగా నవీకరించబడుతుంది. లైవ్ డేటా మూలం: Telegram."
-        : "Token information is updated automatically. Live data source: Telegram.",
+        ? "టోకెన్ సమాచారం స్వయంచాలకంగా నవీకరించబడుతుంది. ప్రత్యక్ష టోకెన్ వివరాల సేకరణ మూలం: Laxmi Telugu Tech Channel."
+        : "Token information is updated automatically. Live data source: Laxmi Telugu Tech Channel.",
 
     source:
       lang === "te"
         ? "లైవ్ డేటా మూలం"
-        : "Live data source",
+        : "Live Data Source",
 
     notAvailable:
       lang === "te"
