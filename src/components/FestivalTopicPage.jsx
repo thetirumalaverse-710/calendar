@@ -17,7 +17,7 @@ import { getTempleFilterLabel } from '../utils/templeHelpers';
 import useTheme from '../hooks/useTheme';
 import { isModifiedClick } from '../utils/navigation';
 import GarudaVahanamPage from './GarudaVahanamPage';
-import BrahmotsavamPage from './BrahmotsavamPage';
+// import BrahmotsavamPage from './BrahmotsavamPage';
 
 function formatDateDisplay(dateStr, lang) {
   if (!dateStr) return '';
@@ -98,6 +98,7 @@ export default function FestivalTopicPage({
     );
   }
 
+  /*
   // Dedicated premium page for Srivari Brahmotsavams (Navarathri Brahmotsavam 2026)
   if (slug === 'brahmotsavam') {
     return (
@@ -111,6 +112,7 @@ export default function FestivalTopicPage({
       />
     );
   }
+  */
 
   const isTe = lang === 'te';
   const ctaSearchQuery = topic.searchQuery || 'Garuda Vahanam';
