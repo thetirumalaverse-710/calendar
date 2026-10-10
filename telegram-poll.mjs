@@ -603,8 +603,6 @@ async function runPoll(channel) {
    * to guarantee no token messages are missed even if GitHub Actions
    * cron execution is delayed by several hours.
    */
-  const nowIST = new Date();
-  const todayIndiaDate = getIndiaDate(nowIST);
 
   const yesterdayIST = new Date(nowIST.getTime() - 24 * 60 * 60 * 1000);
   const yesterdayIndiaDate = getIndiaDate(yesterdayIST);
